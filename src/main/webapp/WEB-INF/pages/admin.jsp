@@ -18,6 +18,7 @@
         <div class="items">
         <ul>
             <li><i class="fa-solid fa-chart-pie"></i><a href = "#">Dashboard</a></li>
+            <li><i class="fa-solid fa-list-check"></i><a href="#">Management</a>+</li>
             <li><i class="fa-solid fa-users"></i><a href="#">Users</a></li>
             <li><i class="fa-solid fa-chart-simple"></i><a href="#">Statistics</a></li>
             <li><i class="fa-solid fa-gears"></i><a href="#">Settings</a></li>

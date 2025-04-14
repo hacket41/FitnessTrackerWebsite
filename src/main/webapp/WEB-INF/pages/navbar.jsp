@@ -15,7 +15,7 @@
             <li><a href="#">Products</a></li>
             <li><a href="#">About</a></li>
             <li><a href="#">Forum</a></li>
-            <li><a href="#">Login</a></li>
+            <li><a href="${pageContext.request.contextPath}/login">Login</a></li>
             
         </ul>
         <ul>

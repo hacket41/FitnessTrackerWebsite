@@ -16,10 +16,10 @@
             <header>Login</header>
         </div>
         <div class="input-box">
-            <input type="text" class="input-field" placeholder="Username" autocomplete="off" required>
+            <input type="text" name ="username" class="input-field" placeholder="Username" autocomplete="off" required>
         </div>
         <div class="input-box">
-            <input type="password" class="input-field" placeholder="Password" autocomplete="off" required>
+            <input type="password" name="password" class="input-field" placeholder="Password" autocomplete="off" required>
         </div>
         <div class="forgot">
             <section>
@@ -35,7 +35,7 @@
             <label for="submit">Sign In</label>
         </div>
         <div class="sign-up-link">
-            <p>Don't have account? <a href="#">Sign Up</a></p>
+            <p>Don't have account? <a href="${pageContext.request.contextPath}/register">Sign Up</a></p>
         </div>
     </div>
     

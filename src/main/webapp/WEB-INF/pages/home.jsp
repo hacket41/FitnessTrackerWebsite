@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+ 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +13,6 @@
 </head>
 <body>
 	<jsp:include page = "navbar.jsp"/>
-	
 
     <!-- HERO SECTION STARTS HERE -->
     <section id = "hero_img">
@@ -40,7 +40,7 @@
         </div>
 
         <div class = "image">
-            <img src="../images/feature.jpg" alt="">
+            <img src="${pageContext.request.contextPath}/resources/images/feature.jpg" />
         </div>
     </section>
     
@@ -68,7 +68,6 @@
               <div class="title-large">BUILT<br>TO<br>LAST</div>
               <div class="downloads">
                 <div style="font-size: 24px;">📚</div>
-                <p>all DAREBEE<br>books & downloads</p>
               </div>
             </div>
           
@@ -135,6 +134,8 @@
 		    document.querySelector('.sidebar').style.display = 'none';
 		}
 	</script>
+	
+	
     <jsp:include page = "footer.jsp"/>
 </body>
 </html>
