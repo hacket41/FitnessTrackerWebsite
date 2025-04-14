@@ -12,7 +12,7 @@
         <ul class="sidebar">
             <li onclick = "hideSidebar()"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="26" viewBox="0 -960 960 960" width="26" fill="001231"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224con-224-224 224Z"/></svg></a></li>
             <li><a href="#">Blog</a></li>
-            <li><a href="#">Products</a></li>
+            <li><a href="${pageContext.request.contextPath}/meals">Meals</a></li>
             <li><a href="${pageContext.request.contextPath}/meals">About</a></li>
             <li><a href="#">Forum</a></li>
             <li><a href="${pageContext.request.contextPath}/login">Login</a></li>
@@ -21,7 +21,7 @@
         <ul>
             <li><a href="#">TEST</a></li>
             <li class="hideOnMobile"><a href="#">Blog</a></li>
-            <li class="hideOnMobile"><a href="#">Products</a></li>
+            <li class="hideOnMobile"><a href="${pageContext.request.contextPath}/meals">Meals</a></li>
             <li class="hideOnMobile"><a href="#">About</a></li>
             <li class="hideOnMobile"><a href="#">Forum</a></li>
             <li class="hideOnMobile"><a href="#">Login</a></li>
