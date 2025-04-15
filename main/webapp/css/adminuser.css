@@ -1,0 +1,392 @@
+@charset "UTF-8";
+
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family:  'Poppins', sans-serif;
+}
+
+body{
+    width: 100%;
+    background: #E5E7EB;
+    position: relative;
+    display: flex;
+}
+
+
+/* SIDE MENU CODE  */
+#menu{
+    background: #111827;
+    width:300px;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+#menu .logo{
+    display: flex;
+    align-items: center;
+    color: #E5E7EB;
+    padding: 30px 0 0 10px;
+}
+
+#menu .logo img{
+    width:60px;
+    margin-right: 10px;
+}
+
+.logo h2{
+    margin-right: 15px;
+    font-size: 20px;
+}
+
+#menu .items{
+    margin-top: 40px;
+}
+
+#menu .items li{
+    list-style: none;
+    padding: 15px 0;
+    transition: 0.3s ease;
+}
+
+#menu .items li:hover{
+    background: #253074;
+    cursor: pointer;
+}
+
+#menu .items li:nth-child(1){
+    border-left: 4px solid white;
+}
+
+#menu .items li i{
+    color: rgb(134, 141, 151);
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    font-size: 14px;
+    margin: 0 10px 0 25px;
+}
+
+#menu .items li i:hover i, #menu .items li i:hover a{
+    color: aliceblue;
+}
+
+#menu .items li a{
+    text-decoration: none;
+    color: rgb(134, 141, 151);
+    font-weight: 300px;
+    transition: 0.3s ease;
+}
+
+/* PROFILE CODE AND NAV CODE  */
+
+#interface{
+    width: calc(100% - 300px);
+    margin-left: 300px;
+    position: relative;
+}
+
+#interface .navigation{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    padding: 15px 30px;
+    border-bottom: 3px solid purple;
+    position: fixed;
+    width: calc(100% - 300px);
+}
+
+#interface .navigation .search{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px 14px;
+    border: 1px solid #d7dbe6;
+    border-radius: 4px;
+}
+
+#interface .navigation .search input{
+    border: none;
+    outline: none;
+    font-size: 14px;
+}
+
+#interface .navigation .search i{
+    margin-right: 14px;
+}
+
+
+#interface .navigation .profile{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+} 
+
+#interface .navigation .profile .i{
+    margin-right: 20px;
+    font-size: 19px;
+    font-weight: 400;
+}
+
+
+#interface .navigation .profile img{
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius:50%;
+    margin-left: 10px;
+}
+
+/* BOXES BELOW NAV BAR  */
+.n1{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    
+}
+
+#menu-btn{
+    display: none;
+    color:#2b2b2b;
+    font-size:20px;
+    cursor: pointer;
+    margin-right: 20px;
+}
+/* Additional styling for fixed layout */
+.navigation-new {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px 0 30px;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    border: 1px solid #d7dbe6;
+    border-radius: 4px;
+    padding: 8px 12px;
+    background-color: white;
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+    font-size: 14px;
+}
+
+.search-bar i {
+    margin-right: 10px;
+    color: #555;
+}
+
+.filter-box {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.filter-box select {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #d7dbe6;
+    border-radius: 4px;
+    appearance: none;
+    background-color: white;
+}
+
+.dropdown-arrow {
+    position: absolute;
+    right: 12px;
+    pointer-events: none;
+    color: #777;
+}
+
+/* Guest Role Dropdowns */
+.guest-nav {
+    display: flex;
+    gap: 20px;
+    padding: 20px 30px 0 30px;
+    flex-wrap: wrap;
+}
+
+.guest-nav select {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #d7dbe6;
+    border-radius: 4px;
+    background-color: white;
+}
+
+/* Button Styling */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.action-buttons a {
+    text-decoration: none;
+    font-size: 13px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: 500;
+    color: white;
+}
+
+.action-buttons .view-btn {
+    background-color: #4CAF50;
+}
+
+.action-buttons .remove-btn {
+    background-color: #f44336;
+}
+
+
+.i-name{
+    color: #444a53;
+    padding: 30px 30px 0 30px;
+    font-size: 24px;
+    font-weight: 700;
+    margin-top: 70px;
+}
+
+
+
+/* Profile tables starts form here  */
+
+.board{
+    width: 94%;
+    margin: 30px 0 30px 30px;
+    overflow: auto;
+    background-color: white;
+    border-radius: 8px; 
+}
+
+.board img{
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.board h5{
+    font-weight: 600;
+    font-size: 14px;
+}
+
+
+.board p{
+    font-weight: 400;
+    font-size: 14px;
+    color: #787d8d;
+}
+
+
+.board .people{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: start;
+}
+
+table{
+    border-collapse:collapse;
+}
+
+tr{
+    border-bottom: 1px solid #eef0f3;
+}
+
+thead td{
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 400;
+    background-color: #F9FAFB;
+    text-align: start;
+    padding: 15px;
+}
+
+tbody tr td{
+    padding: 10px 15px;
+}
+
+.active p{
+    background-color: #d7fada;
+    padding: 2px 10px;
+    display: inline-block;
+    border-radius: 40px;
+    color: #61bb68;
+}
+
+.edit a{
+    text-decoration: none;
+    font-size: 14px;
+    color: #554cd1;
+    font-weight: 600;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 769px){
+    #menu{
+        width:270px;
+        position: fixed;
+        left: -270px;
+        transition: 0.3s ease;
+    }
+
+    #menu.active{
+        left:0px;
+    }
+
+    #menu-btn{
+        display: initial;
+    }
+
+    #interface{
+        width: 100%;
+        margin-left: 0px;
+        display: inline-block;
+        transition: 0.3s ease;
+    }
+
+    #menu.active~#interface{
+        width: calc(100% - 270px);
+        margin-left: 270px;
+        transition: 0.3s ease;
+    }
+
+    #interface .navigation {
+        width: 100%;
+    }
+
+    .values {
+        padding: 30px 30px 0 30px;
+        justify-content: flex-start;
+    }
+
+    .values .val-box {
+        padding: 16px 20px;
+        margin: 10px 20px 10px 0;
+    }
+
+    .board {
+        width: 92%;
+        padding: 0;
+        overflow-x: auto;
+    }
+
+    table{
+        width: 100%;
+        border-collapse: collapse;
+    }
+}

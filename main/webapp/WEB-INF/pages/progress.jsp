@@ -5,20 +5,10 @@
 <head>
   <meta charset="UTF-8">
   <title>My Progress</title>
-  <link rel="stylesheet" href="progress.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/progress.css">
 </head>
 <body>
-  <header>
-    <nav>
-      <a href="#">Home</a>
-      <a href="#">My meals</a>
-      <a href="#">My Progress</a>
-      <a href="#">Workouts</a>
-      <a href="#">About</a>
-      <a href="#">My Profile</a>
-      <a href="#">☰</a>
-    </nav>
-  </header>
+ <jsp:include page="navbar.jsp"/>
 
   <div class="container">
     <h1>My Progress</h1>
@@ -99,6 +89,20 @@
       }
     });
   </script>
+  
+      <script>
+		function showSidebar() {
+		    document.querySelector('.sidebar').style.display = 'flex';
+		}
+		
+		function hideSidebar() {
+		    document.querySelector('.sidebar').style.display = 'none';
+		}
+	</script>
+	
+	
+  
+   <jsp:include page="footer.jsp"/>
 </body>
 </html>
     

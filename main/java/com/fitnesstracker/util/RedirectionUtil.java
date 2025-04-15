@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class RedirectionUtil {
 
-	private static final String baseUrl = "/WEB-INF/pages folder/";
+	private static final String baseUrl = "/WEB-INF/pages/";
 	public static final String registerUrl = baseUrl + "register.jsp";
 	public static final String loginUrl = baseUrl + "login.jsp";
 	public static final String homeUrl = baseUrl + "home.jsp";
@@ -28,5 +28,10 @@ public class RedirectionUtil {
 		setMsgAttribute(req, msgType, msg);
 		redirectToPage(req, resp, page);
 	}
+
+	
+	
+
+	
 
 }
