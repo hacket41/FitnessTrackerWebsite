@@ -9,28 +9,38 @@
 </head>
 <body>
      <!-- FOOTER  -->
-     <footer class = "sectionforpadding">
-		<div class="col">
-			<img src="" alt="">
-			<h4>Contact</h4>
-			<p><strong>Address: </strong>Lorem ipsum dolor, sit amet consectetur adipisici</p>
-			<p><strong>Address: </strong>Lorem ipsum dolor, sit amet consectetur adipisici</p>
-			<p><strong>Address: </strong>Lorem ipsum dolor, sit amet consectetur adipisici</p>
-			<div class="follow">
-				<h4>Follow</h4>
-				<div class="icon">
-					<i class="facebook"></i>
-					<i class="twitter"></i>
-					<i class="instagram"></i>
-					<i class="pinterest"></i>
-				</div>
-			</div>
-		</div>
+   <footer class="footer">
+  <div class="footer-container">
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <p><strong>Address:</strong> Kathmandu, Nepal</p>
+      <p><strong>Phone:</strong> +977 9812345678</p>
+      <p><strong>Email:</strong> info@fitnesstracker.com</p>
+    </div>
 
-		<div class="col">
-			<h4>About</h4>
-			
-		</div>
-	</footer>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">My Meals</a></li>
+        <li><a href="#">My Progress</a></li>
+        <li><a href="#">My Workouts</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Follow Us</h4>
+      <div class="social-icons">
+        <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#"><i class="fa-brands fa-pinterest-p"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2025 Fitness Tracker | All rights reserved.</p>
+  </div>
+</footer>
 </body>
 </html>
