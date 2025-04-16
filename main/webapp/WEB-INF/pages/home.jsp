@@ -75,17 +75,14 @@
             <!-- Get Started Column -->
             <div class="column">
               <div class="section-title">GET<br>STARTED</div>
-              <p style="margin-top: 10px; color: grey;">New to DAREBEE? Start here:</p>
+              <p style="margin-top: 10px; color: grey;"> Start here:</p>
               <div class="links">
                 <p>Introduction</p>
                 <p>Workout Manual</p>
                 <p>Warmup & Stretching</p>
                 <p>How to Pick a Program</p>
                 <p>Exercise Alternatives</p>
-                <p>Certificates & Badges</p>
-                <p>Video Exercise Library</p>
-                <p>Website Functionality</p>
-                <p>Help / Ask a Question</p>
+                
               </div>
             </div>
           
@@ -98,11 +95,7 @@
                 <p>why we have no ads</p>
                 <p>team behind the project</p>
                 <p>the internet of tomorrow</p>
-                <p>local workshops</p>
-                <p>initiatives & collaborations</p>
-                <p>print a t-shirt</p>
-                <p>popular questions / answered</p>
-                <p>copyright & terms of use</p>
+               
               </div>
             </div>
           </div>

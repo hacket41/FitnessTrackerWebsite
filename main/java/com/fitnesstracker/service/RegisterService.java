@@ -53,7 +53,7 @@ public class RegisterService {
 			insertStmt.setString(2, userModel.getL_name());
 			insertStmt.setString(3, userModel.getUsername());
 			insertStmt.setString(4, userModel.getEmail());
-			insertStmt.setString(5, "2025-04-01");
+			insertStmt.setDate(5, Date.valueOf(userModel.getBirthday()));
 //			insertStmt.setDate(5, Date.valueOf(userModel.getBirthday()));
 			insertStmt.setString(6, userModel.getPassword());
 			

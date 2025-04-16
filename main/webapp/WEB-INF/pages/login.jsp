@@ -10,7 +10,7 @@
     <title>Login</title>
 </head>
 <body>
-
+	<form action="${pageContext.request.contextPath}/login" method = "post">
     <div class="login-box">
         <div class="login-header">
             <header>Login</header>
@@ -31,7 +31,7 @@
             </section>
         </div>
         <div class="input-submit">
-            <button class="submit-btn" id="submit"></button>
+            <button type= "submit" class="submit-btn" id="submit"></button>
             <label for="submit">Sign In</label>
         </div>
         <div class="sign-up-link">
@@ -39,6 +39,6 @@
         </div>
     </div>
     
- 
+ </form>
 </body>
 </html>

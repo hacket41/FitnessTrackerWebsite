@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 import jakarta.servlet.http.Part;
 
-
+//
 public class ValidationUtil {
 
 	// 1. Validate if a field is null or empty

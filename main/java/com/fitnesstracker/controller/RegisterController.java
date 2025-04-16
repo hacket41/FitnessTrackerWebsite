@@ -46,7 +46,7 @@ public class RegisterController extends HttpServlet {
 			if (isAdded == null) {
 				handleError(request, response, "Our server is under maintenance. Please try again later!");
 			} else if (isAdded) {
-				handleSuccess(request, response, "Account created successfully!", "/WEB-INF/pages/login.jsp");
+				handleSuccess(request, response, "Account created successfully", "/WEB-INF/pages/login.jsp");
 			} else {
 				handleError(request, response, "Could not register your account. Please try again later!");
 			}
