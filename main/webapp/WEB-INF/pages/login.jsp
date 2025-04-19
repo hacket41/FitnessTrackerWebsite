@@ -35,7 +35,7 @@
             <label for="submit">Sign In</label>
         </div>
         <div class="sign-up-link">
-            <p>Don't have account? <a href="${pageContext.request.contextPath}/register">Sign Up</a></p>
+            <p>Don't have account? <a href="${pageContext.request.contextPath}/register">Login</a></p>
         </div>
     </div>
     
