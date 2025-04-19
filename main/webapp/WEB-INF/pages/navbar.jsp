@@ -73,7 +73,7 @@
 		                    </a>
 		                </div>
 		            </div>
-		        </li>s
+		        </li>
 		    </c:when>
 		    <c:otherwise>
        		 <li class="hideOnMobile"><a href="${pageContext.request.contextPath}/login">Login</a></li>

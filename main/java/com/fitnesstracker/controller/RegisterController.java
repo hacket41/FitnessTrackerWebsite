@@ -55,7 +55,9 @@ public class RegisterController extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-
+	
+	
+	//method for receiving data from the register form.
 	private UserModel extractUserModel(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String fName = request.getParameter("firstName");
 		String lName = request.getParameter("lastName");

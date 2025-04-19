@@ -53,7 +53,7 @@ public class LoginController extends HttpServlet {
 				SessionUtil.setAttribute(req, "username", username);
 				if (username.equals("admin")) {
 					CookiesUtil.addCookie(resp, "role", "admin", 5 * 30);
-					resp.sendRedirect(req.getContextPath() + "/dashboard"); // Redirect to /home
+					resp.sendRedirect(req.getContextPath() + "/admin"); // Redirect to /home
 				} else {
 					CookiesUtil.addCookie(resp, "role", "student", 5 * 30);
 					resp.sendRedirect(req.getContextPath() + "/home"); // Redirect to /home

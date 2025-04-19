@@ -12,6 +12,8 @@ public class UserModel {
 	private String username;
 	private String email;
 	private LocalDate birthday;
+
+	//
 	public ProgressModel getProgress() {
 		return progress;
 	}
@@ -22,6 +24,7 @@ public class UserModel {
 
 	private String password;
 	private ProgressModel progress;
+	private String role;
 	
 	public UserModel(){
 	}
@@ -40,6 +43,7 @@ public class UserModel {
 		this.email = email;
 		this.birthday = birthday;
 		this.password = password;
+		
 	}
 	
 	public UserModel(String f_name, String l_name, String username, String email, LocalDate birthday,  String password) {
@@ -50,6 +54,8 @@ public class UserModel {
 		this.birthday = birthday;
 		this.password = password;
 	}
+
+	
 
 	public int getId() {
 		return id;
@@ -107,7 +113,13 @@ public class UserModel {
 		this.password = password;
 	}
 	
+	public String getRole(){
+		return role;
+	}
 	
+	public void setRole(String role) {
+		this.role = role;
+	}
 	
 	
 }

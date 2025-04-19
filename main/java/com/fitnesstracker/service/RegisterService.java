@@ -54,7 +54,6 @@ public class RegisterService {
 			insertStmt.setString(3, userModel.getUsername());
 			insertStmt.setString(4, userModel.getEmail());
 			insertStmt.setDate(5, Date.valueOf(userModel.getBirthday()));
-//			insertStmt.setDate(5, Date.valueOf(userModel.getBirthday()));
 			insertStmt.setString(6, userModel.getPassword());
 			
 			return insertStmt.executeUpdate() > 0;
