@@ -12,16 +12,16 @@
 <body>
     <section id="menu">
         <div class="logo">
-            <img src="${pageContext.request.contextPath}/image?name=pic1.jpg" alt="">
+            <img src="${pageContext.request.contextPath}/resources/images/pic1.jpg" alt="">
             <h2>Fitness Tracker</h2>
         </div>
         <div class="items">
         <ul>
-            <li><i class="fa-solid fa-chart-pie"></i><a href = "#">Dashboard</a></li>
-            <li><i class="fa-solid fa-list-check"></i><a href="#">Management</a>+</li>
-            <li><i class="fa-solid fa-users"></i><a href="#">Users</a></li>
-            <li><i class="fa-solid fa-chart-simple"></i><a href="#">Statistics</a></li>
-            <li><i class="fa-solid fa-gears"></i><a href="#">Settings</a></li>
+            <li><i class="fa-solid fa-chart-pie"></i><a href ="${pageContext.request.contextPath}/admin">Dashboard</a></li>
+            <li><i class="fa-solid fa-users"></i><a href="${pageContext.request.contextPath}/adminusers">Users</a></li>
+            <li><i class="fa-solid fa-chart-simple"></i><a href="${pageContext.request.contextPath}/adminstat">Statistics</a></li>
+            <li><i class="fa-solid fa-gears"></i><a href="${pageContext.request.contextPath}/admincontent">Content</a></li>
+            <li><i class="fa-solid fa-house"></i><a href="${pageContext.request.contextPath}/home">Home</a></li>
         </ul>
         </div>
     </section>
@@ -40,7 +40,7 @@
 
             <div class="profile">
                 <i class="fa-solid fa-user"></i>
-                <img src="../images/user-1.jpg" alt="">
+                <img src="${pageContext.request.contextPath}/resources/images/user-1.jpg" alt="">
             </div>
         </div>
 
@@ -95,7 +95,7 @@
                 <tbody>
                     <tr>
                         <td class="people">
-                            <img src="../images/prof-1.jpg" alt="">
+                            <img src="${pageContext.request.contextPath}/resources/images/prof-1.jpg" alt="">
                             <div class="people-de">
                                 <h5>John Doe</h5>
                                 <p>john@email.com</p>
@@ -118,7 +118,7 @@
 
                     <tr>
                         <td class="people">
-                            <img src="../images/prof-1.jpg" alt="">
+                            <img src="${pageContext.request.contextPath}/resources/images/prof-1.jpg" alt="">
                             <div class="people-de">
                                 <h5>John Doe</h5>
                                 <p>john@email.com</p>
@@ -141,7 +141,7 @@
 
                     <tr>
                         <td class="people">
-                            <img src="../images/prof-1.jpg" alt="">
+                            <img src="${pageContext.request.contextPath}/resources/images/prof-1.jpg" alt="">
                             <div class="people-de">
                                 <h5>John Doe</h5>
                                 <p>john@email.com</p>
@@ -164,7 +164,7 @@
 
                     <tr>
                         <td class="people">
-                            <img src="../images/prof-1.jpg" alt="">
+                            <img src="${pageContext.request.contextPath}/resources/images/prof-1.jpg" alt="">
                             <div class="people-de">
                                 <h5>John Doe</h5>
                                 <p>john@email.com</p>
@@ -187,7 +187,7 @@
 
                     <tr>
                         <td class="people">
-                            <img src="../images/prof-1.jpg" alt="">
+                            <img src="${pageContext.request.contextPath}/resources/images/prof-1.jpg" alt="">
                             <div class="people-de">
                                 <h5>John Doe</h5>
                                 <p>john@email.com</p>
@@ -210,7 +210,7 @@
 
                     <tr>
                         <td class="people">
-                            <img src="../images/prof-1.jpg" alt="">
+                            <img src="${pageContext.request.contextPath}/resources/images/prof-1.jpg" alt="">
                             <div class="people-de">
                                 <h5>John Doe</h5>
                                 <p>john@email.com</p>
@@ -233,7 +233,7 @@
 
                     <tr>
                         <td class="people">
-                            <img src="../images/prof-1.jpg" alt="">
+                            <img src="${pageContext.request.contextPath}/resources/images/prof-1.jpg" alt="">
                             <div class="people-de">
                                 <h5>John Doe</h5>
                                 <p>john@email.com</p>
@@ -256,7 +256,7 @@
 
                     <tr>
                         <td class="people">
-                            <img src="../images/prof-1.jpg" alt="">
+                            <img src="${pageContext.request.contextPath}/resources/images/prof-1.jpg" alt="">
                             <div class="people-de">
                                 <h5>John Doe</h5>
                                 <p>john@email.com</p>
@@ -279,7 +279,7 @@
 
                     <tr>
                         <td class="people">
-                            <img src="../images/prof-1.jpg" alt="">
+                            <img src="${pageContext.request.contextPath}/resources/images/prof-1.jpg" alt="">
                             <div class="people-de">
                                 <h5>John Doe</h5>
                                 <p>john@email.com</p>
@@ -302,7 +302,7 @@
 
                     <tr>
                         <td class="people">
-                            <img src="../images/prof-1.jpg" alt="">
+                            <img src="${pageContext.request.contextPath}/resources/images/prof-1.jpg" alt="">
                             <div class="people-de">
                                 <h5>John Doe</h5>
                                 <p>john@email.com</p>
@@ -325,7 +325,7 @@
 
                     <tr>
                         <td class="people">
-                            <img src="../images/prof-1.jpg" alt="">
+                            <img src="${pageContext.request.contextPath}/resources/images/prof-1.jpg" alt="">
                             <div class="people-de">
                                 <h5>John Doe</h5>
                                 <p>john@email.com</p>
@@ -348,7 +348,7 @@
 
                     <tr>
                         <td class="people">
-                            <img src="../images/prof-1.jpg" alt="">
+                            <img src="${pageContext.request.contextPath}/resources/images/prof-1.jpg" alt="">
                             <div class="people-de">
                                 <h5>John Doe</h5>
                                 <p>john@email.com</p>
@@ -372,7 +372,9 @@
             </table>
         </div>
     </section>
-
+	
+	
+	<!-- Diss -->
     <script>
         $('#menu-btn').click(function(){
             $('#menu').toggleClass("active");

@@ -57,8 +57,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="phone">Phone Number</label>
-                    <input type="text" id="phone" name="phone">
+                    <label for="phone">Birthday</label>
+                    <input type="date" id="date" name="date">
                 </div>
 
                 <div class="form-group">

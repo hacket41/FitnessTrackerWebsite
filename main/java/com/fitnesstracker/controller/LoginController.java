@@ -44,26 +44,29 @@ public class LoginController extends HttpServlet {
 		String username = req.getParameter("username");
 		String password = req.getParameter("password");
 
-		if (!validationUtil.isNullOrEmpty("username") && !validationUtil.isNullOrEmpty("password")) {
+		if (!validationUtil.isNullOrEmpty(username) && !validationUtil.isNullOrEmpty(password)) {
+		    
+		    UserModel userModel = new UserModel(username, password);
+		    Boolean loginStatus = loginService.loginUser(userModel);
 
-			UserModel userModel = new UserModel(username, password);
-			Boolean loginStatus = loginService.loginUser(userModel);
+		    if (loginStatus != null && loginStatus) {
+		        SessionUtil.setAttribute(req, "username", username);
 
-			if (loginStatus != null && loginStatus) {
-				SessionUtil.setAttribute(req, "username", username);
-				if (username.equals("admin")) {
-					CookiesUtil.addCookie(resp, "role", "admin", 5 * 30);
-					resp.sendRedirect(req.getContextPath() + "/admin"); // Redirect to /home
-				} else {
-					CookiesUtil.addCookie(resp, "role", "student", 5 * 30);
-					resp.sendRedirect(req.getContextPath() + "/home"); // Redirect to /home
-				}
-			} else {
-				handleLoginFailure(req, resp, loginStatus);
-			}
+		        String role = loginService.getUserRole(username); // Fetch role from DB
+
+		        if ("admin".equalsIgnoreCase(role)) {
+		            CookiesUtil.addCookie(resp, "role", "admin", 5 * 30);
+		            resp.sendRedirect(req.getContextPath() + "/admin");
+		        } else {
+		            CookiesUtil.addCookie(resp, "role", "user", 5 * 30);
+		            resp.sendRedirect(req.getContextPath() + "/home");
+		        }
+		    } else {
+		        handleLoginFailure(req, resp, loginStatus);
+		    }
 		} else {
-			redirectionUtil.setMsgAndRedirect(req, resp, "error", "Please fill all the fields!",
-					RedirectionUtil.loginUrl);
+		    redirectionUtil.setMsgAndRedirect(req, resp, "error", "Please fill all the fields!",
+		            RedirectionUtil.loginUrl);
 		}
 	}
 
@@ -81,9 +84,9 @@ public class LoginController extends HttpServlet {
 			throws ServletException, IOException {
 		String errorMessage;
 		if (loginStatus == null) {
-			errorMessage = "Our server is under maintenance. Please try again later!";
+			errorMessage = "Server is under maintenance. Please try again later.";
 		} else {
-			errorMessage = "User credential mismatch. Please try again!";
+			errorMessage = "Details invalid. Please try again!";
 		}
 		
 		

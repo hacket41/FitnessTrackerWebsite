@@ -5,22 +5,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/adminstats.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admincontent.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <title>Content</title>
 </head>
 <body>
     <section id="menu">
         <div class="logo">
-            <img src="logoone.png" alt="">
+            <img src="${pageContext.request.contextPath}/resources/images/logoone.png" alt="">
             <h2>Fitness Tracker</h2>
         </div>
         <div class="items">
         <ul>
-            <li><i class="fa-solid fa-chart-pie"></i><a href = "#">Dashboard</a></li>
-            <li><i class="fa-solid fa-users"></i><a href="#">Users</a></li>
-            <li><i class="fa-solid fa-chart-simple"></i><a href="#">Statistics</a></li>
-            <li><i class="fa-solid fa-gears"></i><a href="#">Content</a></li>
+            <li><i class="fa-solid fa-chart-pie"></i><a href ="${pageContext.request.contextPath}/admin">Dashboard</a></li>
+            <li><i class="fa-solid fa-users"></i><a href="${pageContext.request.contextPath}/adminusers">Users</a></li>
+            <li><i class="fa-solid fa-chart-simple"></i><a href="${pageContext.request.contextPath}/adminstat">Statistics</a></li>
+            <li><i class="fa-solid fa-gears"></i><a href="${pageContext.request.contextPath}/admincontent">Content</a></li>
+            <li><i class="fa-solid fa-house"></i><a href="${pageContext.request.contextPath}/home">Home</a></li>
         </ul>
         </div>
     </section>
@@ -37,7 +38,7 @@
 
             <div class="profile">
                 <i class="fa-solid fa-user"></i>
-                <img src="../profile/user-1.jpg" alt="">
+                <img src="${pageContext.request.contextPath}/resources/images/user-1.jpg" alt="">
             </div>
         </div>
 

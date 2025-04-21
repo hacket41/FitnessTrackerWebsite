@@ -11,6 +11,7 @@ public class UserModel {
 	private String l_name;
 	private String username;
 	private String email;
+	private String image_path;
 	private LocalDate birthday;
 
 	//
@@ -120,6 +121,16 @@ public class UserModel {
 	public void setRole(String role) {
 		this.role = role;
 	}
+	
+	public String getImage_path() {
+	    return image_path;
+	}
+
+	public void setImage_path(String image_path) {
+	    this.image_path = image_path;
+	}
+
+	
 	
 	
 }

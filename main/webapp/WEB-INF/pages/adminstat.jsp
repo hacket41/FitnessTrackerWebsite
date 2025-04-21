@@ -6,22 +6,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fitness Tracker Dashboard</title>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/adminstats.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/adminstat.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <section id="menu">
     <div class="logo">
-      <img src="../logoone.png" alt="">
+      <img src="${pageContext.request.contextPath}/resources/images/logoone.png" alt="">
       <h2>Fitness Tracker</h2>
     </div>
     <div class="items">
       <ul>
-        <li><i class="fa-solid fa-chart-pie"></i><a href="#">Dashboard</a></li>
-        <li><i class="fa-solid fa-users"></i><a href="#">Users</a></li>
-        <li><i class="fa-solid fa-chart-simple"></i><a href="#">Statistics</a></li>
-        <li><i class="fa-solid fa-gears"></i><a href="#">Content</a></li>
+       <li><i class="fa-solid fa-chart-pie"></i><a href ="${pageContext.request.contextPath}/admin">Dashboard</a></li>
+            <li><i class="fa-solid fa-users"></i><a href="${pageContext.request.contextPath}/adminusers">Users</a></li>
+            <li><i class="fa-solid fa-chart-simple"></i><a href="${pageContext.request.contextPath}/adminstat">Statistics</a></li>
+            <li><i class="fa-solid fa-gears"></i><a href="${pageContext.request.contextPath}/admincontent">Content</a></li>
+            <li><i class="fa-solid fa-house"></i><a href="${pageContext.request.contextPath}/home">Home</a></li>
       </ul>
     </div>
   </section>

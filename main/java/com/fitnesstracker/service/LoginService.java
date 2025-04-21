@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import com.fitnesstracker.config.DBConfig;
 import com.fitnesstracker.model.UserModel;
 import com.fitnesstracker.util.PasswordUtil;
+import com.fitnesstracker.model.RoleModel;
 
 
 /**
@@ -29,7 +30,7 @@ public class LoginService {
 		}
 	}
 	
-	
+	//GETTING usename and password for login procedure
 	public Boolean loginUser(UserModel userModel) {
 		
 		if(connectionErr) {
@@ -38,6 +39,8 @@ public class LoginService {
 		}
 		
 		String query = "SELECT username, password FROM user WHERE username = ?";
+		
+		
 		try(PreparedStatement stmt = dbConn.prepareStatement(query)){
 			stmt.setString(1, userModel.getUsername());
 			ResultSet result = stmt.executeQuery();
@@ -53,10 +56,36 @@ public class LoginService {
 		return false;
 	}
 	
+	//GETING USER FOR ADMIN PAGE REDIRECTION
 	
+	public String getUserRole(String username) {
+	    if (connectionErr) {
+	        System.out.println("Error in Connection. Try again.");
+	        return null;
+	    }
+
+	    String query = "SELECT r.role FROM roles r " +
+	                   "JOIN user u ON r.user_id = u.user_id " +
+	                   "WHERE u.username = ?";
+
+	    try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+	        stmt.setString(1, username);
+	        ResultSet rs = stmt.executeQuery();
+	        if (rs.next()) {
+	            return rs.getString("role");
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return null;
+	}
+
 	
+
+
+
 	/*
-	 * PASSWORD VALIDATION
+	 * PASSWORD VALIDATION AND DECRYPTION
 	 */
 	
 	private boolean validatePassword(ResultSet result, UserModel userModel) throws SQLException{
@@ -68,4 +97,6 @@ public class LoginService {
 		&& PasswordUtil.decrypt(dbPassword, dbUsername).equals(userModel.getPassword());
 		
 	}
+	
+	
 }
