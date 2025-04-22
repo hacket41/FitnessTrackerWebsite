@@ -32,7 +32,7 @@ public class RegisterService {
 		}
 		
 		String progressQuery = "SELECT progress_id FROM progress WHERE progress_type = ?";
-		String insertQuery = "INSERT INTO `user` (`f_name`, `l_name`, `username`, `email`, `birthday`, `password`) VALUES (?, ?, ?, ?, ?, ?);";
+		String insertQuery = "INSERT INTO `user` (`f_name`, `l_name`, `username`, `email`, `birthday`, `password`, `image_path`) VALUES (?, ?, ?, ?, ?, ?, ?);";
 		
 		
 		try(PreparedStatement programStmt = dbConn.prepareStatement(progressQuery);
@@ -55,6 +55,7 @@ public class RegisterService {
 			insertStmt.setString(4, userModel.getEmail());
 			insertStmt.setDate(5, Date.valueOf(userModel.getBirthday()));
 			insertStmt.setString(6, userModel.getPassword());
+			insertStmt.setString(7, "/resources/images/default.webp");
 			
 			return insertStmt.executeUpdate() > 0;
 		

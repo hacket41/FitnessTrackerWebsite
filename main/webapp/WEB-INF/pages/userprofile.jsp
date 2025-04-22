@@ -1,8 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-
-
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,41 +22,41 @@
             <h2>My Profile</h2>
 
             <div class="profile-pic">
-			    <c:choose>
-			        <c:when test="${not empty imagePath}">
-			            <img src="${pageContext.request.contextPath}/${imagePath}" alt="Profile" style="width:64px; height:64px; border-radius:50%; object-fit:cover;">
-			        </c:when>
-			        <c:otherwise>
-			            <div class="avatar"></div>
-			        </c:otherwise>
-			    </c:choose>
-			</div>
-
+                <c:choose>
+                    <c:when test="${not empty user.image_path}">
+                        <img src="${pageContext.request.contextPath}/${user.image_path}" alt="Profile"
+                             style="width:64px; height:64px; border-radius:50%; object-fit:cover;">
+                    </c:when>
+                    <c:otherwise>
+                        <div class="avatar"></div>
+                    </c:otherwise>
+                </c:choose>
+            </div>
 
             <form action="${pageContext.request.contextPath}/userprofile" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="firstName">First Name</label>
-                    <input type="text" id="firstName" name="firstName">
+                    <input type="text" id="firstName" name="firstName" value="${user.f_name}">
                 </div>
 
                 <div class="form-group">
                     <label for="lastName">Last Name</label>
-                    <input type="text" id="lastName" name="lastName">
+                    <input type="text" id="lastName" name="lastName" value="${user.l_name}">
                 </div>
 
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" name="username">
+                    <input type="text" id="username" name="username" value="${user.username}">
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email">
+                    <input type="email" id="email" name="email" value="${user.email}">
                 </div>
 
                 <div class="form-group">
-                    <label for="phone">Birthday</label>
-                    <input type="date" id="date" name="date">
+                    <label for="date">Birthday</label>
+                    <input type="date" id="date" name="date" value="${user.birthday}">
                 </div>
 
                 <div class="form-group">

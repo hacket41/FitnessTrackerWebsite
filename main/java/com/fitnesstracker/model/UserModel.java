@@ -6,7 +6,7 @@ import org.apache.catalina.User;
 
 public class UserModel {
 	
-	private int id;
+	private int user_id;
 	private String f_name;
 	private String l_name;
 	private String username;
@@ -35,9 +35,9 @@ public class UserModel {
 		this.password = password;
 	}
 	
-	public UserModel(int id, String f_name, String l_name, String username, String email, LocalDate birthday,  String password) {
+	public UserModel(int user_id, String f_name, String l_name, String username, String email, LocalDate birthday,  String password) {
 		super();
-		this.id = id;
+		this.user_id = user_id;
 		this.f_name = f_name;
 		this.l_name = l_name;
 		this.username = username;
@@ -58,12 +58,12 @@ public class UserModel {
 
 	
 
-	public int getId() {
-		return id;
+	public int getUserId() {
+		return user_id;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setId(int user_id) {
+		this.user_id = user_id;
 	}
 
 	public String getF_name() {

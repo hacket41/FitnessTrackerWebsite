@@ -51,7 +51,8 @@ public class LoginController extends HttpServlet {
 
 		    if (loginStatus != null && loginStatus) {
 		        SessionUtil.setAttribute(req, "username", username);
-
+		        
+		        req.getSession().setAttribute("user", loginService.getFullUserByUsername(username));
 		        String role = loginService.getUserRole(username); // Fetch role from DB
 
 		        if ("admin".equalsIgnoreCase(role)) {

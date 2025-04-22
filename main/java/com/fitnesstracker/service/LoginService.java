@@ -80,7 +80,39 @@ public class LoginService {
 	    return null;
 	}
 
-	
+	public UserModel getFullUserByUsername(String username) {
+		UserModel user = null;
+
+		try (Connection conn = DBConfig.getDbConnection()) {
+			String sql = "SELECT user_id, f_name, l_name, username, email, birthday, password, image_path FROM user WHERE username = ?";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, username);
+
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				user = new UserModel();
+				user.setId(rs.getInt("user_id"));
+				user.setF_name(rs.getString("f_name"));
+				user.setL_name(rs.getString("l_name"));
+				user.setUsername(rs.getString("username"));
+				user.setEmail(rs.getString("email"));
+
+				java.sql.Date birthdaySql = rs.getDate("birthday");
+				if (birthdaySql != null) {
+					user.setBirthday(birthdaySql.toLocalDate());
+				}
+
+				user.setPassword(rs.getString("password"));
+				user.setImage_path(rs.getString("image_path"));
+
+				
+			}
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		return user;
+	}
 
 
 
