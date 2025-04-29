@@ -59,7 +59,16 @@
 		            <div class="sub-menu-wrap" id="subMenu">
 		                <div class="sub-menu">
 		                    <div class="user-info">
-		                        <img src="${pageContext.request.contextPath}/resources/images/user.png" alt="User">
+		                       <!--  <img src="${pageContext.request.contextPath}/resources/images/user.png" alt="User">-->
+					                       <c:choose>
+			                    <c:when test="${not empty user.image_path}">
+			                        <img src="${pageContext.request.contextPath}/${user.image_path}" alt="Profile"
+			                             style="width:64px; height:64px; border-radius:50%; object-fit:cover;">
+			                    </c:when>
+			                    <c:otherwise>
+			                        <div class="avatar"></div>
+			                    </c:otherwise>
+			                </c:choose>
 		                        <h2></h2>
 		                    </div>
 		                    <hr>

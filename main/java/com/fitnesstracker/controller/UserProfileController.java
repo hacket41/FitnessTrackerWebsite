@@ -92,6 +92,7 @@ public class UserProfileController extends HttpServlet {
             stmt.setInt(7, user.getUserId());
 
             int rows = stmt.executeUpdate();
+            
             if (rows > 0) {
                 request.setAttribute("message", "Profile updated successfully.");
             } else {

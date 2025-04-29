@@ -46,7 +46,7 @@
 
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" name="username" value="${user.username}">
+                    <input type="text" id="username" name="username" value="${user.username}" readonly>
                 </div>
 
                 <div class="form-group">
