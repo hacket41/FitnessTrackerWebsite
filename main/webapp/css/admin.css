@@ -353,3 +353,11 @@ tbody tr td{
         border-collapse: collapse;
     }
 }
+
+.active p {
+    color: green;
+}
+
+.offline p {
+    color: red;
+}
