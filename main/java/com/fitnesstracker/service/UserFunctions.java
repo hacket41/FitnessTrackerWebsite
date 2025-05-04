@@ -46,4 +46,45 @@ public class UserFunctions {
         }
         return count;
     }
+    
+    public UserModel getUserById(int userId) throws SQLException, ClassNotFoundException {
+        Connection conn = DBConfig.getDbConnection();
+        String sql = "SELECT * FROM user WHERE user_id=?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setInt(1, userId);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            UserModel user = new UserModel();
+            user.setId(rs.getInt("user_id"));
+            user.setUsername(rs.getString("username"));
+            user.setF_name(rs.getString("f_name"));
+            user.setL_name(rs.getString("l_name"));
+            user.setEmail(rs.getString("email"));
+            user.setBirthday(rs.getDate("birthday").toLocalDate());
+            return user;
+        }
+        return null;
+    }
+
+    public void updateUserProfileFromAdmin(int userId, String fName, String lName, String email, String birthdayStr)
+            throws SQLException, ClassNotFoundException {
+        Connection conn = DBConfig.getDbConnection();
+        String sql = "UPDATE user SET f_name=?, l_name=?, email=?, birthday=? WHERE user_id=?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, fName);
+        stmt.setString(2, lName);
+        stmt.setString(3, email);
+        stmt.setDate(4, java.sql.Date.valueOf(birthdayStr));
+        stmt.setInt(5, userId);
+        stmt.executeUpdate();
+    }
+
+    public void deleteUser(int userId) throws SQLException, ClassNotFoundException {
+        Connection conn = DBConfig.getDbConnection();
+        String sql = "DELETE FROM user WHERE user_id=?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setInt(1, userId);
+        stmt.executeUpdate();
+    }
+
 }

@@ -33,7 +33,8 @@
                 </c:choose>
             </div>
 
-            <form action="${pageContext.request.contextPath}/userprofile" method="post" enctype="multipart/form-data">
+           <form action="${pageContext.request.contextPath}/userprofile?userId=${user.userId}" method="post" enctype="multipart/form-data">
+
                 <div class="form-group">
                     <label for="firstName">First Name</label>
                     <input type="text" id="firstName" name="firstName" value="${user.f_name}">

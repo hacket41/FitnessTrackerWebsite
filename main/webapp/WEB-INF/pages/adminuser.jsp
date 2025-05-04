@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -96,161 +97,44 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>
-                            <input type="checkbox" class="small-box">
-                        </td>
-                        <td class="people">
-                            <img src="${pageContext.request.contextPath}/resources/images/prof-1.jpg" alt="">
-                            <div class="people-de">
-                                <h5>John Doe</h5>
-                                <p>john@email.com</p>
-                            </div>
-                        </td>
+                    <c:forEach var="user" items="${userList}">
+				    <tr>
+				        <td class="people">
+				            <img src="${user.image_path}" alt="">
+				            <div class="people-de">
+				                <h5>${user.username}</h5>
+				                <p>${user.email}</p>
+				            </div>
+				        </td>
+				        <td class="people-des">
+				            <h5>${user.username}</h5>
+				            <p>${user.f_name} ${user.l_name}</p>
+				        </td>
+				        <td class="${onlineUsers.contains(user.username) ? 'active' : 'offline'}">
+						    <p>${onlineUsers.contains(user.username) ? 'Online' : 'Offline'}</p>
+						</td>
+				        <td class="role">
+						    <c:choose>
+						        <c:when test="${user.username == sessionScope.user.username}">
+						            <p>Admin</p>
+						        </c:when>
+						        <c:otherwise>
+						            <p>User</p>
+						        </c:otherwise>
+						    </c:choose>
+						</td>
 
-                        <td class="people-des">
-                            <h5>College Student</h5>
-                            <p>IT STD.</p>
-                        </td>
+				        <td class="edit">
+						    <a href="${pageContext.request.contextPath}/userprofile?userId=${user.userId}">Edit</a>
+						    |
+						    <a href="${pageContext.request.contextPath}/adminuser/delete?userId=${user.userId}" 
+						       onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
+						</td>
 
-                        <td class="active"><p>Active</p></td>
 
-                        <td class="role">
-                            <p>Admin</p>
-                        </td>
-
-                        <td class="edit"><a href="#">Edit</a></td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <input type="checkbox" class="small-box">
-                        </td>
-                        <td class="people">
-                            <img src="${pageContext.request.contextPath}/resources/images/prof-1.jpg" alt="">
-                            <div class="people-de">
-                                <h5>John Doe</h5>
-                                <p>john@email.com</p>
-                            </div>
-                        </td>
-
-                        <td class="people-des">
-                            <h5>College Student</h5>
-                            <p>IT STD.</p>
-                        </td>
-
-                        <td class="active"><p>Active</p></td>
-
-                        <td class="role">
-                            <p>Admin</p>
-                        </td>
-
-                        <td class="edit"><a href="#">Edit</a></td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <input type="checkbox" class="small-box">
-                        </td>
-                        <td class="people">
-                            <img src="${pageContext.request.contextPath}/resources/images/prof-1.jpg" alt="">
-                            <div class="people-de">
-                                <h5>John Doe</h5>
-                                <p>john@email.com</p>
-                            </div>
-                        </td>
-
-                        <td class="people-des">
-                            <h5>College Student</h5>
-                            <p>IT STD.</p>
-                        </td>
-
-                        <td class="active"><p>Active</p></td>
-
-                        <td class="role">
-                            <p>Admin</p>
-                        </td>
-
-                        <td class="edit"><a href="#">Edit</a></td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <input type="checkbox" class="small-box">
-                        </td>
-                        <td class="people">
-                            <img src="${pageContext.request.contextPath}/resources/images/prof-1.jpg" alt="">
-                            <div class="people-de">
-                                <h5>John Doe</h5>
-                                <p>john@email.com</p>
-                            </div>
-                        </td>
-
-                        <td class="people-des">
-                            <h5>College Student</h5>
-                            <p>IT STD.</p>
-                        </td>
-
-                        <td class="active"><p>Active</p></td>
-
-                        <td class="role">
-                            <p>Admin</p>
-                        </td>
-
-                        <td class="edit"><a href="#">Edit</a></td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <input type="checkbox" class="small-box">
-                        </td>
-                        <td class="people">
-                            <img src="${pageContext.request.contextPath}/resources/images/prof-1.jpg" alt="">
-                            <div class="people-de">
-                                <h5>John Doe</h5>
-                                <p>john@email.com</p>
-                            </div>
-                        </td>
-
-                        <td class="people-des">
-                            <h5>College Student</h5>
-                            <p>IT STD.</p>
-                        </td>
-
-                        <td class="active"><p>Active</p></td>
-
-                        <td class="role">
-                            <p>Admin</p>
-                        </td>
-
-                        <td class="edit"><a href="#">Edit</a></td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <input type="checkbox" class="small-box">
-                        </td>
-                        <td class="people">
-                            <img src="${pageContext.request.contextPath}/resources/images/prof-1.jpg" alt="">
-                            <div class="people-de">
-                                <h5>John Doe</h5>
-                                <p>john@email.com</p>
-                            </div>
-                        </td>
-
-                        <td class="people-des">
-                            <h5>College Student</h5>
-                            <p>IT STD.</p>
-                        </td>
-
-                        <td class="active"><p>Active</p></td>
-
-                        <td class="role">
-                            <p>Admin</p>
-                        </td>
-
-                        <td class="edit"><a href="#">Edit</a></td>
-                    </tr>
+				    </tr>
+				</c:forEach>
+				</tbody>
         </div>
     </section>
         
