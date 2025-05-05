@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Set;
+
 
 @WebServlet(asyncSupported = true, urlPatterns = { "/adminusers" })
 public class AdminUserController extends HttpServlet {
@@ -36,7 +36,7 @@ public class AdminUserController extends HttpServlet {
             request.setAttribute("userCount", userCount);
             request.getRequestDispatcher("/WEB-INF/pages/adminuser.jsp").forward(request, response);
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace(); // Handle exception properly
+            e.printStackTrace();//Exceptioon test fix
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }

@@ -55,6 +55,8 @@
                 <div class="meal-section animated slide-up" style="animation-delay: 0.6s;">
                     <h2 class="subtitle">TODAY'S MEALS</h2>
                     <div class="meal-cards" id="mealCardsContainer">
+                    
+                    
                         <!-- JSP to loop through meals -->
                         <c:if test="${empty todaysMeals}">
                             <p>No meals logged for today. Start tracking your nutrition by adding meals.</p>
@@ -75,6 +77,30 @@
                         </c:forEach>
                     </div>
                 </div>
+                
+                <div class="meal-section animated slide-up" style="animation-delay: 0.6s;">
+				    <h2>SUGGESTED MEALS</h2>
+				    <div class="meal-cards" id="mealCardsContainer">
+				        <c:if test="${empty suggestedMeals}">
+				            <p>No suggested meals available.</p>
+				        </c:if>
+				
+				        <c:forEach items="${suggestedMeals}" var="meal">
+				            <div class="meal-card">
+				                <div>
+				                    <div class="meal-name">${meal.name}</div>
+				                    <div class="meal-details">
+
+										${meal.type}
+										${meal.calories}
+										${meal.macros}
+
+				                    </div>
+				                </div>
+				            </div>
+				        </c:forEach>
+				    </div>
+				</div>
             </div>       
             
             <!-- Meal logging by JSP -->

@@ -49,12 +49,14 @@
         <div class="content-section">
             <div class="content-card">
                 <h4>Upload Meal Plan</h4>
-                <form>
-                    <input type="text" placeholder="Meal Plan Title" required>
-                    <textarea placeholder="Meal Plan Details" required></textarea>
-                    <input type="file" accept=".pdf,.doc,.docx">
-                    <button type="submit">Upload</button>
-                </form>
+				<form action="${pageContext.request.contextPath}/admincontent" method="post">
+				    <input type="text" name="mealName" placeholder="Meal Name" required>
+				    <input type="text" name="mealType" placeholder="Meal Type" required>
+				    <input type="text" name="calories" placeholder="Calories" required>
+				    <textarea name="macros" placeholder="Macros" required></textarea>
+				    <button type="submit">Upload</button>
+				</form>
+
             </div>
             <div class="content-card">
                 <h4>Upload Workout Routine</h4>

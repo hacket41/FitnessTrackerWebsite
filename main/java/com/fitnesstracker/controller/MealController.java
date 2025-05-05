@@ -1,6 +1,7 @@
 package com.fitnesstracker.controller;
 
 import com.fitnesstracker.model.Meal;
+import com.fitnesstracker.model.UploadedMeal;
 import com.fitnesstracker.config.DBConfig;
 
 import jakarta.servlet.ServletException;
@@ -36,7 +37,7 @@ public class MealController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         Integer userId = (Integer) session.getAttribute("userId");
-
+        
         if (userId == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
@@ -46,10 +47,13 @@ public class MealController extends HttpServlet {
             List<Meal> todaysMeals = getTodaysMeals(userId);
             int totalCalories = calculateTotalCalories(todaysMeals);
             double waterIntake = getWaterIntake(session);
-
+            List<UploadedMeal> suggesMeals = getSuggestedMeals();
+            
+            
             request.setAttribute("todaysMeals", todaysMeals);
             request.setAttribute("totalCalories", totalCalories);
             request.setAttribute("waterIntake", waterIntake);
+            request.setAttribute("suggestedMeals", suggesMeals);
             request.getRequestDispatcher("/WEB-INF/pages/meals.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
@@ -210,4 +214,34 @@ public class MealController extends HttpServlet {
     private int parseIntOrDefault(String value, int defaultValue) {
         return value != null && !value.trim().isEmpty() ? Integer.parseInt(value) : defaultValue;
     }
+    
+    
+    //Addition from admin upload side:
+    private List<UploadedMeal> getSuggestedMeals() {
+        List<UploadedMeal> suggestedMeals = new ArrayList<>();
+
+        try (Connection conn = DBConfig.getDbConnection();
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM uploadedmeals");
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                UploadedMeal meal = new UploadedMeal();
+                meal.setId(rs.getInt("uploadedmeals_id"));
+                meal.setName(rs.getString("uploadedmeals_name"));
+                meal.setType(rs.getString("uploadedmeal_type"));
+                meal.setCalories(rs.getInt("calories"));
+                meal.setMacros(rs.getString("macros"));//Fixingerror
+                suggestedMeals.add(meal);
+            }
+
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+
+        return suggestedMeals;
+    }
+    
+    
+    
+
 }

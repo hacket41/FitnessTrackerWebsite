@@ -36,9 +36,7 @@
                            Lets target your Upper Back, Lats and Biceps today with these
                             simple and beginner friendly Pull workout. <br>
                             BEST OF LUCK 
-                    
                     </div>
-
                 </div>
             </div>
             
