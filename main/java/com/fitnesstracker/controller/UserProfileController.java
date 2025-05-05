@@ -1,49 +1,68 @@
 package com.fitnesstracker.controller;
 
+import com.fitnesstracker.config.DBConfig;
+import com.fitnesstracker.model.UserModel;
+
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
+
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
-import com.fitnesstracker.util.ImageUtil;
-
-@WebServlet(asyncSupported = true, urlPatterns = { "/userprofile" })
-@MultipartConfig
+@WebServlet(urlPatterns = { "/userprofile" })
 public class UserProfileController extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private final ImageUtil imageUtil = new ImageUtil();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Optionally load user info from session or database to show in form
         request.getRequestDispatcher("/WEB-INF/pages/userprofile.jsp").forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        Part image = request.getPart("image");
-        String imagePath = null;
+        // Get form data
+        String f_name = request.getParameter("f_name");
+        String l_name = request.getParameter("l_name");
+        String email = request.getParameter("email");
 
-        if (image != null && image.getSize() > 0) {
-            String folder = "profile";
-            String savePath = request.getServletContext().getRealPath("/resources/images/" + folder);
+        // Get encrypted username from session
+        String encryptedUsername = (String) request.getSession().getAttribute("enc_username");
 
-            boolean uploaded = imageUtil.uploadImage(image, savePath);
+        boolean updated = false;
 
-            if (uploaded) {
-                String imageName = imageUtil.getImageNameFromPart(image);
-                imagePath = "resources/images/" + folder + "/" + imageName;
-                request.setAttribute("imagePath", imagePath);
-                request.setAttribute("message", "Image uploaded successfully.");
-            } else {
-                request.setAttribute("message", "Image upload failed.");
-            }
+        String sql = "UPDATE users SET f_name = ?, l_name = ?, email = ? WHERE username = ?";
+
+        try (Connection conn = DBConfig.getDbConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, f_name);
+            stmt.setString(2, l_name);
+            stmt.setString(3, email);
+            stmt.setString(4, encryptedUsername); // use the encrypted username
+
+            int rowsAffected = stmt.executeUpdate();
+            updated = rowsAffected > 0;
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
 
+        // Set attributes and forward to JSP
+        UserModel user = new UserModel();
+        user.setF_name(f_name);
+        user.setL_name(l_name);
+        user.setEmail(email);
+        user.setUsername(encryptedUsername); // Optional: only if needed in view
+
+        request.setAttribute("user", user);
+        request.setAttribute("message", updated ? "Profile updated successfully." : "Failed to update profile.");
         request.getRequestDispatcher("/WEB-INF/pages/userprofile.jsp").forward(request, response);
     }
 }

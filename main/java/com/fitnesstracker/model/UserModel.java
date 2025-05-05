@@ -54,6 +54,7 @@ public class UserModel {
 		this.birthday = birthday;
 		this.password = password;
 	}
+	
 
 	
 

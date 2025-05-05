@@ -102,34 +102,27 @@
         </div>
       </div>
 
-      <!-- Side Panel for Checklist -->
       <div class="checklist-section animated slide-in-right" style="animation-delay: 1s;">
         <h3 class="checklist-title">TODAY'S CHECKLIST</h3>
         
         <div class="checklist-container">
-          <div class="checklist-item">
-            <input type="checkbox" id="cardio" name="activity1">
-            <label for="cardio">30 minutes of cardio</label>
-          </div>
-          
-          <div class="checklist-item">
-            <input type="checkbox" id="strength" name="activity2">
-            <label for="strength">Strength training</label>
-          </div>
-          
-          <div class="checklist-item">
-            <input type="checkbox" id="meals" name="activity3">
-            <label for="meals">Balanced meals</label>
-          </div>
-          
-          <div class="checklist-item">
-            <input type="checkbox" id="calories" name="activity4">
-            <label for="calories">Tracked calorie intake</label>
-          </div>
+           <div id="taskList">
         </div>
         
-        <button class="btn add-task-btn">ADD TASKS</button>
-        <button class="btn">SAVE PROGRESS</button>
+        <div class="todo-controls">
+            <input type="text" id="newTaskInput" placeholder="Enter a new task...">
+            <button class="btn add-task-btn" id="addTask">ADD TASK</button>
+        </div>
+        
+        <div class="todo-controls">
+            <button class="btn" id="saveBtn">SAVE LIST</button>
+            <button class="btn" id="clearBtn">CLEAR ALL</button>
+        </div>
+        
+        <div class="status-bar" id="statusBar"></div>
+    </div>
+        </div>
+       
       </div>
       
       <section id="content" class="animated fade-in" style="animation-delay: 1.2s;">
@@ -146,14 +139,13 @@
           <img src="${pageContext.request.contextPath}/resources/images/feature.jpg" alt="Fitness progress">
         </div>
       </section>
-    </div>
   </main>
 
   <jsp:include page="footer.jsp"/>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    // Chart JS Configuration
+
     const ctx = document.getElementById('progressChart').getContext('2d');
     new Chart(ctx, {
       type: 'line',
@@ -221,33 +213,151 @@
       }
     });
 
-    // Animation on scroll
-    document.addEventListener('DOMContentLoaded', function() {
-      const animatedElements = document.querySelectorAll('.animated');
-      
-      function checkInView() {
-        animatedElements.forEach(element => {
-          const elementTop = element.getBoundingClientRect().top;
-          const elementVisible = 150;
-          
-          if (elementTop < window.innerHeight - elementVisible) {
-            element.classList.add('active');
-          }
-        });
-      }
-      
-      window.addEventListener('scroll', checkInView);
-      checkInView();
-    });
 
-    // Sidebar toggle functions
-    function showSidebar() {
-      document.querySelector('.sidebar').style.display = 'flex';
-    }
-    
-    function hideSidebar() {
-      document.querySelector('.sidebar').style.display = 'none';
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const taskList = document.getElementById('taskList');
+        const addTaskBtn = document.getElementById('addTask');
+        const newTaskInput = document.getElementById('newTaskInput');
+        const saveBtn = document.getElementById('saveBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const statusBar = document.getElementById('statusBar');
+        
+        loadTasks();
+        
+        addTaskBtn.addEventListener('click', function() {
+            addNewTask();
+        });
+        
+        newTaskInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addNewTask();
+            }
+        });
+        
+        saveBtn.addEventListener('click', function() {
+            saveTasks();
+            showStatus('Tasks saved successfully!');
+        });
+        
+        clearBtn.addEventListener('click', function() {
+            if (confirm('Are you sure you want to clear all tasks?')) {
+                taskList.innerHTML = '';
+                localStorage.removeItem('todoTasks');
+                showStatus('All tasks cleared!');
+            }
+        });
+        
+        function addNewTask(text = '') {
+            const taskText = text || newTaskInput.value.trim();
+            
+            if (taskText) {
+                const taskItem = document.createElement('div');
+                taskItem.classList.add('checklist-item', 'fade-in');
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = 'task-' + Date.now();
+                
+                const label = document.createElement('label');
+                label.htmlFor = checkbox.id;
+                label.textContent = taskText;
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.classList.add('delete-btn');
+                deleteBtn.innerHTML = '✖';
+                deleteBtn.title = 'Delete Task';
+                
+                taskItem.appendChild(checkbox);
+                taskItem.appendChild(label);
+                taskItem.appendChild(deleteBtn);
+                taskList.appendChild(taskItem);
+
+                newTaskInput.value = '';
+
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        taskItem.classList.add('completed');
+                    } else {
+                        taskItem.classList.remove('completed');
+                    }
+
+                    saveTasks();
+                    showStatus('Progress updated!');
+                });
+                
+                deleteBtn.addEventListener('click', function() {
+                    taskItem.style.opacity = '0';
+                    taskItem.style.transform = 'translateX(20px)';
+                    taskItem.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    
+                    setTimeout(() => {
+                        taskItem.remove();
+                        saveTasks();
+                        showStatus('Task removed!');
+                    }, 300);
+                });
+                
+                saveTasks();
+                showStatus('Task added!');
+                
+                newTaskInput.focus();
+            }
+        }
+        
+        function saveTasks() {
+            const tasks = [];
+            const taskItems = taskList.querySelectorAll('.checklist-item');
+            
+            taskItems.forEach(item => {
+                const checkbox = item.querySelector('input[type="checkbox"]');
+                const label = item.querySelector('label');
+                
+                tasks.push({
+                    text: label.textContent,
+                    completed: checkbox.checked
+                });
+            });
+            
+            localStorage.setItem('todoTasks', JSON.stringify(tasks));
+        }
+        
+        function loadTasks() {
+            const savedTasks = localStorage.getItem('todoTasks');
+            
+            if (savedTasks) {
+                const tasks = JSON.parse(savedTasks);
+                
+                tasks.forEach(task => {
+                    addNewTask(task.text);
+
+                    const taskItem = taskList.lastElementChild;
+                    const checkbox = taskItem.querySelector('input[type="checkbox"]');
+
+                    checkbox.checked = task.completed;
+
+                    if (task.completed) {
+                        taskItem.classList.add('completed');
+                    }
+                });
+                
+                if (tasks.length > 0) {
+                    showStatus('Your saved tasks have been loaded!');
+                }
+            }
+        }
+        
+        function showStatus(message) {
+            statusBar.textContent = message;
+            statusBar.style.opacity = '1';
+
+            setTimeout(() => {
+                statusBar.style.opacity = '0';
+                setTimeout(() => {
+                    statusBar.textContent = '';
+                }, 300);
+            }, 2000);
+        }
+    });
   </script>
 </body>
 </html>

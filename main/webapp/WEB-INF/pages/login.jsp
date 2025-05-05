@@ -18,6 +18,18 @@
                 <p class="login-subtitle">Welcome to your fitness journey</p>
             </div>
 
+            <!-- Error message section -->
+            <%
+                String error = (String) request.getAttribute("error");
+                if (error != null) {
+            %>
+                <div class="error-message animated slide-up" style="animation-delay: 0.25s; color: red; text-align: center; margin-bottom: 10px;">
+                    <%= error %>
+                </div>
+            <%
+                }
+            %>
+
             <form action="${pageContext.request.contextPath}/login" method="post">
                 <div class="input-box animated slide-up" style="animation-delay: 0.3s;">
                     <input type="text" name="username" class="input-field" placeholder="Username" autocomplete="off" required>
@@ -47,7 +59,7 @@
                 </div>
             </form>
         </div>
-        
+
         <!-- Feature illustration -->
         <div class="login-illustration animated slide-in-right" style="animation-delay: 0.4s;">
             <img src="${pageContext.request.contextPath}/resources/images/feature.jpg" alt="Fitness Journey" class="illustration-image">
@@ -57,7 +69,6 @@
             </div>
         </div>
     </div>
-    
 
     <!-- JavaScript for animations -->
     <script>

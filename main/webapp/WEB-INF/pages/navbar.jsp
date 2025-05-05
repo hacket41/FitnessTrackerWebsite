@@ -60,7 +60,7 @@
 		                <div class="sub-menu">
 		                    <div class="user-info">
 		                        <img src="${pageContext.request.contextPath}/resources/images/user.png" alt="User">
-		                        <h2>Ben Dover</h2>
+		                        <h2>${sessionScope.username}</h2>
 		                    </div>
 		                    <hr>
 		                    <a href="${pageContext.request.contextPath}/userprofile" class="sub-menu-link">

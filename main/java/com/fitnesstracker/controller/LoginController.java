@@ -15,11 +15,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-//CREATION OF LOGIN PROCESS MANAGEMENT
 @WebServlet(asyncSupported = true, urlPatterns = { "/login" })
 public class LoginController extends HttpServlet {
-	
-	
+
 	private static final long serialVersionUID = 1L;
 	private ValidationUtil validationUtil;
 	private RedirectionUtil redirectionUtil;
@@ -27,8 +25,6 @@ public class LoginController extends HttpServlet {
 
 	@Override
 	public void init() throws ServletException {
-		
-		
 		this.validationUtil = new ValidationUtil();
 		this.redirectionUtil = new RedirectionUtil();
 		this.loginService = new LoginService();
@@ -44,19 +40,21 @@ public class LoginController extends HttpServlet {
 		String username = req.getParameter("username");
 		String password = req.getParameter("password");
 
-		if (!validationUtil.isNullOrEmpty("username") && !validationUtil.isNullOrEmpty("password")) {
+		// Corrected input validation (use actual values, not strings)
+		if (!validationUtil.isNullOrEmpty(username) && !validationUtil.isNullOrEmpty(password)) {
 
 			UserModel userModel = new UserModel(username, password);
 			Boolean loginStatus = loginService.loginUser(userModel);
 
 			if (loginStatus != null && loginStatus) {
 				SessionUtil.setAttribute(req, "username", username);
-				if (username.equals("admin")) {
+
+				if ("admin".equals(username)) {
 					CookiesUtil.addCookie(resp, "role", "admin", 5 * 30);
-					resp.sendRedirect(req.getContextPath() + "/admin"); // Redirect to /home
+					resp.sendRedirect(req.getContextPath() + "/admin");
 				} else {
 					CookiesUtil.addCookie(resp, "role", "student", 5 * 30);
-					resp.sendRedirect(req.getContextPath() + "/home"); // Redirect to /home
+					resp.sendRedirect(req.getContextPath() + "/home");
 				}
 			} else {
 				handleLoginFailure(req, resp, loginStatus);
@@ -85,11 +83,8 @@ public class LoginController extends HttpServlet {
 		} else {
 			errorMessage = "User credential mismatch. Please try again!";
 		}
-		
-		
+
 		req.setAttribute("error", errorMessage);
 		req.getRequestDispatcher(RedirectionUtil.loginUrl).forward(req, resp);
-		
 	}
-
 }

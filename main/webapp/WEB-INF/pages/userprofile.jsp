@@ -1,7 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,53 +21,36 @@
         <div class="content">
             <h2>My Profile</h2>
 
+            <!-- Profile Picture (Removed the imagePath logic) -->
             <div class="profile-pic">
-			    <c:choose>
-			        <c:when test="${not empty imagePath}">
-			            <img src="${pageContext.request.contextPath}/${imagePath}" alt="Profile" style="width:64px; height:64px; border-radius:50%; object-fit:cover;">
-			        </c:when>
-			        <c:otherwise>
-			            <div class="avatar"></div>
-			        </c:otherwise>
-			    </c:choose>
-			</div>
+                <div class="avatar"></div> <!-- Placeholder for avatar -->
+            </div>
 
+            <!-- User Information Form -->
+            <form action="${pageContext.request.contextPath}/userprofile" method="post">
+                <!-- Hidden username (or user ID) -->
+                <input type="hidden" name="username" value="${user.username}"/>
 
-            <form action="${pageContext.request.contextPath}/userprofile" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="firstName">First Name</label>
-                    <input type="text" id="firstName" name="firstName">
+                    <input type="text" id="firstName" name="f_name" value="${user.f_name}" required>
                 </div>
 
                 <div class="form-group">
                     <label for="lastName">Last Name</label>
-                    <input type="text" id="lastName" name="lastName">
+                    <input type="text" id="lastName" name="l_name" value="${user.l_name}" required>
                 </div>
 
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username">
-                </div>
 
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email">
-                </div>
-
-                <div class="form-group">
-                    <label for="phone">Phone Number</label>
-                    <input type="text" id="phone" name="phone">
-                </div>
-
-                <div class="form-group">
-                    <label for="image">Upload Profile Image</label>
-                    <input type="file" id="image" name="image" accept="image/*">
-                    <p class="note">Supported formats: JPG, PNG (Max: 10MB)</p>
+                    <input type="email" id="email" name="email" value="${user.email}" required>
                 </div>
 
                 <button class="save-btn" type="submit">Save Changes</button>
             </form>
 
+            <!-- Display success/failure message -->
             <c:if test="${not empty message}">
                 <p style="margin-top: 20px; color: green;">${message}</p>
             </c:if>

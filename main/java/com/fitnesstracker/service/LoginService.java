@@ -53,6 +53,23 @@ public class LoginService {
 		return false;
 	}
 	
+	public boolean updateUserProfile(UserModel user) {
+	    String sql = "UPDATE users SET f_name=?, l_name=?, email=? WHERE username=?";
+	    try (Connection conn = DBConfig.getDbConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+	        stmt.setString(1, user.getF_name());
+	        stmt.setString(2, user.getL_name());
+	        stmt.setString(3, user.getEmail());
+	        
+
+	        int rowsUpdated = stmt.executeUpdate();
+	        return rowsUpdated > 0;
+	    } catch (SQLException | ClassNotFoundException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+	
 	
 	
 	/*
