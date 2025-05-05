@@ -57,33 +57,9 @@
                     <input type="text" placeholder="Search">
                 </div>
 
-                <div class="filter-box">
-                    <select name="filter" id="filter">
-                        <option disabled selected>Filter</option>
-                        <option value="az">A-Z</option>
-                        <option value="date">Date-Joined</option>
-                        <option value="role">Role</option>
-                    </select>
-                    <span class="dropdown-arrow">▼</span>
-                </div>
+                
         </div>
-        <div class="guest-nav">
-            <div class="drop-down">
-                <select name = "role" id="role">
-                    <option value="guest">Guest</option>
-                    <option value="basic">Basic</option>
-                    <option value="subscription">Subscription</option>
-                </select>
-            </div>
-            
-            <div class="drop-down-1">
-                <select name = "role" id="role">
-                    <option value="guest">Guest</option>
-                    <option value="basic">Basic</option>
-                    <option value="subscription">Subscription</option>
-                </select>
-            </div>
-        </div>
+        
         <div class = "board">
             <table width = "100%">
                 <thead>
@@ -125,7 +101,7 @@
 						</td>
 
 				        <td class="edit">
-						    <a href="${pageContext.request.contextPath}/userprofile?userId=${user.userId}">Edit</a>
+						    <a href="${pageContext.request.contextPath}/adminedit?userId=${user.userId}">View</a>
 						    |
 						    <a href="${pageContext.request.contextPath}/adminuser/delete?userId=${user.userId}" 
 						       onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>

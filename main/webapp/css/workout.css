@@ -117,6 +117,31 @@ main {
     margin: 30px 0 60px;
 }
 
+.meal-wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+.meal-section {
+    grid-column: span 3;
+    width: 100%;
+}
+
+.meal-cards {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 30px;
+    margin-bottom: 30px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+}
+
+
+
 .day-card {
     position: relative;
     background-color: white;
@@ -229,6 +254,43 @@ main {
     --accent-hover: #3b8ec5;
 }
 
+
+
+
+/*FlashCard*/
+
+.meal-cards:hover {
+    transform: translateY(-3px);
+}
+
+.meal-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.3s ease;
+}
+
+.meal-card:hover {
+    background-color: #f9f9f9;
+}
+
+.meal-card:last-child {
+    border-bottom: none;
+}
+
+.meal-name {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.meal-details {
+    color: #666;
+    margin-top: 5px;
+}
+
+
 /* Animation classes - Copied from meals page */
 .animated {
     opacity: 0;
@@ -296,7 +358,7 @@ main {
     }
     
     #content .image img {
-        width: 100%;
+        width: 50%;
         max-width: 500px;
         height: auto;
         margin-top: 30px;

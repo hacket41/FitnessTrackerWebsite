@@ -35,18 +35,6 @@ public class AdminUserEditController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int userId = Integer.parseInt(request.getParameter("userId"));
-        String fName = request.getParameter("firstName");
-        String lName = request.getParameter("lastName");
-        String email = request.getParameter("email");
-        String birthday = request.getParameter("birthday");
-
-        try {
-            userFunctions.updateUserProfileFromAdmin(userId, fName, lName, email, birthday);
-            response.sendRedirect(request.getContextPath() + "/adminusers");
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.sendError(500);
-        }
+       
     }
 }

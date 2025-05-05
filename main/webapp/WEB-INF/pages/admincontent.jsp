@@ -60,21 +60,14 @@
             </div>
             <div class="content-card">
                 <h4>Upload Workout Routine</h4>
-                <form>
-                    <input type="text" placeholder="Workout Title" required>
-                    <textarea placeholder="Workout Details" required></textarea>
-                    <input type="file" accept=".pdf,.doc,.docx">
-                    <button type="submit">Upload</button>
-                </form>
-            </div>
-            <div class="content-card">
-                <h4>Upload Fitness Tips</h4>
-                <form>
-                    <input type="text" placeholder="Tip Title" required>
-                    <textarea placeholder="Tip Details" required></textarea>
-                    <input type="file" accept=".pdf,.doc,.docx">
-                    <button type="submit">Upload</button>
-                </form>
+                <form action="${pageContext.request.contextPath}/admincontent" method="post">
+				    <input type="hidden" name="action" value="uploadWorkout" />
+				    <input type="text" name="workoutName" placeholder="Workout Name" required />
+				    <input type="text" name="workoutType" placeholder="Workout Type" required />
+				    <input type="text" name="workoutDuration" placeholder="Workout Duration" required />
+				    <button type="submit">Upload</button>
+				</form>
+
             </div>
         </div>
         
