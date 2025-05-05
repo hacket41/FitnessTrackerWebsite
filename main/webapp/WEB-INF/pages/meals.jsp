@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,7 +29,7 @@
                     <div class="stat-card animated fade-in">
                         <div>
                             <div>TODAY'S WATER INTAKE (Litres)</div>
-                            <div class="stat-value" id="waterIntakeValue">0</div>
+                            <div class="stat-value" id="waterIntakeValue">${waterIntake}</div>
                         </div>
                         <div class="water-icon">
                             <span class="icon">💧</span>
@@ -42,7 +43,7 @@
                     <div class="stat-card animated fade-in" style="animation-delay: 0.4s;">
                         <div>
                             <div>TODAY'S CALORIES</div>
-                            <div class="stat-value" id="caloriesValue">0</div>
+                            <div class="stat-value" id="caloriesValue">${totalCalories}</div>
                         </div>
                         <div class="calorie-icon">
                             <span class="icon">🔥</span>
@@ -54,7 +55,24 @@
                 <div class="meal-section animated slide-up" style="animation-delay: 0.6s;">
                     <h2 class="subtitle">TODAY'S MEALS</h2>
                     <div class="meal-cards" id="mealCardsContainer">
-                        <!-- JSP will insert meal cards here based on database data -->
+                        <!-- JSP to loop through meals -->
+                        <c:if test="${empty todaysMeals}">
+                            <p>No meals logged for today. Start tracking your nutrition by adding meals.</p>
+                        </c:if>
+                        
+                        <c:forEach items="${todaysMeals}" var="meal">
+                            <div class="meal-card">
+                                <div>
+                                    <div class="meal-name">${meal.mealName}</div>
+                                    <div class="meal-details">
+                                        ${meal.mealType} · ${meal.caloriesConsumed} calories · ${meal.macrosGm}g macros
+                                    </div>
+                                </div>
+                                <div class="meal-time">
+                                    ${meal.mealLogDate}
+                                </div>
+                            </div>
+                        </c:forEach>
                     </div>
                 </div>
             </div>       
@@ -63,8 +81,8 @@
             <div class="log-meal-section animated slide-in-right" style="animation-delay: 0.8s;">
                 <h3 class="log-meal-title">LOG YOUR MEAL</h3>
                 
-                <form id="mealForm" action="addMeal.jsp" method="post">
-                    <input type="text" name="mealName" class="input-field" placeholder="Enter Meal Name">
+                <form id="mealForm" action="${pageContext.request.contextPath}/addMeal" method="post">
+                    <input type="text" name="mealName" class="input-field" placeholder="Enter Meal Name" required>
                     
                     <button type="button" id="toggleMacros" class="toggle-macros">Enter Macros</button>
                     
@@ -72,36 +90,36 @@
                         <div class="macro-field">
                             <label>Protein</label>
                             <div>
-                                <input type="number" name="protein" value="0"> <span>g</span>
+                                <input type="number" name="protein" value="0" min="0"> <span>g</span>
                             </div>
                         </div>
                         
                         <div class="macro-field">
                             <label>Carbs</label>
                             <div>
-                                <input type="number" name="carbs" value="0"> <span>g</span>
+                                <input type="number" name="carbs" value="0" min="0"> <span>g</span>
                             </div>
                         </div>
                         
                         <div class="macro-field">
                             <label>Fats</label>
                             <div>
-                                <input type="number" name="fats" value="0"> <span>g</span>
+                                <input type="number" name="fats" value="0" min="0"> <span>g</span>
                             </div>
                         </div>
                         
                         <div class="macro-field">
                             <label>Calories</label>
                             <div>
-                                <input type="number" name="calories" value="0"> <span>kcal</span>
+                                <input type="number" name="calories" value="0" min="0"> <span>kcal</span>
                             </div>
                         </div>
                     </div>
                     
                     <div class="time-picker">
-                        <input type="text" name="hour" class="time-input" value="0">
+                        <input type="text" name="hour" class="time-input" value="0" pattern="[0-9]{1,2}" required>
                         <div class="time-separator">:</div>
-                        <input type="text" name="minute" class="time-input" value="00">
+                        <input type="text" name="minute" class="time-input" value="00" pattern="[0-9]{2}" required>
                         <select name="ampm" class="am-pm">
                             <option value="AM">AM</option>
                             <option value="PM">PM</option>
@@ -143,23 +161,27 @@
             }
         });
         
-        // Water intake buttons
-  
-		document.getElementById('increaseWaterBtn').addEventListener('click', function() {
-    	let currentValue = parseFloat(document.getElementById('waterIntakeValue').textContent);
-    	currentValue += 0.1;
-    	document.getElementById('waterIntakeValue').textContent = currentValue.toFixed(1);
-		});
+        // Water intake buttons - using AJAX to update on server
+        document.getElementById('increaseWaterBtn').addEventListener('click', function() {
+            updateWaterIntake('increase');
+        });
 
-		document.getElementById('decreaseWaterBtn').addEventListener('click', function() {
-    	let currentValue = parseFloat(document.getElementById('waterIntakeValue').textContent);
-    		if (currentValue > 0) {
-        	currentValue -= 0.1;
-        // Ensure value doesn’t go below 0 due to floating-point errors
-        if (currentValue < 0) currentValue = 0;
-        document.getElementById('waterIntakeValue').textContent = currentValue.toFixed(1);
-    }
-		});
+        document.getElementById('decreaseWaterBtn').addEventListener('click', function() {
+            updateWaterIntake('decrease');
+        });
+        
+        // Function to update water intake with AJAX
+        function updateWaterIntake(action) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '${pageContext.request.contextPath}/updateWater', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    document.getElementById('waterIntakeValue').textContent = xhr.responseText;
+                }
+            };
+            xhr.send('action=' + action);
+        }
 
         // Animation on scroll
         document.addEventListener('DOMContentLoaded', function() {
