@@ -21,6 +21,7 @@
         <div class="content">
             <h2>My Profile</h2>
 
+            <!-- Profile Picture -->
             <div class="profile-pic">
                 <c:choose>
                     <c:when test="${not empty user.image_path}">
@@ -33,16 +34,17 @@
                 </c:choose>
             </div>
 
-           <form action="${pageContext.request.contextPath}/userprofile?userId=${user.userId}" method="post" enctype="multipart/form-data">
+            <!-- User Information Form -->
+            <form action="${pageContext.request.contextPath}/userprofile?userId=${user.userId}" method="post" enctype="multipart/form-data">
 
                 <div class="form-group">
                     <label for="firstName">First Name</label>
-                    <input type="text" id="firstName" name="firstName" value="${user.f_name}">
+                    <input type="text" id="firstName" name="firstName" value="${user.f_name}" required>
                 </div>
 
                 <div class="form-group">
                     <label for="lastName">Last Name</label>
-                    <input type="text" id="lastName" name="lastName" value="${user.l_name}">
+                    <input type="text" id="lastName" name="lastName" value="${user.l_name}" required>
                 </div>
 
                 <div class="form-group">
@@ -52,7 +54,7 @@
 
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" value="${user.email}">
+                    <input type="email" id="email" name="email" value="${user.email}" required>
                 </div>
 
                 <div class="form-group">
@@ -69,6 +71,7 @@
                 <button class="save-btn" type="submit">Save Changes</button>
             </form>
 
+            <!-- Display success/failure message -->
             <c:if test="${not empty message}">
                 <p style="margin-top: 20px; color: green;">${message}</p>
             </c:if>

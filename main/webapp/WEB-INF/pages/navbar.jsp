@@ -16,25 +16,25 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/navbar.css" />
 </head>
 <body>
-	   <nav>
+   <nav>
        <ul class="sidebar">
-		    <li onclick="hideSidebar()">
-		        <a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="26" viewBox="0 -960 960 960" width="26" fill="001231"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></a>
-		    </li>
-		    <li><a href="${pageContext.request.contextPath}/home">Home</a></li>
-		    <li><a href="${pageContext.request.contextPath}/meals">Meals</a></li>
-		    <li><a href="${pageContext.request.contextPath}/progress">Progress</a></li>
-		    <li><a href="${pageContext.request.contextPath}/workout">Workout</a></li>
-		
-		    <c:choose>
-		        <c:when test="${not empty sessionScope.username}">
-		            <li><a href="${pageContext.request.contextPath}/userprofile">Profile</a></li>
-		        </c:when>
-		        <c:otherwise>
-		            <li><a href="${pageContext.request.contextPath}/login">Login</a></li>
-		        </c:otherwise>
-		    </c:choose>
-		</ul>
+            <li onclick="hideSidebar()">
+                <a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="26" viewBox="0 -960 960 960" width="26" fill="001231"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></a>
+            </li>
+            <li><a href="${pageContext.request.contextPath}/home">Home</a></li>
+            <li><a href="${pageContext.request.contextPath}/meals">Meals</a></li>
+            <li><a href="${pageContext.request.contextPath}/progress">Progress</a></li>
+            <li><a href="${pageContext.request.contextPath}/workout">Workout</a></li>
+        
+            <c:choose>
+                <c:when test="${not empty sessionScope.username}">
+                    <li><a href="${pageContext.request.contextPath}/userprofile">Profile</a></li>
+                </c:when>
+                <c:otherwise>
+                    <li><a href="${pageContext.request.contextPath}/login">Login</a></li>
+                </c:otherwise>
+            </c:choose>
+        </ul>
         
         <ul class="sidebar">
             <li onclick = "hideSidebar()"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="26" viewBox="0 -960 960 960" width="26" fill="001231"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224con-224-224 224Z"/></svg></a></li>
@@ -43,7 +43,6 @@
             <li><a href="${pageContext.request.contextPath}/progress">Progress</a></li>
             <li><a href="${pageContext.request.contextPath}/workout">Workouts</a></li>
             <li><a href="${pageContext.request.contextPath}/login">Login</a></li>
-            
         </ul>
         <ul>
             <li class="hideOnMobile logo"><a href="#"><span class="be">Be</span><span class="fit">Fit</span></a>
@@ -52,49 +51,46 @@
             <li class="hideOnMobile"><a href="${pageContext.request.contextPath}/meals">Meals</a></li>
             <li class="hideOnMobile"><a href="${pageContext.request.contextPath}/progress">Progress</a></li>
             <li class="hideOnMobile"><a href="${pageContext.request.contextPath}/workout">Workout</a></li>
-            <li><c:choose>
-		    <c:when test="${not empty sessionScope.username}">
-		        <li class="hideOnMobile login-dropdown-wrapper" onclick="toggleMenu()">
-		            <a href="#">Profile</a>
-		            <div class="sub-menu-wrap" id="subMenu">
-		                <div class="sub-menu">
-		                    <div class="user-info">
-		                       <!--  <img src="${pageContext.request.contextPath}/resources/images/user.png" alt="User">-->
-					                       <c:choose>
-			                    <c:when test="${not empty user.image_path}">
-			                        <img src="${pageContext.request.contextPath}/${user.image_path}" alt="Profile"
-			                             style="width:64px; height:64px; border-radius:50%; object-fit:cover;">
-			                    </c:when>
-			                    <c:otherwise>
-			                        <div class="avatar"></div>
-			                    </c:otherwise>
-			                </c:choose>
-		                        <h2></h2>
-		                    </div>
-		                    <hr>
-		                    <a href="${pageContext.request.contextPath}/userprofile" class="sub-menu-link">
-		                        <i class="fa-solid fa-user"></i><p>Profile</p>
-		                        <span>></span>
-		                    </a>
-		                    <a href="${pageContext.request.contextPath}/logout" class="sub-menu-link">
-		                        <i class="fa-solid fa-right-from-bracket"></i><p>Log-Out</p>
-		                        <span>></span>
-		                    </a>
-		                </div>
-		            </div>
-		        </li>
-		    </c:when>
-		    <c:otherwise>
-       		 <li class="hideOnMobile"><a href="${pageContext.request.contextPath}/login">Login</a></li>
-    			</c:otherwise>
-			</c:choose>
-			<li>
-           	
+            <c:choose>
+                <c:when test="${not empty sessionScope.username}">
+                    <li class="hideOnMobile login-dropdown-wrapper" onclick="toggleMenu()">
+                        <a href="#">Profile</a>
+                        <div class="sub-menu-wrap" id="subMenu">
+                            <div class="sub-menu">
+                                <div class="user-info">
+                                    <c:choose>
+                                        <c:when test="${not empty user.image_path}">
+                                            <img src="${pageContext.request.contextPath}/${user.image_path}" alt="Profile"
+                                                 style="width:64px; height:64px; border-radius:50%; object-fit:cover;">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="${pageContext.request.contextPath}/resources/images/user.png" alt="User">
+                                        </c:otherwise>
+                                    </c:choose>
+                                    <h2>${sessionScope.username}</h2>
+                                </div>
+                                <hr>
+                                <a href="${pageContext.request.contextPath}/userprofile" class="sub-menu-link">
+                                    <i class="fa-solid fa-user"></i><p>Profile</p>
+                                    <span>></span>
+                                </a>
+                                <a href="${pageContext.request.contextPath}/logout" class="sub-menu-link">
+                                    <i class="fa-solid fa-right-from-bracket"></i><p>Log-Out</p>
+                                    <span>></span>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                </c:when>
+                <c:otherwise>
+                    <li class="hideOnMobile"><a href="${pageContext.request.contextPath}/login">Login</a></li>
+                </c:otherwise>
+            </c:choose>
             <li onclick="showSidebar()"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="26" viewBox="0 -960 960 960" width="26" fill="000000"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg></a></li>
         </ul>    
     </nav>
     
-	<script>
+    <script>
         function showSidebar() {
             document.querySelector('.sidebar').style.display = 'flex';
         }
@@ -107,8 +103,5 @@
             document.getElementById("subMenu").classList.toggle("open-menu");
         }
     </script>
-           
-    
-	
 </body>
 </html>

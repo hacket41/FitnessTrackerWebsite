@@ -17,9 +17,8 @@
                 <header>LOGIN</header>
                 <p class="login-subtitle">Welcome to your fitness journey</p>
             </div>
-			
-			
-			<!-- Error message section -->
+
+            <!-- Error message section -->
             <%
                 String error = (String) request.getAttribute("error");
                 if (error != null) {
@@ -30,68 +29,65 @@
             <%
                 }
             %>
-			
-			
-            <form action="${pageContext.request.contextPath}/login" method="post">
-                <div class="input-box animated slide-up" style="animation-delay: 0.3s;">
-                    <input type="text" name="username" class="input-field" placeholder="Username" autocomplete="off" required>
-                </div>
-
-                <div class="input-box animated slide-up" style="animation-delay: 0.4s;">
-                    <input type="password" name="password" class="input-field" placeholder="Password" autocomplete="off" required>
-                </div>
-
-                <div class="forgot animated slide-up" style="animation-delay: 0.5s;">
-                    <section>
-                        <input type="checkbox" id="check" name="remember">
-                        <label for="check">Remember me</label>
-                    </section>
-                    <section>
-                        <a href="${pageContext.request.contextPath}/forgot-password">Forgot password</a>
-                    </section>
-                </div>
-
-                <div class="input-submit animated slide-up" style="animation-delay: 0.6s;">
-                    <button type="submit" class="submit-btn" id="submit"></button>
-                    <label for="submit">Sign In</label>
-                </div>
-
-                <div class="sign-up-link animated slide-up" style="animation-delay: 0.7s;">
-                    <p>Don't have account? <a href="${pageContext.request.contextPath}/register">Sign Up</a></p>
-                </div>
-            </form>
-        </div>
-        
-        <!-- Feature illustration -->
-        <div class="login-illustration animated slide-in-right" style="animation-delay: 0.4s;">
-            <img src="${pageContext.request.contextPath}/resources/images/feature.jpg" alt="Fitness Journey" class="illustration-image">
-            <div class="illustration-text">
-                <h2>FITNESS JOURNEY</h2>
-                <p>Track your progress and achieve your goals</p>
-            </div>
-        </div>
+<form action="${pageContext.request.contextPath}/login" method="post">
+    <div class="input-box animated slide-up" style="animation-delay: 0.3s;">
+        <input type="text" name="username" class="input-field" placeholder="Username" autocomplete="off" required>
     </div>
-    
 
-    <!-- JavaScript for animations -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const animatedElements = document.querySelectorAll('.animated');
+    <div class="input-box animated slide-up" style="animation-delay: 0.4s;">
+        <input type="password" name="password" class="input-field" placeholder="Password" autocomplete="off" required>
+    </div>
 
-            function checkInView() {
-                animatedElements.forEach(element => {
-                    const elementTop = element.getBoundingClientRect().top;
-                    const elementVisible = 150;
+    <div class="forgot animated slide-up" style="animation-delay: 0.5s;">
+        <section>
+            <input type="checkbox" id="check" name="remember">
+            <label for="check">Remember me</label>
+        </section>
+        <section>
+            <a href="${pageContext.request.contextPath}/forgot-password">Forgot password</a>
+        </section>
+    </div>
 
-                    if (elementTop < window.innerHeight - elementVisible) {
-                        element.classList.add('active');
-                    }
-                });
-            }
+    <div class="input-submit animated slide-up" style="animation-delay: 0.6s;">
+        <button type="submit" class="submit-btn" id="submit"></button>
+        <label for="submit">Sign In</label>
+    </div>
 
-            window.addEventListener('scroll', checkInView);
-            checkInView(); // Run once on page load to activate visible elements
-        });
-    </script>
+    <div class="sign-up-link animated slide-up" style="animation-delay: 0.7s;">
+        <p>Don't have account? <a href="${pageContext.request.contextPath}/register">Sign Up</a></p>
+    </div>
+</form>
+</div>
+
+<!-- Feature illustration -->
+<div class="login-illustration animated slide-in-right" style="animation-delay: 0.4s;">
+    <img src="${pageContext.request.contextPath}/resources/images/feature.jpg" alt="Fitness Journey" class="illustration-image">
+    <div class="illustration-text">
+        <h2>FITNESS JOURNEY</h2>
+        <p>Track your progress and achieve your goals</p>
+    </div>
+</div>
+</div>
+
+<!-- JavaScript for animations -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const animatedElements = document.querySelectorAll('.animated');
+
+        function checkInView() {
+            animatedElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', checkInView);
+        checkInView(); // Run once on page load to activate visible elements
+    });
+</script>
 </body>
 </html>

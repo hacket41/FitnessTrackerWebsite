@@ -1,5 +1,10 @@
 package com.fitnesstracker.controller;
 
+import com.fitnesstracker.config.DBConfig;
+import com.fitnesstracker.model.UserModel;
+import com.fitnesstracker.service.UserFunctions;
+import com.fitnesstracker.util.ImageUtil;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,12 +17,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
-
-import com.fitnesstracker.config.DBConfig;
-import com.fitnesstracker.model.UserModel;
-import com.fitnesstracker.util.ImageUtil;
-import com.fitnesstracker.service.UserFunctions;
 
 @WebServlet(asyncSupported = true, urlPatterns = { "/userprofile" })
 @MultipartConfig
@@ -39,7 +40,7 @@ public class UserProfileController extends HttpServlet {
                 String sql = "SELECT * FROM user WHERE user_id=?";
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 stmt.setInt(1, userId);
-                var rs = stmt.executeQuery();
+                ResultSet rs = stmt.executeQuery();
 
                 if (rs.next()) {
                     user = new UserModel();
@@ -67,7 +68,6 @@ public class UserProfileController extends HttpServlet {
         request.setAttribute("user", user);
         request.getRequestDispatcher("/WEB-INF/pages/userprofile.jsp").forward(request, response);
     }
-
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -127,7 +127,11 @@ public class UserProfileController extends HttpServlet {
                 stmt.setString(1, user.getF_name());
                 stmt.setString(2, user.getL_name());
                 stmt.setString(3, user.getEmail());
-                stmt.setDate(4, java.sql.Date.valueOf(user.getBirthday()));
+                if (user.getBirthday() != null) {
+                    stmt.setDate(4, java.sql.Date.valueOf(user.getBirthday()));
+                } else {
+                    stmt.setNull(4, java.sql.Types.DATE);
+                }
                 stmt.setString(5, user.getImage_path());
                 stmt.setInt(6, user.getUserId());
 
@@ -139,7 +143,7 @@ public class UserProfileController extends HttpServlet {
                     request.setAttribute("message", "Failed to update profile.");
                 }
 
-            } catch (Exception e) {
+            } catch (SQLException | ClassNotFoundException e) {
                 e.printStackTrace();
                 request.setAttribute("message", "Error updating profile.");
             }

@@ -81,8 +81,7 @@ public class LoginController extends HttpServlet {
     }
 
     /**
-     * Handles login failures by setting attributes and forwarding to the login
-     * page.
+     * Handles login failures by setting attributes and forwarding to the login page.
      *
      * @param req         HttpServletRequest object
      * @param resp        HttpServletResponse object
