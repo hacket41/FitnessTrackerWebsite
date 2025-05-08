@@ -530,3 +530,32 @@ main {
         font-size: 1.5rem;
     }
 }
+
+.meal-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+}
+
+.delete-btn {
+    background-color: #ff6b6b !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    font-size: 1.4em !important;
+    padding: 8px 12px !important;
+    transition: all 0.3s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+}
+
+.delete-btn:hover {
+    background-color: #333333 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+}
