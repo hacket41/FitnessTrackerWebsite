@@ -21,11 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Servlet implementation class MealController
- * Handles all meal-related operations including displaying, adding, and updating meals
- */
-@WebServlet(urlPatterns = { "/meals", "/addMeal", "/updateWater" })
+@WebServlet(urlPatterns = { "/meals", "/addMeal", "/updateWater", "/deleteMeal" })
 public class MealController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -46,10 +42,9 @@ public class MealController extends HttpServlet {
         try {
             List<Meal> todaysMeals = getTodaysMeals(userId);
             int totalCalories = calculateTotalCalories(todaysMeals);
-            double waterIntake = getWaterIntake(session);
+            double waterIntake = getWaterIntakeFromDatabase(userId, session);
             List<UploadedMeal> suggesMeals = getSuggestedMeals();
-            
-            
+
             request.setAttribute("todaysMeals", todaysMeals);
             request.setAttribute("totalCalories", totalCalories);
             request.setAttribute("waterIntake", waterIntake);
@@ -75,7 +70,9 @@ public class MealController extends HttpServlet {
         if (requestURI.contains("/addMeal")) {
             addMeal(request, response, userId);
         } else if (requestURI.contains("/updateWater")) {
-            updateWaterIntake(request, response, session);
+            updateWaterIntake(request, response, session, userId);
+        } else if (requestURI.contains("/deleteMeal")) {
+            deleteMeal(request, response, userId);
         } else {
             doGet(request, response);
         }
@@ -102,21 +99,22 @@ public class MealController extends HttpServlet {
             int fats = parseIntOrDefault(fatsStr, 0);
             int calories = parseIntOrDefault(caloriesStr, (protein * 4) + (carbs * 4) + (fats * 9));
 
-            int macros = protein + carbs + fats;
             String mealType = determineMealType(hour, ampm, protein, carbs, fats);
             String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
             try (Connection conn = DBConfig.getDbConnection();
                  PreparedStatement stmt = conn.prepareStatement(
-                         "INSERT INTO meal (meal_name, meal_log_date, meal_type, calories_consumed, macros_gm, user_id) " +
-                         "VALUES (?, ?, ?, ?, ?, ?)")) {
+                         "INSERT INTO meal (meal_name, meal_log_date, meal_type, calories_consumed, protein_gm, carbs_gm, fats_gm, user_id) " +
+                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
 
                 stmt.setString(1, mealName);
                 stmt.setString(2, currentDate);
                 stmt.setString(3, mealType);
                 stmt.setInt(4, calories);
-                stmt.setInt(5, macros);
-                stmt.setInt(6, userId);
+                stmt.setInt(5, protein);
+                stmt.setInt(6, carbs);
+                stmt.setInt(7, fats);
+                stmt.setInt(8, userId);
 
                 stmt.executeUpdate();
             } catch (ClassNotFoundException | SQLException e) {
@@ -131,10 +129,10 @@ public class MealController extends HttpServlet {
         }
     }
 
-    private void updateWaterIntake(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
+    private void updateWaterIntake(HttpServletRequest request, HttpServletResponse response, HttpSession session, int userId) throws IOException {
         try {
             String action = request.getParameter("action");
-            double currentIntake = getWaterIntake(session);
+            double currentIntake = getWaterIntakeFromDatabase(userId, session);
 
             if ("increase".equals(action)) {
                 currentIntake += 0.1;
@@ -145,11 +143,61 @@ public class MealController extends HttpServlet {
             currentIntake = Math.round(currentIntake * 10.0) / 10.0;
             session.setAttribute("waterIntake", currentIntake);
 
+            try (Connection conn = DBConfig.getDbConnection();
+                 PreparedStatement stmt = conn.prepareStatement(
+                         "INSERT INTO water_intake (user_id, intake_date, litres) VALUES (?, ?, ?) " +
+                         "ON DUPLICATE KEY UPDATE litres = ?")) {
+                String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+                stmt.setInt(1, userId);
+                stmt.setString(2, currentDate);
+                stmt.setDouble(3, currentIntake);
+                stmt.setDouble(4, currentIntake);
+                stmt.executeUpdate();
+            } catch (ClassNotFoundException | SQLException e) {
+                e.printStackTrace();
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid water intake update");
+                return;
+            }
+
             response.setContentType("text/plain");
             response.getWriter().write(String.valueOf(currentIntake));
         } catch (Exception e) {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid water intake update");
+        }
+    }
+
+    private void deleteMeal(HttpServletRequest request, HttpServletResponse response, int userId) throws IOException {
+        String mealIdStr = request.getParameter("mealId");
+        
+        if (mealIdStr == null || mealIdStr.trim().isEmpty()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Meal ID is required");
+            return;
+        }
+
+        try {
+            int mealId = Integer.parseInt(mealIdStr);
+            
+            try (Connection conn = DBConfig.getDbConnection();
+                 PreparedStatement stmt = conn.prepareStatement(
+                         "DELETE FROM meal WHERE meal_id = ? AND user_id = ?")) {
+                
+                stmt.setInt(1, mealId);
+                stmt.setInt(2, userId);
+                
+                int rowsAffected = stmt.executeUpdate();
+                
+                if (rowsAffected > 0) {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                } else {
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND, "Meal not found or unauthorized");
+                }
+            }
+        } catch (NumberFormatException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid meal ID format");
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error occurred");
         }
     }
 
@@ -172,7 +220,9 @@ public class MealController extends HttpServlet {
                     meal.setMealLogDate(rs.getString("meal_log_date"));
                     meal.setMealType(rs.getString("meal_type"));
                     meal.setCaloriesConsumed(rs.getInt("calories_consumed"));
-                    meal.setMacrosGm(rs.getInt("macros_gm"));
+                    meal.setProteinGm(rs.getInt("protein_gm"));
+                    meal.setCarbsGm(rs.getInt("carbs_gm"));
+                    meal.setFatsGm(rs.getInt("fats_gm"));
                     meal.setUserId(rs.getInt("user_id"));
                     meals.add(meal);
                 }
@@ -183,17 +233,33 @@ public class MealController extends HttpServlet {
         return meals;
     }
 
-    private int calculateTotalCalories(List<Meal> meals) {
-        return meals.stream().mapToInt(Meal::getCaloriesConsumed).sum();
-    }
-
-    private double getWaterIntake(HttpSession session) {
+    private double getWaterIntakeFromDatabase(int userId, HttpSession session) {
         Double waterIntake = (Double) session.getAttribute("waterIntake");
         if (waterIntake == null) {
-            waterIntake = 0.0;
+            String todayDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+            try (Connection conn = DBConfig.getDbConnection();
+                 PreparedStatement stmt = conn.prepareStatement(
+                         "SELECT litres FROM water_intake WHERE user_id = ? AND intake_date = ?")) {
+                stmt.setInt(1, userId);
+                stmt.setString(2, todayDate);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        waterIntake = rs.getDouble("litres");
+                    } else {
+                        waterIntake = 0.0;
+                    }
+                }
+            } catch (ClassNotFoundException | SQLException e) {
+                e.printStackTrace();
+                waterIntake = 0.0;
+            }
             session.setAttribute("waterIntake", waterIntake);
         }
         return waterIntake;
+    }
+
+    private int calculateTotalCalories(List<Meal> meals) {
+        return meals.stream().mapToInt(Meal::getCaloriesConsumed).sum();
     }
 
     private String determineMealType(String hour, String ampm, int protein, int carbs, int fats) {
@@ -214,9 +280,7 @@ public class MealController extends HttpServlet {
     private int parseIntOrDefault(String value, int defaultValue) {
         return value != null && !value.trim().isEmpty() ? Integer.parseInt(value) : defaultValue;
     }
-    
-    
-    //Addition from admin upload side:
+
     private List<UploadedMeal> getSuggestedMeals() {
         List<UploadedMeal> suggestedMeals = new ArrayList<>();
 
@@ -230,7 +294,7 @@ public class MealController extends HttpServlet {
                 meal.setName(rs.getString("uploadedmeals_name"));
                 meal.setType(rs.getString("uploadedmeal_type"));
                 meal.setCalories(rs.getInt("calories"));
-                meal.setMacros(rs.getString("macros"));//Fixingerror
+                meal.setMacros(rs.getString("macros"));
                 suggestedMeals.add(meal);
             }
 
@@ -240,8 +304,4 @@ public class MealController extends HttpServlet {
 
         return suggestedMeals;
     }
-    
-    
-    
-
 }

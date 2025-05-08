@@ -9,20 +9,24 @@ public class Meal {
     private String mealLogDate;
     private String mealType;
     private int caloriesConsumed;
-    private int macrosGm;
+    private int proteinGm;
+    private int carbsGm;
+    private int fatsGm;
     private int userId;
     
     // Constructors
     public Meal() {
     }
     
-    public Meal(int mealId, String mealName, String mealLogDate, String mealType, int caloriesConsumed, int macrosGm, int userId) {
+    public Meal(int mealId, String mealName, String mealLogDate, String mealType, int caloriesConsumed, int proteinGm, int carbsGm, int fatsGm, int userId) {
         this.mealId = mealId;
         this.mealName = mealName;
         this.mealLogDate = mealLogDate;
         this.mealType = mealType;
         this.caloriesConsumed = caloriesConsumed;
-        this.macrosGm = macrosGm;
+        this.proteinGm = proteinGm;
+        this.carbsGm = carbsGm;
+        this.fatsGm = fatsGm;
         this.userId = userId;
     }
     
@@ -67,12 +71,28 @@ public class Meal {
         this.caloriesConsumed = caloriesConsumed;
     }
     
-    public int getMacrosGm() {
-        return macrosGm;
+    public int getProteinGm() {
+        return proteinGm;
     }
     
-    public void setMacrosGm(int macrosGm) {
-        this.macrosGm = macrosGm;
+    public void setProteinGm(int proteinGm) {
+        this.proteinGm = proteinGm;
+    }
+    
+    public int getCarbsGm() {
+        return carbsGm;
+    }
+    
+    public void setCarbsGm(int carbsGm) {
+        this.carbsGm = carbsGm;
+    }
+    
+    public int getFatsGm() {
+        return fatsGm;
+    }
+    
+    public void setFatsGm(int fatsGm) {
+        this.fatsGm = fatsGm;
     }
     
     public int getUserId() {
@@ -83,11 +103,10 @@ public class Meal {
         this.userId = userId;
     }
     
-     
     @Override
     public String toString() {
         return "Meal [mealId=" + mealId + ", mealName=" + mealName + ", mealLogDate=" + mealLogDate + ", mealType="
-                + mealType + ", caloriesConsumed=" + caloriesConsumed + ", macrosGm=" + macrosGm + ", userId=" + userId
-                + "]";
+                + mealType + ", caloriesConsumed=" + caloriesConsumed + ", proteinGm=" + proteinGm + ", carbsGm=" + carbsGm
+                + ", fatsGm=" + fatsGm + ", userId=" + userId + "]";
     }
 }

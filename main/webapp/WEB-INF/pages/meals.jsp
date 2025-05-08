@@ -55,8 +55,6 @@
                 <div class="meal-section animated slide-up" style="animation-delay: 0.6s;">
                     <h2 class="subtitle">TODAY'S MEALS</h2>
                     <div class="meal-cards" id="mealCardsContainer">
-                    
-                    
                         <!-- JSP to loop through meals -->
                         <c:if test="${empty todaysMeals}">
                             <p>No meals logged for today. Start tracking your nutrition by adding meals.</p>
@@ -67,40 +65,40 @@
                                 <div>
                                     <div class="meal-name">${meal.mealName}</div>
                                     <div class="meal-details">
-                                        ${meal.mealType} · ${meal.caloriesConsumed} calories · ${meal.macrosGm}g macros
+                                        ${meal.mealType} · ${meal.caloriesConsumed} calories · Protein: ${meal.proteinGm}g, Carbs: ${meal.carbsGm}g, Fats: ${meal.fatsGm}g
                                     </div>
                                 </div>
-                                <div class="meal-time">
-                                    ${meal.mealLogDate}
+                                <div class="meal-actions">
+                                    <div class="meal-time">
+                                        ${meal.mealLogDate}
+                                    </div>
+                                    <button class="delete-btn" onclick="deleteMeal(${meal.mealId})">🗑️</button>
                                 </div>
                             </div>
                         </c:forEach>
                     </div>
                 </div>
                 
+                <!-- Suggested Meals section -->
                 <div class="meal-section animated slide-up" style="animation-delay: 0.6s;">
-				    <h2>SUGGESTED MEALS</h2>
-				    <div class="meal-cards" id="mealCardsContainer">
-				        <c:if test="${empty suggestedMeals}">
-				            <p>No suggested meals available.</p>
-				        </c:if>
-				
-				        <c:forEach items="${suggestedMeals}" var="meal">
-				            <div class="meal-card">
-				                <div>
-				                    <div class="meal-name">${meal.name}</div>
-				                    <div class="meal-details">
-
-										${meal.type}
-										${meal.calories}
-										${meal.macros}
-
-				                    </div>
-				                </div>
-				            </div>
-				        </c:forEach>
-				    </div>
-				</div>
+                    <h2>SUGGESTED MEALS</h2>
+                    <div class="meal-cards" id="suggestedMealCardsContainer">
+                        <c:if test="${empty suggestedMeals}">
+                            <p>No suggested meals available.</p>
+                        </c:if>
+                
+                        <c:forEach items="${suggestedMeals}" var="meal">
+                            <div class="meal-card">
+                                <div>
+                                    <div class="meal-name">${meal.mealName}</div>
+                                    <div class="meal-details">
+                                        ${meal.mealType} · ${meal.caloriesConsumed} calories  calories · Protein: ${meal.proteinGm}g, Carbs: ${meal.carbsGm}g, Fats: ${meal.fatsGm}g
+                                    </div>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
             </div>       
             
             <!-- Meal logging by JSP -->
@@ -110,35 +108,31 @@
                 <form id="mealForm" action="${pageContext.request.contextPath}/addMeal" method="post">
                     <input type="text" name="mealName" class="input-field" placeholder="Enter Meal Name" required>
                     
-                    <button type="button" id="toggleMacros" class="toggle-macros">Enter Macros</button>
+                    <div class="macro-field">
+                        <label>Protein</label>
+                        <div>
+                            <input type="number" name="protein" value="0" min="0"> <span>g</span>
+                        </div>
+                    </div>
                     
-                    <div id="macroFields" style="display: none;">
-                        <div class="macro-field">
-                            <label>Protein</label>
-                            <div>
-                                <input type="number" name="protein" value="0" min="0"> <span>g</span>
-                            </div>
+                    <div class="macro-field">
+                        <label>Carbs</label>
+                        <div>
+                            <input type="number" name="carbs" value="0" min="0"> <span>g</span>
                         </div>
-                        
-                        <div class="macro-field">
-                            <label>Carbs</label>
-                            <div>
-                                <input type="number" name="carbs" value="0" min="0"> <span>g</span>
-                            </div>
+                    </div>
+                    
+                    <div class="macro-field">
+                        <label>Fats</label>
+                        <div>
+                            <input type="number" name="fats" value="0" min="0"> <span>g</span>
                         </div>
-                        
-                        <div class="macro-field">
-                            <label>Fats</label>
-                            <div>
-                                <input type="number" name="fats" value="0" min="0"> <span>g</span>
-                            </div>
-                        </div>
-                        
-                        <div class="macro-field">
-                            <label>Calories</label>
-                            <div>
-                                <input type="number" name="calories" value="0" min="0"> <span>kcal</span>
-                            </div>
+                    </div>
+                    
+                    <div class="macro-field">
+                        <label>Calories</label>
+                        <div>
+                            <input type="number" name="calories" value="0" min="0"> <span>kcal</span>
                         </div>
                     </div>
                     
@@ -175,18 +169,6 @@
 
     <!--Javascript-->
     <script>
-        // Toggle macro fields
-        document.getElementById('toggleMacros').addEventListener('click', function() {
-            const macroFields = document.getElementById('macroFields');
-            if (macroFields.style.display === 'none') {
-                macroFields.style.display = 'block';
-                this.textContent = 'Hide Macros';
-            } else {
-                macroFields.style.display = 'none';
-                this.textContent = 'Enter Macros';
-            }
-        });
-        
         // Water intake buttons - using AJAX to update on server
         document.getElementById('increaseWaterBtn').addEventListener('click', function() {
             updateWaterIntake('increase');
@@ -209,6 +191,26 @@
             xhr.send('action=' + action);
         }
 
+        // Function to delete a meal
+        function deleteMeal(mealId) {
+            if (confirm('Are you sure you want to delete this meal?')) {
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '${pageContext.request.contextPath}/deleteMeal', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            // Reload the page to show updated meal list
+                            window.location.reload();
+                        } else {
+                            alert('Error deleting meal: ' + xhr.responseText);
+                        }
+                    }
+                };
+                xhr.send('mealId=' + mealId);
+            }
+        }
+
         // Animation on scroll
         document.addEventListener('DOMContentLoaded', function() {
             const animatedElements = document.querySelectorAll('.animated');
@@ -228,7 +230,6 @@
             checkInView();
         });
     </script>
-        <jsp:include page = "footer.jsp"/>
-    
+    <jsp:include page = "footer.jsp"/>
 </body>
 </html>
