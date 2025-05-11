@@ -90,10 +90,10 @@
                         <c:forEach items="${suggestedMeals}" var="meal">
                             <div class="meal-card">
                                 <div>
-                                    <div class="meal-name">${meal.mealName}</div>
+                                    <div class="meal-name">${meal.name}</div>
                                     <div class="meal-details">
-                                        ${meal.mealType} · ${meal.caloriesConsumed} calories  calories · Protein: ${meal.proteinGm}g, Carbs: ${meal.carbsGm}g, Fats: ${meal.fatsGm}g
-                                    </div>
+									    ${meal.type} · ${meal.calories} calories · Macros: ${meal.macros}
+									</div>
                                 </div>
                             </div>
                         </c:forEach>

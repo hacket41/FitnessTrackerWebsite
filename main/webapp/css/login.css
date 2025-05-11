@@ -232,6 +232,19 @@ a:hover {
     animation: slideInRight 0.7s ease-out forwards;
 }
 
+/*New changes*/
+
+#check {
+    margin-right: 10px;
+    accent-color: var(--accent);
+}
+
+#showPassword {
+    margin-right: 10px;
+    accent-color: var(--accent);
+}
+
+
 @keyframes fadeIn {
     from {
         opacity: 0;
