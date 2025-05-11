@@ -34,19 +34,18 @@
         <input type="text" name="username" class="input-field" placeholder="Username" autocomplete="off" required>
     </div>
 
-    <div class="input-box animated slide-up" style="animation-delay: 0.4s;">
-        <input type="password" name="password" class="input-field" placeholder="Password" autocomplete="off" required>
-    </div>
+   <div class="input-box animated slide-up" style="animation-delay: 0.4s;">
+    <input type="password" id="password" name="password" class="input-field" placeholder="Password" autocomplete="off" required>
+	</div>
 
-    <div class="forgot animated slide-up" style="animation-delay: 0.5s;">
-        <section>
-            <input type="checkbox" id="check" name="remember">
-            <label for="check">Remember me</label>
-        </section>
-        <section>
-            <a href="${pageContext.request.contextPath}/forgot-password">Forgot password</a>
-        </section>
-    </div>
+	<!-- NEW FEATURE FOR SHOWING HIDDEN PASSWORD -->
+	<div class="forgot animated slide-up" style="animation-delay: 0.5s;">
+    <section>
+        <input type="checkbox" id="check" name="remember">
+        <label for="check">Remember me</label>
+    </section>
+   
+
 
     <div class="input-submit animated slide-up" style="animation-delay: 0.6s;">
         <button type="submit" class="submit-btn" id="submit"></button>
@@ -88,6 +87,10 @@
         window.addEventListener('scroll', checkInView);
         checkInView(); // Run once on page load to activate visible elements
     });
+    
+    
+   
+    
 </script>
 </body>
 </html>

@@ -3,7 +3,6 @@ package com.fitnesstracker.controller;
 import com.fitnesstracker.model.UserModel;
 import com.fitnesstracker.service.UserFunctions;
 
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,7 +18,8 @@ import java.util.List;
 public class AdminUserController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    private UserFunctions userFunctions;
+    @SuppressWarnings("unused")
+	private UserFunctions userFunctions;
 
     @Override
     public void init() throws ServletException {

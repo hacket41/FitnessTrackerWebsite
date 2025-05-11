@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 import jakarta.servlet.ServletContext;
 
+@SuppressWarnings("unused")
 @WebListener
 public class SessionListener implements HttpSessionListener {
 
@@ -18,7 +19,8 @@ public class SessionListener implements HttpSessionListener {
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
         ServletContext context = se.getSession().getServletContext();
-        Set<String> onlineUsers = (Set<String>) context.getAttribute("onlineUsers");
+        @SuppressWarnings("unchecked")
+		Set<String> onlineUsers = (Set<String>) context.getAttribute("onlineUsers");
         String username = (String) se.getSession().getAttribute("username");
 
         if (username != null && onlineUsers != null) {

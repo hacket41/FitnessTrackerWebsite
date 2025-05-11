@@ -208,6 +208,8 @@ a:hover {
     color: var(--accent);
 }
 
+
+
 /* Animation classes - Matched with meals/workout pages */
 .animated {
     opacity: 0;
