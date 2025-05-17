@@ -20,8 +20,9 @@
         <div class = "hero">
             <div class="text">
                 <h2>HEALTY LIVING AND MAINTAINENCE</h2>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Obcaecati, a 
-                    vel officia odio quasi perferendstrum aut.</p>
+               <p>
+  At <strong>Be Fit</strong>, we believe that a healthy lifestyle starts with small, consistent habits. Our fitness tracker helps you stay on top of your goals by monitoring activity, sleep, heart rate, and more — giving you the insights you need to maintain your well-being. Whether you're just starting out or pushing for peak performance, <strong>Be Fit</strong> keeps you motivated, informed, and on track for a healthier, stronger you.
+</p>
                 <div class="button">
                     <button>Get Started</button>
                 </div>     
@@ -50,56 +51,55 @@
         <div class="headingfeature">
             <h1>INDEX</h1>
         </div>
-        <div class="page-wrapper">
-        <div class="container">
-            <!-- Donation Column -->
-            <div class="column donation">
-              <h2>help us stay up<br>donate $1</h2>
-              <div class="hand-icon">🤲</div>
-              <div>Funding Level</div>
-              <div class="progress">
-                <div class="progress-bar">19%</div>
-              </div>
-              <p>Just paid bills...</p>
-              <p style="color: grey;">What Does This Mean?</p>
-            </div>
-          
-            <!-- Built to Last Column -->
-            <div class="column" style="text-align: center;">
-              <div class="title-large">BUILT<br>TO<br>LAST</div>
-              <div class="downloads">
-                <div style="font-size: 24px;">📚</div>
-              </div>
-            </div>
-          
-            <!-- Get Started Column -->
-            <div class="column">
-              <div class="section-title">GET<br>STARTED</div>
-              <p style="margin-top: 10px; color: grey;"> Start here:</p>
-              <div class="links">
-                <p>Introduction</p>
-                <p>Workout Manual</p>
-                <p>Warmup & Stretching</p>
-                <p>How to Pick a Program</p>
-                <p>Exercise Alternatives</p>
-                
-              </div>
-            </div>
-          
-            <!-- The Project Column -->
-            <div class="column">
-              <div class="section-title">THE<br>PROJECT</div>
-              <div class="links project-links">
-                <p>about the project</p>
-                <p>how we are supported & why</p>
-                <p>why we have no ads</p>
-                <p>team behind the project</p>
-                <p>the internet of tomorrow</p>
-               
-              </div>
-            </div>
-          </div>
-        </div>
+       <div class="page-wrapper">
+  <div class="container">
+    <!-- Donation Column -->
+    <div class="column donation">
+      <h2>support healthy lives<br>donate $1</h2>
+      <div class="hand-icon">🤲</div>
+      <div>Community Support</div>
+      <div class="progress">
+        <div class="progress-bar">19%</div>
+      </div>
+      <p>Your donations helps us improve features, support more users, and keep Be Fit free for everyone.</p>
+      <p style="color: grey;">Why donations matter</p>
+    </div>
+
+    <!-- Be Fit Tracker Column -->
+    <div class="column" style="text-align: center;">
+      <div class="title-large">BE<br>FIT<br>TRACKER</div>
+      <div class="downloads">
+        <div style="font-size: 24px;">⌚📱</div>
+      </div>
+      <p style="color: grey;">Your journey, your pace — track fitness, sleep, and more with Be Fit.</p>
+    </div>
+
+    <!-- Get Started Column -->
+    <div class="column">
+      <div class="section-title">GET<br>STARTED</div>
+      <p style="margin-top: 10px; color: grey;">Everything you need to begin:</p>
+      <div class="links">
+        <p>Set Up Your Device</p>
+        <p>Connect to the Be Fit App</p>
+        <p>Start Tracking Steps & Sleep</p>
+        <p>Create Personal Goals</p>
+        <p>Monitor Progress Over Time</p>
+      </div>
+    </div>
+
+    <!-- The Project Column -->
+    <div class="column">
+      <div class="section-title">THE<br>MISSION</div>
+      <div class="links project-links">
+        <p>what drives be fit</p>
+        <p>our commitment to privacy</p>
+        <p>why it's built for everyone</p>
+        <p>meet the creators</p>
+        <p>roadmap to future updates</p>
+      </div>
+    </div>
+  </div>
+</div>
     </section>
 
     <!-- NEWSLETTER -->

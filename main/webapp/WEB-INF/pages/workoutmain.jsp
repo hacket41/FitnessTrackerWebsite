@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+ <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,8 +60,26 @@
                     <img src="${pageContext.request.contextPath}/resources/images/Friday.webp" alt="Friday" />
                     <div class="day-name"><a href="${pageContext.request.contextPath}/friday">Friday</a></div>
                 </div>
-            </div>
+                
 
+            </div>
+			
+			<div class="meal-wrapper days-grid">
+				<div class="meal-section animated slide-up" style="animation-delay: 0.6s;">
+				        <h2>Workout Routine</h2>
+				       <div class="meal-cards" id="mealCardsContainer">
+						    <c:forEach var="workout" items="${workoutList}">
+						        <div class="meal-card">
+						            <h3>${workout.name}</h3>
+						            <p>Type: ${workout.type}</p>
+						            <p>Duration: ${workout.duration}</p>
+						        </div>
+						    </c:forEach>
+						</div>
+
+				</div>
+			</div>
+			
             <!-- Feature section -->
             <section id="content" class="animated fade-in" style="animation-delay: 1s;">
                 <div class="getstarted">
