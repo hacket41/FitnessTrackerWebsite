@@ -25,7 +25,8 @@
 
     <main>
         <div class="container animated fade-in">
-            <!-- Workout Type Selector -->
+           		 <!-- First Test Push-->
+			 <!-- Workout Type Selector -->
             <div class="workout-selector animated slide-up" style="animation-delay: 0.2s;">
                 <select class="workout-type-selector" onchange="updateTheme(this.value)">
                     <option value="" disabled selected>Select Workout Type</option>
