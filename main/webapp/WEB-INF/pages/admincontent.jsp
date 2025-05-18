@@ -25,7 +25,8 @@
         </ul>
         </div>
     </section>
-
+	
+	<!-- Inteface Portions -->
     <section id="interface">
         <div class = "navigation">
             <div class = "n1">
