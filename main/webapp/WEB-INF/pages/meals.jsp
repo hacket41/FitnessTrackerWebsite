@@ -55,7 +55,6 @@
                 <div class="meal-section animated slide-up" style="animation-delay: 0.6s;">
                     <h2 class="subtitle">TODAY'S MEALS</h2>
                     <div class="meal-cards" id="mealCardsContainer">
-                        <!-- JSP to loop through meals -->
                         <c:if test="${empty todaysMeals}">
                             <p>No meals logged for today. Start tracking your nutrition by adding meals.</p>
                         </c:if>
@@ -72,6 +71,11 @@
                                     <div class="meal-time">
                                         ${meal.mealLogDate}
                                     </div>
+                                    <button class="favorite-btn ${favoriteMealService.isFavorite(sessionScope.userId, meal.mealId) ? 'active' : ''}" 
+                                            onclick="toggleFavorite(${meal.mealId})" 
+                                            data-meal-id="${meal.mealId}">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
                                     <button class="delete-btn" onclick="deleteMeal(${meal.mealId})">🗑️</button>
                                 </div>
                             </div>
@@ -79,6 +83,35 @@
                     </div>
                 </div>
                 
+                <!-- Favorite Meals section -->
+                <div class="meal-section animated slide-up" style="animation-delay: 0.6s;">
+                    <h2 class="subtitle">FAVORITE MEALS</h2>
+                    <div class="meal-cards" id="favoriteMealCardsContainer">
+                        <c:if test="${empty favoriteMeals}">
+                            <p>No favorite meals yet. Click the heart icon to add meals to your favorites!</p>
+                        </c:if>
+                
+                        <c:forEach items="${favoriteMeals}" var="meal">
+                            <div class="meal-card">
+                                <div>
+                                    <div class="meal-name">${meal.mealName}</div>
+                                    <div class="meal-details">
+                                        ${meal.mealType} · ${meal.caloriesConsumed} calories · Protein: ${meal.proteinGm}g, Carbs: ${meal.carbsGm}g, Fats: ${meal.fatsGm}g
+                                    </div>
+                                </div>
+                                <div class="meal-actions">
+                                    <div class="meal-time">
+                                        ${meal.mealLogDate}
+                                    </div>
+                                    <button class="favorite-btn active" onclick="toggleFavorite(${meal.mealId})" data-meal-id="${meal.mealId}">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
+
                 <!-- Suggested Meals section -->
                 <div class="meal-section animated slide-up" style="animation-delay: 0.6s;">
                     <h2>SUGGESTED MEALS</h2>
@@ -92,8 +125,8 @@
                                 <div>
                                     <div class="meal-name">${meal.name}</div>
                                     <div class="meal-details">
-									    ${meal.type} · ${meal.calories} calories · Macros: ${meal.macros}
-									</div>
+                                        ${meal.type} · ${meal.calories} calories · Macros: ${meal.macros}
+                                    </div>
                                 </div>
                             </div>
                         </c:forEach>
@@ -105,7 +138,8 @@
             <div class="log-meal-section animated slide-in-right" style="animation-delay: 0.8s;">
                 <h3 class="log-meal-title">LOG YOUR MEAL</h3>
                 
-                <form id="mealForm" action="${pageContext.request.contextPath}/addMeal" method="post">
+                <form id="mealForm" action="${pageContext.request.contextPath}/meals" method="post">
+                    <input type="hidden" name="action" value="addMeal">
                     <input type="text" name="mealName" class="input-field" placeholder="Enter Meal Name" required>
                     
                     <div class="macro-field">
@@ -181,21 +215,25 @@
         // Function to update water intake with AJAX
         function updateWaterIntake(action) {
             const xhr = new XMLHttpRequest();
-            xhr.open('POST', '${pageContext.request.contextPath}/updateWater', true);
+            xhr.open('POST', '${pageContext.request.contextPath}/meals', true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    document.getElementById('waterIntakeValue').textContent = xhr.responseText;
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        document.getElementById('waterIntakeValue').textContent = xhr.responseText;
+                    } else {
+                        console.error('Error updating water intake:', xhr.responseText);
+                    }
                 }
             };
-            xhr.send('action=' + action);
+            xhr.send('action=updateWater&waterAction=' + action);
         }
 
         // Function to delete a meal
         function deleteMeal(mealId) {
             if (confirm('Are you sure you want to delete this meal?')) {
                 const xhr = new XMLHttpRequest();
-                xhr.open('POST', '${pageContext.request.contextPath}/deleteMeal', true);
+                xhr.open('POST', '${pageContext.request.contextPath}/meals', true);
                 xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState === 4) {
@@ -207,8 +245,36 @@
                         }
                     }
                 };
-                xhr.send('mealId=' + mealId);
+                xhr.send('action=deleteMeal&mealId=' + mealId);
             }
+        }
+
+        // Function to toggle favorite status
+        function toggleFavorite(mealId) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '${pageContext.request.contextPath}/toggleFavorite', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if (response.success) {
+                                // Reload the page to update both sections
+                                window.location.reload();
+                            } else {
+                                alert('Error toggling favorite status');
+                            }
+                        } catch (e) {
+                            console.error('Error parsing response:', e);
+                            alert('Error processing server response');
+                        }
+                    } else {
+                        alert('Error toggling favorite status: ' + xhr.responseText);
+                    }
+                }
+            };
+            xhr.send('action=toggleFavorite&mealId=' + mealId);
         }
 
         // Animation on scroll
@@ -233,3 +299,41 @@
     <jsp:include page = "footer.jsp"/>
 </body>
 </html>
+
+<style>
+.meal-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.favorite-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    color: #ccc;
+    transition: color 0.3s ease;
+}
+
+.favorite-btn:hover {
+    color: #ff6b6b;
+}
+
+.favorite-btn.active {
+    color: #ff6b6b;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    color: #ff6b6b;
+    transition: color 0.3s ease;
+}
+
+.delete-btn:hover {
+    color: #ff0000;
+}
+</style>

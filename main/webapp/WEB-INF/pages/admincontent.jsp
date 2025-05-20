@@ -33,8 +33,11 @@
             <div class = "n1">
                 
                 <div class="search">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" placeholder="Search">
+                    <form method="get" action="${pageContext.request.contextPath}/admincontent" class="search-form">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" name="search" value="${searchQuery}" placeholder="Search content...">
+                        <button type="submit" style="display: none;"></button>
+                    </form>
                 </div>
             </div>
 
@@ -118,5 +121,15 @@
 		</div>
 
 				
+    <script>
+        // Auto-submit search form when user stops typing
+        let searchTimeout;
+        document.querySelector('.search-form input').addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                this.form.submit();
+            }, 500);
+        });
+    </script>
 </body>
 </html>

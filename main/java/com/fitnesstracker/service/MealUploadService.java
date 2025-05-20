@@ -12,7 +12,7 @@ public class MealUploadService {
     }
 
     public void insertMeal(UploadedMeal meal) throws SQLException {
-        String sql = "INSERT INTO uploaded_meals (name, type, calories, macros) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO uploadedmeals (uploadedmeals_name, uploadedmeal_type, calories, macros) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, meal.getName());
             stmt.setString(2, meal.getType());
@@ -22,17 +22,16 @@ public class MealUploadService {
         }
     }
 
-
     public List<UploadedMeal> getSuggestedMeals() throws SQLException {
         List<UploadedMeal> meals = new ArrayList<>();
-        String sql = "SELECT * FROM uploaded_meals";
+        String sql = "SELECT * FROM uploadedmeals";
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 UploadedMeal meal = new UploadedMeal();
-                meal.setId(rs.getInt("id"));
-                meal.setName(rs.getString("name"));
-                meal.setType(rs.getString("type"));
+                meal.setId(rs.getInt("uploadedmeals_id"));
+                meal.setName(rs.getString("uploadedmeals_name"));
+                meal.setType(rs.getString("uploadedmeal_type"));
                 meal.setCalories(rs.getInt("calories"));
                 meal.setMacros(rs.getString("macros"));
                 meals.add(meal);
@@ -40,6 +39,4 @@ public class MealUploadService {
         }
         return meals;
     }
-
-
 }

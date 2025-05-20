@@ -33,9 +33,11 @@
 
         <div class="input-box">
             <input 
-                type="text" class="input-field" id="birthday" name="birthday" placeholder="Birthday"
-                onfocus="(this.type='date')" 
-                onblur="if(this.value==''){this.type='text'}" 
+                type="date" 
+                class="input-field" 
+                id="birthday" 
+                name="birthday" 
+                placeholder="Birthday"
                 required>
         </div>
         

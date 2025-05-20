@@ -28,28 +28,12 @@ public class RegisterService {
 		if(dbConn == null) {
 			System.err.println("Database Connection is not available");
 			return null;
-			
 		}
 		
-		String progressQuery = "SELECT progress_id FROM progress WHERE progress_type = ?";
 		String insertQuery = "INSERT INTO `user` (`f_name`, `l_name`, `username`, `email`, `birthday`, `password`, `image_path`) VALUES (?, ?, ?, ?, ?, ?, ?);";
 		
-		
-		try(PreparedStatement programStmt = dbConn.prepareStatement(progressQuery);
-				PreparedStatement insertStmt = dbConn.prepareStatement(insertQuery)){
-			
-			ProgressModel intialProgress = new ProgressModel("no-progress");
-			
-			userModel.setProgress(intialProgress);
-			
-			programStmt.setString(1, userModel.getProgress().getProgress_type());
-			@SuppressWarnings("unused")
-			ResultSet result = programStmt.executeQuery();
-			
-			
-			
+		try(PreparedStatement insertStmt = dbConn.prepareStatement(insertQuery)){
 			//InsertUSERDETAILS
-			
 			insertStmt.setString(1, userModel.getF_name());
 			insertStmt.setString(2, userModel.getL_name());
 			insertStmt.setString(3, userModel.getUsername());

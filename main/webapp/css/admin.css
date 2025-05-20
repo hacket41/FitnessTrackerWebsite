@@ -102,25 +102,37 @@ body{
     width: calc(100% - 300px);
 }
 
-#interface .navigation .search{
+#interface .navigation .search {
     display: flex;
-    justify-content: flex-start;
     align-items: center;
-    padding: 10px 14px;
-    border: 1px solid #d7dbe6;
+    background: #fff;
+    padding: 8px 15px;
     border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-#interface .navigation .search input{
+#interface .navigation .search .search-form {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+#interface .navigation .search input {
     border: none;
     outline: none;
     font-size: 14px;
+    width: 100%;
+    padding: 0 10px;
 }
 
-#interface .navigation .search i{
-    margin-right: 14px;
+#interface .navigation .search i {
+    margin-right: 10px;
+    color: #666;
 }
 
+#interface .navigation .search input::placeholder {
+    color: #999;
+}
 
 #interface .navigation .profile{
     display: flex;

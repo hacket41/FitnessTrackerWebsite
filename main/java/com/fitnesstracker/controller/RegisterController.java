@@ -61,9 +61,16 @@ public class RegisterController extends HttpServlet {
 		String lName = request.getParameter("lastName");
 		String userName = request.getParameter("userName");
 		String email = request.getParameter("email");
-		LocalDate birthDay = LocalDate.parse(request.getParameter("birthday"));
+		String birthdayStr = request.getParameter("birthday");
 		String password = request.getParameter("password");
 		String retypepassword = request.getParameter("retypePassword");
+
+		// Validate required fields
+		if (fName == null || lName == null || userName == null || email == null || birthdayStr == null || password == null) {
+			redirectionUtil.setMsgAndRedirect(request, response, "error",
+					"All fields are required!", RedirectionUtil.registerUrl);
+			return null;
+		}
 
 		if (password == null || !password.equals(retypepassword)) {
 			redirectionUtil.setMsgAndRedirect(request, response, "error",
@@ -71,8 +78,28 @@ public class RegisterController extends HttpServlet {
 			return null;
 		}
 
+		// Parse birthday with proper error handling
+		LocalDate birthDay;
+		try {
+			birthDay = LocalDate.parse(birthdayStr);
+		} catch (Exception e) {
+			redirectionUtil.setMsgAndRedirect(request, response, "error",
+					"Invalid date format. Please use YYYY-MM-DD format.", RedirectionUtil.registerUrl);
+			return null;
+		}
+
 		password = PasswordUtil.encrypt(userName, password);
-		return new UserModel(fName, lName, userName, email, birthDay, password);
+		
+		// Create and populate UserModel
+		UserModel userModel = new UserModel();
+		userModel.setF_name(fName);
+		userModel.setL_name(lName);
+		userModel.setUsername(userName);
+		userModel.setEmail(email);
+		userModel.setBirthday(birthDay);
+		userModel.setPassword(password);
+		
+		return userModel;
 	}
 
 	private void handleSuccess(HttpServletRequest req, HttpServletResponse resp, String message, String redirectPage)
