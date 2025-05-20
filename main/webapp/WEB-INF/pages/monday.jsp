@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,34 +11,39 @@
 <body>
     <jsp:include page="navbar.jsp"/>
     
-<button class="back-button" onclick="window.location.href='${pageContext.request.contextPath}/workout'">Go Back</button>
+    <button class="back-button" onclick="window.location.href='${pageContext.request.contextPath}/workout'">Go Back</button>
     
-    
-    
-        <!-- Progress Bar -->
-        <div class="progress-container">
-            <div class="progress-title">Today's Progress</div>
-            <div class="progress-bar-outer">
-                <div class="progress-bar-inner" id="progress-bar"></div>
-            </div>
-            <div class="progress-text">
-                <span id="progress-percentage">0%</span>
-            </div>
+    <!-- Display Error Messages -->
+    <c:if test="${not empty error}">
+        <div class="error" style="color: red; margin: 10px 20px;">${error}</div>
+    </c:if>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-title">Today's Progress</div>
+        <div class="progress-bar-outer">
+            <div class="progress-bar-inner" id="progress-bar"></div>
         </div>
-        <div class="workout-details">
-            <div class="workout-info">
-                <div class="exercise-name-container">
-                    <p>PULL <br> WORKOUT</p>
-                    <div class="workout-duration">Duration - 45 Mins</div>
-                    <hr class="custom-line">
-                    <div class ="exercise-description">
-                           Lets target your Upper Back, Lats and Biceps today with these
-                            simple and beginner friendly Pull workout. <br>
-                            BEST OF LUCK 
-                    </div>
+        <div class="progress-text">
+            <span id="progress-percentage">0%</span>
+        </div>
+    </div>
+
+    <!-- Workout Details -->
+    <div class="workout-details">
+        <!-- Workout Info (Expanded) -->
+        <div class="workout-info">
+            <div class="exercise-name-container">
+                <p>LEG <br> WORKOUT</p>
+                <div class="workout-duration">Duration - 50 Mins</div>
+                <hr class="custom-line">
+                <div class="exercise-description">
+                    Kick off the week with a powerful leg workout targeting your Quads, Hamstrings, and Glutes. <br>
+                    LET'S GET STRONG
                 </div>
             </div>
-            
+        </div>
+         <!-- Exercises Table (Fixed Width) -->
             <div class="exercises-table">
                 <div class="table-header">
                     <div class="workout-type">Exercise </div>
@@ -91,28 +95,23 @@
                 </div>
 
                 
-                <!-- Action Buttons -->
+              <!-- Action Buttons -->
                 <div class="action-buttons">
-                    <button class="btn btn-primary" id="save-progress">Save Progress</button>
-                    <button class="btn btn-success" id="complete-workout">Complete Workout</button>
+                    <button type="button" class="btn btn-primary" id="save-progress" onclick="submitForm('saveProgress')">Save Progress</button>
+                    <button type="button" class="btn btn-success" id="complete-workout" onclick="submitForm('completeWorkout')">Complete Workout</button>
                 </div>
-            </div>
         </div>
+    </div>
 
     <script>
-        
-        
-          window.onload = function() {
-    // Progress bar functionality
-    const checkboxes = document.querySelectorAll('.exercise-checkbox');
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', updateProgress);
-    });
+        window.onload = function() {
+            const checkboxes = document.querySelectorAll('.exercise-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateProgress);
+            });
+            updateProgress();
+        }
 
-    updateProgress();
-}
-
-        // Progress bar update
         function updateProgress() {
             const totalExercises = document.querySelectorAll('.exercise-checkbox').length;
             const completedExercises = document.querySelectorAll('.exercise-checkbox:checked').length;
@@ -121,7 +120,6 @@
             document.getElementById('progress-bar').style.width = progressPercentage + '%';
             document.getElementById('progress-percentage').textContent = progressPercentage + '%';
 
-            // Visual 'completed' class toggle
             document.querySelectorAll('.exercise-checkbox').forEach(checkbox => {
                 if (checkbox.checked) {
                     checkbox.closest('.exercise-row').classList.add('completed');
@@ -130,8 +128,11 @@
                 }
             });
         }
-    </script>
 
-    <jsp:include page="footer.jsp"/>
+        function submitForm(action) {
+            document.getElementById('formAction').value = action;
+            document.getElementById('workoutForm').submit();
+        }
+    </script>
 </body>
 </html>

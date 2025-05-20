@@ -1,7 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
- <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,16 +23,10 @@
 
     <main>
         <div class="container animated fade-in">
-           		 <!-- First Test Push-->
-			 <!-- Workout Type Selector -->
-            <div class="workout-selector animated slide-up" style="animation-delay: 0.2s;">
-                <select class="workout-type-selector" onchange="updateTheme(this.value)">
-                    <option value="" disabled selected>Select Workout Type</option>
-                    <option value="strength">Strength Training</option>
-                    <option value="cardio">Cardio</option>
-                </select>
+			<!-- Training Days Heading -->
+            <div class="training-days-heading animated slide-up" style="animation-delay: 0.2s; text-align: center; margin-bottom: 30px;">
+                <h2>Training Days</h2>
             </div>
-
             <!-- Days Grid -->
             <div class="days-grid">
                 <div class="day-card animated slide-up" style="animation-delay: 0.3s;">
@@ -61,8 +53,6 @@
                     <img src="${pageContext.request.contextPath}/resources/images/Friday.webp" alt="Friday" />
                     <div class="day-name"><a href="${pageContext.request.contextPath}/friday">Friday</a></div>
                 </div>
-                
-
             </div>
 			
 			<div class="meal-wrapper days-grid">

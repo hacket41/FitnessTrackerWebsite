@@ -43,7 +43,6 @@ public class RegisterService {
 			userModel.setProgress(intialProgress);
 			
 			programStmt.setString(1, userModel.getProgress().getProgress_type());
-			@SuppressWarnings("unused")
 			ResultSet result = programStmt.executeQuery();
 			
 			

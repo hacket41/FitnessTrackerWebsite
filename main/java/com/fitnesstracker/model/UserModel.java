@@ -22,7 +22,12 @@ public class UserModel {
     
     // Getters and setters
     
-    public int getUserId() {
+    public UserModel(String fName, String lName, String userName2, String email2, LocalDate birthDay2,
+			String password2) {
+		// TODO Auto-generated constructor stub
+	}
+
+	public int getUserId() {
         return userId;
     }
     
@@ -103,4 +108,14 @@ public class UserModel {
     public void setRole(String role) {
         this.role = role;
     }
+
+	public ProgressModel getProgress() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void setProgress(ProgressModel intialProgress) {
+		// TODO Auto-generated method stub
+		
+	}
 }
