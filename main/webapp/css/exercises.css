@@ -164,9 +164,10 @@ body {
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
 }
 
-.table-header {
+.table-header,
+.exercise-row {
     display: grid;
-    grid-template-columns: 2fr 1.5fr 1fr 1fr 0.5fr;
+    grid-template-columns: 2fr 1.5fr 1fr 0.5fr; /* 4 columns */
     font-weight: 700;
     padding: 18px 20px;
     border-bottom: 2px solid var(--accent);
@@ -174,15 +175,6 @@ body {
     font-size: 14px;
     letter-spacing: 0.5px;
     color: var(--dark-text);
-}
-
-.exercise-row {
-    display: grid;
-    grid-template-columns: 2fr 1.5fr 1fr 1fr 0.5fr;
-    align-items: center;
-    padding: 18px 20px;
-    border-bottom: 1px solid #e0e0e0;
-    transition: all 0.3s ease;
 }
 
 .exercise-row:hover {

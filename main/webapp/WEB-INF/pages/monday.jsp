@@ -30,7 +30,7 @@
     <div class="workout-details">
         <div class="workout-info">
             <div class="exercise-name-container">
-                <p>LEG <br> WORKOUT</p>
+                <p>PULL <br> WORKOUT</p>
                 <div class="workout-duration">Duration - 45 Mins</div>
                 <hr class="custom-line">
                 <div class="exercise-description">
