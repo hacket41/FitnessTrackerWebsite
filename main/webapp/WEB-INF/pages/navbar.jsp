@@ -88,16 +88,44 @@
     
     <script>
         function showSidebar() {
-            document.querySelector('.sidebar').style.display = 'flex';
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.style.display = 'flex';
+            sidebar.classList.add('active');
         }
 
         function hideSidebar() {
-            document.querySelector('.sidebar').style.display = 'none';
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.style.display = 'none';
+            sidebar.classList.remove('active');
         }
 
-        function toggleMenu(){
-            document.getElementById("subMenu").classList.toggle("open-menu");
+        function toggleMenu() {
+            const subMenu = document.getElementById("subMenu");
+            if (window.innerWidth > 768) { // Only toggle on desktop
+                subMenu.classList.toggle("open-menu");
+            }
         }
+
+        // Close sidebar when clicking outside
+        document.addEventListener('click', function(event) {
+            const sidebar = document.querySelector('.sidebar');
+            const menuBtn = document.querySelector('li[onclick="showSidebar()"]');
+            
+            if (sidebar.classList.contains('active') && 
+                !sidebar.contains(event.target) && 
+                !menuBtn.contains(event.target)) {
+                hideSidebar();
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                const sidebar = document.querySelector('.sidebar');
+                sidebar.style.display = 'none';
+                sidebar.classList.remove('active');
+            }
+        });
     </script>
 </body>
 </html>
