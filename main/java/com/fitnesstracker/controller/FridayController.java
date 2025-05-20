@@ -122,26 +122,33 @@ public class FridayController extends HttpServlet {
      */
     private void saveProgress(HttpServletRequest request, Connection conn, int userId) throws SQLException {
         // Clear previous progress for today to avoid duplicates
-        String deleteSql = "DELETE FROM progress WHERE user_id = ? AND progress_type = ? AND progress_date = ?";
+        String deleteSql = "DELETE FROM progress WHERE user_id = ? AND progress_type = ? AND progress_log = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(deleteSql)) {
             pstmt.setInt(1, userId);
             pstmt.setString(2, "Cardio Workout");
             pstmt.setString(3, LocalDate.now().toString());
             pstmt.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.severe("Error deleting previous progress: " + e.getMessage());
+            throw e;
         }
 
         // Insert new progress for completed exercises
-        String insertSql = "INSERT INTO progress (progress_type, progress_notes, progress_log, user_id, progress_date) VALUES (?, ?, ?, ?, ?)";
+        String insertSql = "INSERT INTO progress (progress_type, progress_notes, progress_log, user_id) VALUES (?, ?, ?, ?)";
         String[] exercises = {"running", "jumpingJacks", "cycling", "highKnees", "burpees"};
         for (String exercise : exercises) {
-            if ("on".equals(request.getParameter(exercise))) {
+            String paramValue = request.getParameter(exercise);
+            LOGGER.info("Saving progress for " + exercise + ": parameter value = " + (paramValue != null ? paramValue : "null"));
+            if ("on".equals(paramValue)) {
                 try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
                     pstmt.setString(1, "Cardio Workout");
                     pstmt.setString(2, "Completed " + exercise);
-                    pstmt.setString(3, "Exercise completed");
+                    pstmt.setString(3, LocalDate.now().toString());
                     pstmt.setInt(4, userId);
-                    pstmt.setString(5, LocalDate.now().toString());
                     pstmt.executeUpdate();
+                } catch (SQLException e) {
+                    LOGGER.severe("Error inserting progress for " + exercise + ": " + e.getMessage());
+                    throw e;
                 }
             }
         }
@@ -154,8 +161,11 @@ public class FridayController extends HttpServlet {
         String[] exercises = {"running", "jumpingJacks", "cycling", "highKnees", "burpees"};
         boolean allCompleted = true;
         for (String exercise : exercises) {
-            if (!"on".equals(request.getParameter(exercise))) {
+            String paramValue = request.getParameter(exercise);
+            LOGGER.info("Checking exercise " + exercise + ": parameter value = " + (paramValue != null ? paramValue : "null"));
+            if (!"on".equals(paramValue)) {
                 allCompleted = false;
+                LOGGER.warning("Exercise " + exercise + " not completed (value: " + (paramValue != null ? paramValue : "null") + ")");
                 break;
             }
         }
@@ -164,9 +174,7 @@ public class FridayController extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/pages/friday.jsp").forward(request, response);
             return;
         }
-        // Save progress first
         saveProgress(request, conn, userId);
-        // Update workout completion status
         String updateSql = "UPDATE workout SET workout_weight_lifted = 0 WHERE user_id = ? AND workout_name = ? AND workout_id = (SELECT MAX(workout_id) FROM workout WHERE user_id = ? AND workout_name = ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(updateSql)) {
             pstmt.setInt(1, userId);
@@ -175,17 +183,19 @@ public class FridayController extends HttpServlet {
             pstmt.setString(4, "Cardio");
             int rowsUpdated = pstmt.executeUpdate();
             if (rowsUpdated == 0) {
-                // Insert new workout if none exists
                 String insertSql = "INSERT INTO workout (workout_name, workout_type, workout_duration, workout_weight_lifted, user_id) VALUES (?, ?, ?, ?, ?)";
                 try (PreparedStatement insertPstmt = conn.prepareStatement(insertSql)) {
                     insertPstmt.setString(1, "Cardio");
-                    insertPstmt.setString(2, "Cardio");
+                    insertPstmt.setString(2, "Cardio Workout");
                     insertPstmt.setInt(3, 45);
-                    insertPstmt.setInt(4, 0); // No weights to track
+                    insertPstmt.setInt(4, 0);
                     insertPstmt.setInt(5, userId);
                     insertPstmt.executeUpdate();
                 }
             }
+        } catch (SQLException e) {
+            LOGGER.severe("Error updating workout completion: " + e.getMessage());
+            throw e;
         }
         response.sendRedirect(request.getContextPath() + "/friday");
     }

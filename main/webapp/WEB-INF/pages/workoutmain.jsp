@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,13 +60,22 @@
 				<div class="meal-section animated slide-up" style="animation-delay: 0.6s;">
 				        <h2>Workout Routine</h2>
 				       <div class="meal-cards" id="mealCardsContainer">
-						    <c:forEach var="workout" items="${workoutList}">
-						        <div class="meal-card">
-						            <h3>${workout.name}</h3>
-						            <p>Type: ${workout.type}</p>
-						            <p>Duration: ${workout.duration}</p>
-						        </div>
-						    </c:forEach>
+						    <c:choose>
+						        <c:when test="${not empty workoutList}">
+						            <c:forEach var="workout" items="${workoutList}">
+						                <div class="meal-card">
+						                    <h3><c:out value="${workout.name}"/></h3>
+						                    <p>Type: <c:out value="${workout.type}"/></p>
+						                    <p>Duration: <c:out value="${workout.duration}"/></p>
+						                </div>
+						            </c:forEach>
+						        </c:when>
+						        <c:otherwise>
+						            <div class="no-workouts">
+						                <p>No workout routines available yet.</p>
+						            </div>
+						        </c:otherwise>
+						    </c:choose>
 						</div>
 
 				</div>
@@ -78,7 +88,7 @@
                     <p>Follow your workout plan, track your progress<br>and reach your fitness goals.</p>
                     
                     <div class="button-1">
-                        <button class="button" onclick="window.location.href='${pageContext.request.contextPath}/progress">View Progress</button>
+                        <button class="button" onclick="window.location.href='${pageContext.request.contextPath}/progress'">View Progress</button>
                     </div>
                 </div>
         

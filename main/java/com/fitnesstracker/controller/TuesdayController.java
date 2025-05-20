@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.logging.Logger;
+import java.util.Enumeration;
 
 /**
  * Servlet implementation class TuesdayController
@@ -30,15 +31,10 @@ public class TuesdayController extends HttpServlet {
         super();
     }
 
-    /**
-     * Handles GET requests to display the Tuesday workout page.
-     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Log request details
         LOGGER.info("Received GET request for /tuesday, Session ID: " + 
             (request.getSession(false) != null ? request.getSession(false).getId() : "No session"));
         
-        // Get user_id from username in session
         Integer userId = null;
         String username = (String) SessionUtil.getAttribute(request, "username");
         if (username != null) {
@@ -69,16 +65,20 @@ public class TuesdayController extends HttpServlet {
             return;
         }
 
-        // Forward to JSP
         request.getRequestDispatcher("/WEB-INF/pages/tuesday.jsp").forward(request, response);
     }
 
-    /**
-     * Handles POST requests for completing workouts.
-     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Log all incoming parameters for debugging
+        StringBuilder paramLog = new StringBuilder("Received POST parameters: ");
+        Enumeration<String> paramNames = request.getParameterNames();
+        while (paramNames.hasMoreElements()) {
+            String paramName = paramNames.nextElement();
+            paramLog.append(paramName).append("=").append(request.getParameter(paramName)).append("; ");
+        }
+        LOGGER.info(paramLog.toString());
+
         String action = request.getParameter("action");
-        // Get user_id from username in session
         Integer userId = null;
         String username = (String) SessionUtil.getAttribute(request, "username");
         if (username != null) {
@@ -112,50 +112,52 @@ public class TuesdayController extends HttpServlet {
             }
         } catch (SQLException | ClassNotFoundException e) {
             LOGGER.severe("Database error: " + e.getMessage());
-            request.setAttribute("error", "Server error occurred");
+            request.setAttribute("error", "Server error occurred: " + e.getMessage());
             request.getRequestDispatcher("/WEB-INF/pages/tuesday.jsp").forward(request, response);
         }
     }
 
-    /**
-     * Saves the progress of checked exercises for the user.
-     */
     private void saveProgress(HttpServletRequest request, Connection conn, int userId) throws SQLException {
-        // Clear previous progress for today to avoid duplicates
-        String deleteSql = "DELETE FROM progress WHERE user_id = ? AND progress_type = ? AND progress_date = ?";
+        String deleteSql = "DELETE FROM progress WHERE user_id = ? AND progress_type = ? AND progress_log = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(deleteSql)) {
             pstmt.setInt(1, userId);
             pstmt.setString(2, "Legs Workout");
             pstmt.setString(3, LocalDate.now().toString());
             pstmt.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.severe("Error deleting previous progress: " + e.getMessage());
+            throw e;
         }
 
-        // Insert new progress for completed exercises
-        String insertSql = "INSERT INTO progress (progress_type, progress_notes, progress_log, user_id, progress_date) VALUES (?, ?, ?, ?, ?)";
+        String insertSql = "INSERT INTO progress (progress_type, progress_notes, progress_log, user_id) VALUES (?, ?, ?, ?)";
         String[] exercises = {"squats", "lunges", "legPress", "calfRaises", "legExtensions"};
         for (String exercise : exercises) {
-            if ("on".equals(request.getParameter(exercise))) {
+            String paramValue = request.getParameter(exercise);
+            LOGGER.info("Saving progress for " + exercise + ": parameter value = " + (paramValue != null ? paramValue : "null"));
+            if ("on".equals(paramValue)) {
                 try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
                     pstmt.setString(1, "Legs Workout");
                     pstmt.setString(2, "Completed " + exercise);
-                    pstmt.setString(3, "Exercise completed");
+                    pstmt.setString(3, LocalDate.now().toString());
                     pstmt.setInt(4, userId);
-                    pstmt.setString(5, LocalDate.now().toString());
                     pstmt.executeUpdate();
+                } catch (SQLException e) {
+                    LOGGER.severe("Error inserting progress for " + exercise + ": " + e.getMessage());
+                    throw e;
                 }
             }
         }
     }
 
-    /**
-     * Marks the workout as completed and saves progress if all exercises are completed.
-     */
     private void completeWorkout(HttpServletRequest request, HttpServletResponse response, Connection conn, int userId) throws ServletException, IOException, SQLException {
         String[] exercises = {"squats", "lunges", "legPress", "calfRaises", "legExtensions"};
         boolean allCompleted = true;
         for (String exercise : exercises) {
-            if (!"on".equals(request.getParameter(exercise))) {
+            String paramValue = request.getParameter(exercise);
+            LOGGER.info("Checking exercise " + exercise + ": parameter value = " + (paramValue != null ? paramValue : "null"));
+            if (!"on".equals(paramValue)) {
                 allCompleted = false;
+                LOGGER.warning("Exercise " + exercise + " not completed (value: " + (paramValue != null ? paramValue : "null") + ")");
                 break;
             }
         }
@@ -164,9 +166,7 @@ public class TuesdayController extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/pages/tuesday.jsp").forward(request, response);
             return;
         }
-        // Save progress first
         saveProgress(request, conn, userId);
-        // Update workout completion status
         String updateSql = "UPDATE workout SET workout_weight_lifted = 0 WHERE user_id = ? AND workout_name = ? AND workout_id = (SELECT MAX(workout_id) FROM workout WHERE user_id = ? AND workout_name = ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(updateSql)) {
             pstmt.setInt(1, userId);
@@ -175,24 +175,23 @@ public class TuesdayController extends HttpServlet {
             pstmt.setString(4, "Legs");
             int rowsUpdated = pstmt.executeUpdate();
             if (rowsUpdated == 0) {
-                // Insert new workout if none exists
                 String insertSql = "INSERT INTO workout (workout_name, workout_type, workout_duration, workout_weight_lifted, user_id) VALUES (?, ?, ?, ?, ?)";
                 try (PreparedStatement insertPstmt = conn.prepareStatement(insertSql)) {
                     insertPstmt.setString(1, "Legs");
-                    insertPstmt.setString(2, "Quads, Hamstrings, and Calves");
+                    insertPstmt.setString(2, "Legs Workout");
                     insertPstmt.setInt(3, 45);
-                    insertPstmt.setInt(4, 0); // No weights to track
+                    insertPstmt.setInt(4, 0);
                     insertPstmt.setInt(5, userId);
                     insertPstmt.executeUpdate();
                 }
             }
+        } catch (SQLException e) {
+            LOGGER.severe("Error updating workout completion: " + e.getMessage());
+            throw e;
         }
         response.sendRedirect(request.getContextPath() + "/tuesday");
     }
 
-    /**
-     * Lists session attributes for debugging.
-     */
     private String listSessionAttributes(HttpServletRequest request) {
         StringBuilder attributes = new StringBuilder();
         HttpSession session = request.getSession(false);

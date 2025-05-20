@@ -111,36 +111,41 @@ public class SundayController extends HttpServlet {
             }
         } catch (SQLException | ClassNotFoundException e) {
             LOGGER.severe("Database error: " + e.getMessage());
-            request.setAttribute("error", "Server error occurred");
+            request.setAttribute("error", "Server error occurred: " + e.getMessage());
             request.getRequestDispatcher("/WEB-INF/pages/sunday.jsp").forward(request, response);
         }
     }
 
     /**
-     * Saves the progress of checked exercises for the user.
+     * Saves the progress of checked exercises for the user using the progress table.
      */
     private void saveProgress(HttpServletRequest request, Connection conn, int userId) throws SQLException {
         // Clear previous progress for today to avoid duplicates
-        String deleteSql = "DELETE FROM progress WHERE user_id = ? AND progress_type = ? AND progress_date = ?";
+        String deleteSql = "DELETE FROM progress WHERE user_id = ? AND progress_type = ? AND progress_log = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(deleteSql)) {
             pstmt.setInt(1, userId);
             pstmt.setString(2, "Push Workout");
             pstmt.setString(3, LocalDate.now().toString());
             pstmt.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.severe("Error deleting previous progress: " + e.getMessage());
+            throw e;
         }
 
         // Insert new progress for completed exercises
-        String insertSql = "INSERT INTO progress (progress_type, progress_notes, progress_log, user_id, progress_date) VALUES (?, ?, ?, ?, ?)";
+        String insertSql = "INSERT INTO progress (progress_type, progress_notes, progress_log, user_id) VALUES (?, ?, ?, ?)";
         String[] exercises = {"benchPress", "inclineDbPress", "machineFly", "tricepsPushdown", "skullCrushers", "latRaises", "dbShoulderPress"};
         for (String exercise : exercises) {
             if ("on".equals(request.getParameter(exercise))) {
                 try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
                     pstmt.setString(1, "Push Workout");
                     pstmt.setString(2, "Completed " + exercise);
-                    pstmt.setString(3, "Exercise completed");
+                    pstmt.setString(3, LocalDate.now().toString());
                     pstmt.setInt(4, userId);
-                    pstmt.setString(5, LocalDate.now().toString());
                     pstmt.executeUpdate();
+                } catch (SQLException e) {
+                    LOGGER.severe("Error inserting progress for " + exercise + ": " + e.getMessage());
+                    throw e;
                 }
             }
         }
@@ -185,6 +190,9 @@ public class SundayController extends HttpServlet {
                     insertPstmt.executeUpdate();
                 }
             }
+        } catch (SQLException e) {
+            LOGGER.severe("Error updating workout completion: " + e.getMessage());
+            throw e;
         }
         response.sendRedirect(request.getContextPath() + "/sunday");
     }

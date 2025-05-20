@@ -15,12 +15,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+
 /**
  * Servlet implementation class AdminContentController
  */
 @WebServlet(asyncSupported = true, urlPatterns = { "/admincontent" })
 public class AdminContentController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOGGER = Logger.getLogger(AdminContentController.class.getName());
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -46,7 +49,7 @@ public class AdminContentController extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/pages/admincontent.jsp").forward(request, response);
 
         } catch (Exception e) {
-            e.printStackTrace();  // Add this for debugging/logging
+            LOGGER.severe("Error fetching uploaded content: " + e.getMessage());
             throw new ServletException("Error fetching uploaded content", e);
         }
     }
@@ -56,12 +59,15 @@ public class AdminContentController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    String action = request.getParameter("action");
+	    LOGGER.info("Received POST request with action: " + action);
 
 	    try (Connection conn = DBConfig.getDbConnection()) {
 	        if ("uploadWorkout".equals(action)) {
 	            String workoutName = request.getParameter("workoutName");
 	            String workoutType = request.getParameter("workoutType");
 	            String workoutDuration = request.getParameter("workoutDuration");
+
+	            LOGGER.info("Uploading workout - Name: " + workoutName + ", Type: " + workoutType + ", Duration: " + workoutDuration);
 
 	            if (workoutName != null && workoutType != null && workoutDuration != null) {
 	                UploadedWorkout workout = new UploadedWorkout();
@@ -71,12 +77,11 @@ public class AdminContentController extends HttpServlet {
 
 	                WorkoutUploadService work = new WorkoutUploadService(conn);
 	                work.insertWorkout(workout);
-
-	                response.sendRedirect(request.getContextPath() + "/admincontent");
-	                return;
+	                LOGGER.info("Successfully uploaded workout: " + workoutName);
+	            } else {
+	                LOGGER.warning("Missing workout parameters - Name: " + workoutName + ", Type: " + workoutType + ", Duration: " + workoutDuration);
 	            }
-	        } else {
-	            // Handle meal upload
+	        } else if ("uploadMeal".equals(action)) {
 	            String mealName = request.getParameter("mealName");
 	            String mealType = request.getParameter("mealType");
 	            String caloriesStr = request.getParameter("calories");
@@ -99,6 +104,7 @@ public class AdminContentController extends HttpServlet {
 	        response.sendRedirect(request.getContextPath() + "/admincontent");
 
 	    } catch (Exception e) {
+	        LOGGER.severe("Error uploading content: " + e.getMessage());
 	        throw new ServletException("Error uploading content", e);
 	    }
 	}

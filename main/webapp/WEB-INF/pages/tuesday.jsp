@@ -54,49 +54,54 @@
                 </div>
                 
                 <!-- Exercise Rows -->
-                <div class="exercise-row">
-                    <div class="exercise-name">Squats</div>
+<div class="exercise-row">
+                    <div class="exercise-name">Barbell Squats</div>
                     <div class="sets-range">4</div>
-                    <div class="exercise-specs">8-10</div>
-                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="squats"></div>
+                    <div class="exercise-specs">6-8</div>
+                    <div class="exercise-tutorial"><a href="#" class="tutorial-link">Tutorial</a></div>
+                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="benchPress"></div>
                 </div>
                 
                 <div class="exercise-row">
-                    <div class="exercise-name">Lunges</div>
+                    <div class="exercise-name">Romanian Deadlifts</div>
+                    <div class="sets-range">3</div>
+                    <div class="exercise-specs">8-10</div>
+                    <div class="exercise-tutorial"><a href="#" class="tutorial-link">Tutorial</a></div>
+                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="inclineDbPress"></div>
+                </div>
+
+                <div class="exercise-row">
+                    <div class="exercise-name">Leg Presss</div>
                     <div class="sets-range">3</div>
                     <div class="exercise-specs">10-12</div>
-                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="lunges"></div>
+                    <div class="exercise-tutorial"><a href="#" class="tutorial-link">Tutorial</a></div>
+                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="machineFly"></div>
                 </div>
 
                 <div class="exercise-row">
-                    <div class="exercise-name">Leg Press</div>
-                    <div class="sets-range">4</div>
+                    <div class="exercise-name">Leg Curls</div>
+                    <div class="sets-range">3</div>
                     <div class="exercise-specs">10-12</div>
-                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="legPress"></div>
+                    <div class="exercise-tutorial"><a href="#" class="tutorial-link">Tutorial</a></div>
+                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="tricepsPushdown"></div>
                 </div>
 
                 <div class="exercise-row">
-                    <div class="exercise-name">Calf Raises</div>
+                    <div class="exercise-name">Standing Calf Raises</div>
                     <div class="sets-range">3</div>
                     <div class="exercise-specs">12-15</div>
-                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="calfRaises"></div>
+                    <div class="exercise-tutorial"><a href="#" class="tutorial-link">Tutorial</a></div>
+                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="skullCrushers"></div>
                 </div>
 
-                <div class="exercise-row">
-                    <div class="exercise-name">Leg Extensions</div>
-                    <div class="sets-range">3</div>
-                    <div class="exercise-specs">10-12</div>
-                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="legExtensions"></div>
-                </div>
                 
                 <!-- Action Buttons -->
                 <div class="action-buttons">
-                    <button type="button" class="btn btn-primary" id="save-progress" onclick="submitForm('completeWorkout')">Save Progress</button>
-                    <button type="button" class="btn btn-success" id="complete-workout" onclick="submitForm('completeWorkout')">Complete Workout</button>
+                    <button class="btn btn-primary" id="save-progress">Save Progress</button>
+                    <button class="btn btn-success" id="complete-workout">Complete Workout</button>
                 </div>
             </div>
-        </form>
-    </div>
+        </div>
 
     <script>
         window.onload = function() {

@@ -35,10 +35,6 @@
                 <div>
                     <i id="menu-btn" class="fa-solid fa-bars"></i>
                 </div>
-                <div class="search">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" placeholder="Search">
-                </div>
             </div>
             <div class="profile">
                 <i class="fa-solid fa-user"></i>
@@ -46,7 +42,14 @@
             </div>
         </div>
 
-        <h3 class="i-name">Dashboard</h3>
+        <div class="header">
+            <h1>Admin Dashboard</h1>
+            <div class="user-info">
+                <span>Welcome, ${sessionScope.username}</span>
+                <a href="logout" class="logout-btn">Logout</a>
+            </div>
+        </div>
+
         <div class="values">
             <div class="val-box">
                 <i class="fa-solid fa-users"></i>
@@ -132,9 +135,10 @@
 	
 	<!-- Function button  -->
     <script>
+        // Toggle menu on mobile
         $('#menu-btn').click(function() {
             $('#menu').toggleClass("active");
-        })
+        });
     </script>
 </body>
 </html>

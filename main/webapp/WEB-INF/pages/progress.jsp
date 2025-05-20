@@ -8,6 +8,7 @@
   <title>My Progress</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/progress.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
   <jsp:include page="navbar.jsp"/>
@@ -26,28 +27,43 @@
         <!-- Stats Section -->
         <h2 class="section-title">PROGRESS OVERVIEW</h2>
         <div class="tracking-stats">
-          <div class="stat-card animated fade-in">
-            <div>
-              <div>CURRENT WEIGHT</div>
-              <div class="stat-value">65 kg</div>
+          <div class="stat-card">
+            <h3>Calories Today</h3>
+            <div class="stat-value">${totalCalories} / ${calorieGoal}</div>
+            <div class="progress-bar">
+              <div class="progress" style="width: ${(totalCalories / calorieGoal) * 100}%"></div>
             </div>
-            <div class="stat-icon">⚖️</div>
           </div>
-
-          <div class="stat-card animated fade-in" style="animation-delay: 0.2s;">
-            <div>
-              <div>CALORIES TODAY</div>
-              <div class="stat-value">1200/2500</div>
+          <div class="stat-card">
+            <h3>Current Weight</h3>
+            <div class="stat-value" id="currentWeightValue">${currentWeight} kg</div>
+            <div class="weight-control">
+              <div class="weight-buttons">
+                <button class="weight-btn decrease" onclick="adjustWeight('decrease')">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <input type="number" id="currentWeightInput" step="0.1" min="0" placeholder="Enter weight">
+                <button class="weight-btn increase" onclick="adjustWeight('increase')">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+              <div class="action-buttons">
+                <button class="weight-btn update" onclick="updateCurrentWeight()">
+                  <i class="fas fa-sync-alt"></i> Update
+                </button>
+                <button class="weight-btn save" onclick="saveWeight()">
+                  <i class="fas fa-save"></i> Save
+                </button>
+              </div>
             </div>
-            <div class="stat-icon">🔥</div>
           </div>
-
-          <div class="stat-card animated fade-in" style="animation-delay: 0.4s;">
-            <div>
-              <div>GOAL WEIGHT</div>
-              <div class="stat-value">80 kg</div>
+          <div class="stat-card">
+            <h3>Goal Weight</h3>
+            <div class="stat-value" id="goalWeightValue">${goalWeight} kg</div>
+            <div class="weight-control">
+              <input type="number" id="goalWeightInput" step="0.1" min="0" placeholder="Enter goal">
+              <button class="btn add-task-btn" onclick="updateGoalWeight()">UPDATE GOAL</button>
             </div>
-            <div class="stat-icon">🏋️</div>
           </div>
         </div>
 
@@ -140,16 +156,19 @@
   <jsp:include page="footer.jsp"/>
 
   <script>
+    let progressChart;
+    let tempWeight = parseFloat(${currentWeight}); // Store temporary weight changes
+
     document.addEventListener('DOMContentLoaded', function() {
       // Progress Chart
       const ctx = document.getElementById('progressChart').getContext('2d');
-      new Chart(ctx, {
+      progressChart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8', 'Week 9', 'Week 10'],
+          labels: [],
           datasets: [{
             label: 'Weight (kg)',
-            data: [60, 58, 55, 54, 56, 58, 60, 63, 64, 65],
+            data: [],
             borderColor: '#ff6b6b',
             backgroundColor: 'rgba(255, 107, 107, 0.1)',
             borderWidth: 3,
@@ -180,8 +199,6 @@
           scales: {
             y: {
               beginAtZero: false,
-              min: 50,
-              max: 85,
               grid: {
                 color: 'rgba(0, 0, 0, 0.05)'
               },
@@ -208,6 +225,9 @@
           }
         }
       });
+
+      // Load initial weight data
+      loadWeightHistory();
 
       // Task List Functionality
       const taskList = document.getElementById('taskList');
@@ -356,7 +376,202 @@
         element.classList.add('fade-in');
       });
     });
+
+    function loadWeightHistory() {
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', '${pageContext.request.contextPath}/progress?action=getWeightHistory', true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          const data = JSON.parse(xhr.responseText);
+          updateChart(data);
+        }
+      };
+      xhr.send();
+    }
+
+    function updateChart(data) {
+      progressChart.data.labels = data.dates;
+      progressChart.data.datasets[0].data = data.weights;
+      progressChart.update();
+    }
+
+    function updateCurrentWeight() {
+      const weightInput = document.getElementById('currentWeightInput');
+      if (weightInput.value) {
+        tempWeight = parseFloat(weightInput.value);
+        document.getElementById('currentWeightValue').textContent = tempWeight.toFixed(1) + ' kg';
+        weightInput.value = '';
+      }
+    }
+
+    function adjustWeight(action) {
+      const currentWeightDisplay = document.getElementById('currentWeightValue');
+      
+      if (action === 'increase' || action === 'decrease') {
+        const change = action === 'increase' ? 0.1 : -0.1;
+        tempWeight = (parseFloat(tempWeight) + change).toFixed(1);
+        currentWeightDisplay.textContent = tempWeight + ' kg';
+      }
+    }
+
+    function saveWeight() {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '${pageContext.request.contextPath}/progress', true);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            document.getElementById('currentWeightValue').textContent = xhr.responseText + ' kg';
+            tempWeight = parseFloat(xhr.responseText);
+            loadWeightHistory(); // Reload chart data
+          } else {
+            alert('Error updating weight: ' + xhr.responseText);
+          }
+        }
+      };
+      xhr.send('action=updateWeight&weight=' + tempWeight);
+    }
+
+    function updateGoalWeight() {
+      const goalWeight = document.getElementById('goalWeightInput').value;
+      if (!goalWeight) {
+        alert('Please enter a goal weight');
+        return;
+      }
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '${pageContext.request.contextPath}/progress', true);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            document.getElementById('goalWeightValue').textContent = xhr.responseText + ' kg';
+            document.getElementById('goalWeightInput').value = '';
+          } else {
+            alert('Error updating goal weight: ' + xhr.responseText);
+          }
+        }
+      };
+      xhr.send('action=updateGoalWeight&goalWeight=' + goalWeight);
+    }
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
+  <style>
+    .weight-control {
+      margin-top: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .weight-buttons {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .weight-control input {
+      flex: 1;
+      padding: 10px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 16px;
+      font-family: 'Montserrat', sans-serif;
+      transition: border-color 0.3s;
+      margin-bottom: 8px;
+    }
+
+    .weight-control input:focus {
+      outline: none;
+      border-color: #ff6b6b;
+    }
+
+    .weight-btn {
+      padding: 10px 16px;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'Montserrat', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .weight-btn i {
+      font-size: 14px;
+    }
+
+    .weight-btn.decrease {
+      background-color: #ff6b6b;
+      padding: 10px;
+    }
+
+    .weight-btn.increase {
+      background-color: #ff6b6b;
+      padding: 10px;
+    }
+
+    .weight-btn.update {
+      background-color: #ff6b6b;
+      flex: 1;
+    }
+
+    .weight-btn.save {
+      background-color: #ff6b6b;
+      flex: 1;
+    }
+
+    .weight-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      background-color: #ff5252;
+    }
+
+    .weight-btn:active {
+      transform: translateY(0);
+      box-shadow: none;
+      background-color: #ff3d3d;
+    }
+
+    .btn.add-task-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #ff6b6b;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn.add-task-btn:hover {
+      background-color: #ff5252;
+      transform: translateY(-2px);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .btn.add-task-btn:active {
+      transform: translateY(0);
+      box-shadow: none;
+      background-color: #ff3d3d;
+    }
+  </style>
 </body>
 </html>

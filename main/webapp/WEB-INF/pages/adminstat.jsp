@@ -33,37 +33,35 @@
     <div class="stats-cards">
       <div class="card">
         <h3>New Users</h3>
-        <p>8,266</p>
+        <p>${newUsers}</p>
       </div>
       <div class="card">
         <h3>Meal Plans</h3>
-        <p>30</p>
+        <p>${mealPlans}</p>
       </div>
       <div class="card">
         <h3>Workout Routines</h3>
-        <p>12</p>
+        <p>${workoutRoutines}</p>
       </div>
       <div class="card">
         <h3>Progress</h3>
-        <p>45%</p>
+        <p>${progress}%</p>
       </div>
     </div>
 
     <div class="charts">
       <div class="chart-box">
         <div class="chart-title">Weekly Active Users</div>
-        <div class="bar bar-70"></div>
-        <div class="bar bar-60"></div>
-        <div class="bar bar-90"></div>
-        <div class="bar bar-45"></div>
+        <c:forEach items="${weeklyActiveUsers}" var="count">
+          <div class="bar bar-${count}"></div>
+        </c:forEach>
       </div>
 
       <div class="chart-box">
         <div class="chart-title">Meal Plan Engagement</div>
-        <div class="bar bar-60"></div>
-        <div class="bar bar-45"></div>
-        <div class="bar bar-70"></div>
-        <div class="bar bar-90"></div>
+        <c:forEach items="${mealPlanEngagement}" var="count">
+          <div class="bar bar-${count}"></div>
+        </c:forEach>
       </div>
     </div>
 
@@ -72,9 +70,6 @@
         <div class="chart-title">User Engagement Breakdown</div>
         <canvas id="pieChart"></canvas>
       </div>
-
-     
-      
     </div>
   </div>
 
@@ -83,10 +78,18 @@
     new Chart(ctx, {
       type: 'pie',
       data: {
-        labels: ['Active Users', 'Inactive Users', 'New Signups'],
+        labels: [
+          <c:forEach items="${userEngagement}" var="stat">
+            '${stat.category}',
+          </c:forEach>
+        ],
         datasets: [{
           label: 'User Engagement',
-          data: [45, 30, 25],
+          data: [
+            <c:forEach items="${userEngagement}" var="stat">
+              ${stat.count},
+            </c:forEach>
+          ],
           backgroundColor: [
             '#5c6ef8',
             '#a3a8f0',

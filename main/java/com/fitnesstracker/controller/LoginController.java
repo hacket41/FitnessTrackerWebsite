@@ -45,6 +45,9 @@ public class LoginController extends HttpServlet {
 
         if (!validationUtil.isNullOrEmpty(username) && !validationUtil.isNullOrEmpty(password)) {
             UserModel userModel = new UserModel();
+            userModel.setUsername(username);
+            userModel.setPassword(password);
+            
             Boolean loginStatus = loginService.loginUser(userModel);
 
             if (loginStatus != null && loginStatus) {
@@ -52,9 +55,9 @@ public class LoginController extends HttpServlet {
                 SessionUtil.setAttribute(req, "username", username);
                 UserModel user = loginService.getFullUserByUsername(username);
                 req.getSession().setAttribute("user", user);
-                req.getSession().setAttribute("userId", user.getUserId()); // From MealsBackend branch
+                req.getSession().setAttribute("userId", user.getUserId());
 
-                // Track online users (from HEAD branch)
+                // Track online users
                 ServletContext context = getServletContext();
                 Set<String> onlineUsers = (Set<String>) context.getAttribute("onlineUsers");
                 if (onlineUsers == null) {
