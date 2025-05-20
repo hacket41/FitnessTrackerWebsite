@@ -41,8 +41,6 @@ public class ValidationUtil {
 		return !isNullOrEmpty(password) && password.matches(passwordRegex);
 	}
 
-	// 8. Validate if a Part's file extension matches with image extensions (jpg,
-	// jpeg, png, gif)
 	
 
 	// 9. Validate if password and retype password match
@@ -50,6 +48,6 @@ public class ValidationUtil {
 		return !isNullOrEmpty(password) && !isNullOrEmpty(retypePassword) && password.equals(retypePassword);
 	}
 
-	// 10. Validate if the date of birth is at least 16 years before today
+	
 
 }

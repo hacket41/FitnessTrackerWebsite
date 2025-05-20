@@ -1,6 +1,6 @@
 package com.fitnesstracker.controller;
 
-import com.fitnesstracker.service.UserFunctions;
+import com.fitnesstracker.service.UserFunctionsService;
 import com.fitnesstracker.model.UserModel;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,7 +18,7 @@ public class AdminController extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            UserFunctions userFunctions = new UserFunctions();
+            UserFunctionsService userFunctions = new UserFunctionsService();
             List<UserModel> userList = userFunctions.getAllUsers();
             int userCount = userFunctions.getUserCount();
             request.setAttribute("userList", userList);

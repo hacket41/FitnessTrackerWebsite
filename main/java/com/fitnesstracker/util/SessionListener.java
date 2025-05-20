@@ -13,7 +13,7 @@ public class SessionListener implements HttpSessionListener {
 
     @Override
     public void sessionCreated(HttpSessionEvent se) {
-        // No action needed on creation
+        // NO CODE NEEDED YET
     }
 
     @Override

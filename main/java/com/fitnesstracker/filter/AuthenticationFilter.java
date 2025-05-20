@@ -24,6 +24,7 @@ public class AuthenticationFilter implements Filter {
     private static final String ROOT = "/";
     private static final String ADMIN_PAGE = "/admin";
     private static final String ADMIN_ROLE = "admin";
+    
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -38,9 +39,13 @@ public class AuthenticationFilter implements Filter {
         HttpServletResponse res = (HttpServletResponse) response;
 
         String uri = req.getRequestURI();
+        String contextPath = req.getContextPath();
+        String path = uri.substring(contextPath.length());
+
+        System.out.println("FILTER: Full URI = " + uri + ", Path = " + path);
+
         String role = null;
 
-        // Get role from cookies
         if (req.getCookies() != null) {
             for (Cookie cookie : req.getCookies()) {
                 if ("role".equals(cookie.getName())) {
@@ -52,35 +57,46 @@ public class AuthenticationFilter implements Filter {
 
         boolean isLoggedIn = SessionUtil.getAttribute(req, "username") != null;
 
-        // Allow CSS/static resources
-        if (uri.endsWith(".css")) {
+        // Allow static files
+        if (path.endsWith(".css") || path.endsWith(".js") || path.endsWith(".png") || path.endsWith(".jpg")) {
             chain.doFilter(request, response);
             return;
         }
 
-        // Allow login, register, and root access without login
+        // Public pages
+        boolean isPublicPage = path.equals("/") ||
+                               path.startsWith("/login") ||
+                               path.startsWith("/register") ||
+                               path.startsWith("/meals") ||
+                               path.startsWith("/about") ||
+                               path.startsWith("/progress") ||
+                               path.startsWith("/workout");
+
+        System.out.println("FILTER: isLoggedIn = " + isLoggedIn + ", isPublicPage = " + isPublicPage);
+
         if (!isLoggedIn) {
-            if (uri.endsWith(LOGIN) || uri.endsWith(REGISTER) || uri.equals(req.getContextPath() + ROOT)) {
+            if (isPublicPage) {
                 chain.doFilter(request, response);
             } else {
-                res.sendRedirect(req.getContextPath() + LOGIN);
+                res.sendRedirect(contextPath + "/login");
             }
         } else {
-            // Block access to /admin if user is not admin
-            if (uri.endsWith(ADMIN_PAGE) && !ADMIN_ROLE.equalsIgnoreCase(role)) {
+            if (path.startsWith("/admin") && !"admin".equalsIgnoreCase(role)) {
                 res.getWriter().write("<h1>Access Denied</h1>");
                 res.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 return;
             }
 
-            // Prevent access to login/register once logged in
-            if (uri.endsWith(LOGIN) || uri.endsWith(REGISTER)) {
-                res.sendRedirect(req.getContextPath() + HOME);
+            if (path.startsWith("/login") || path.startsWith("/register")) {
+                res.sendRedirect(contextPath + "/home");
             } else {
                 chain.doFilter(request, response);
             }
         }
     }
+
+    
+
 
     @Override
     public void destroy() {

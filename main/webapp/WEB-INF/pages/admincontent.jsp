@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -67,10 +68,55 @@
 				    <input type="text" name="workoutType" placeholder="Workout Type" required />
 				    <input type="text" name="workoutDuration" placeholder="Workout Duration" required />
 				    <button type="submit">Upload</button>
-				</form>
-
-            </div>
+				</form>	
+            </div>            
         </div>
         
+        <!-- Suggested Meals Section -->
+			<!-- Suggested Meals Section -->
+			
+
+         <!--  -->
+         <div class="meal-wrapper days-grid">
+				<div class="meal-section animated slide-up" style="animation-delay: 0.6s;">
+				        <h2>Workout Routine</h2>
+				       <div class="meal-cards" id="mealCardsContainer">
+						    <c:forEach var="workout" items="${uploadedWorkouts}">
+						        <div class="meal-card">
+						            <h3>${workout.name}</h3>
+						            <p>Type: ${workout.type}</p>
+						            <p>Duration: ${workout.duration}</p>
+						        </div>
+						    </c:forEach>
+						</div>
+
+				</div>
+			</div>
+			
+		
+		<!-- Suggested Meals Section -->
+		<div class="meal-wrapper days-grid">
+		    <div class="meal-section animated slide-up" style="animation-delay: 0.6s;">
+		        <h2>Suggested Meals</h2>
+		        <div class="meal-cards" id="mealCardsContainer">
+		
+		            <c:if test="${empty suggestedMeals}">
+		                <p>No suggested meals available.</p>
+		            </c:if>
+		
+		            <c:forEach items="${suggestedMeals}" var="meal">
+		                <div class="meal-card">
+		                    <h3>${meal.name}</h3>
+		                    <p>Type: ${meal.type}</p>
+		                    <p>Calories: ${meal.calories}</p>
+		                    <p>Macros: ${meal.macros}</p>
+		                </div>
+		            </c:forEach>
+		
+		        </div>
+		    </div>
+		</div>
+
+				
 </body>
 </html>

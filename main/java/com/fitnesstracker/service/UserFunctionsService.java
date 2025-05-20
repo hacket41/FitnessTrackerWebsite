@@ -6,10 +6,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserFunctions {
-    private static final String SELECT_ALL_USERS = "SELECT u.user_id, u.username, u.email, u.f_name, u.l_name, u.image_path, r.role "
-                                                  + "FROM user u "
-                                                  + "LEFT JOIN roles r ON u.user_id = r.user_id";
+public class UserFunctionsService {
+    private static final String SELECT_ALL_USERS = "SELECT u.user_id, u.username, u.email, u.f_name, u.l_name, u.image_path, r.role " +
+            "FROM user u LEFT JOIN roles r ON u.user_id = r.user_id";
 
     private static final String SELECT_USER_COUNT = "SELECT COUNT(*) AS total_users FROM user";
 
@@ -46,7 +45,7 @@ public class UserFunctions {
         }
         return count;
     }
-    
+
     public UserModel getUserById(int userId) throws SQLException, ClassNotFoundException {
         Connection conn = DBConfig.getDbConnection();
         String sql = "SELECT * FROM user WHERE user_id=?";
@@ -86,5 +85,9 @@ public class UserFunctions {
         stmt.setInt(1, userId);
         stmt.executeUpdate();
     }
+
+   
+
+
 
 }

@@ -44,7 +44,7 @@ public class LoginController extends HttpServlet {
         String password = req.getParameter("password");
 
         if (!validationUtil.isNullOrEmpty(username) && !validationUtil.isNullOrEmpty(password)) {
-            UserModel userModel = new UserModel(username, password);
+            UserModel userModel = new UserModel();
             Boolean loginStatus = loginService.loginUser(userModel);
 
             if (loginStatus != null && loginStatus) {

@@ -2,7 +2,7 @@ package com.fitnesstracker.controller;
 
 import com.fitnesstracker.config.DBConfig;
 import com.fitnesstracker.model.UserModel;
-import com.fitnesstracker.service.UserFunctions;
+import com.fitnesstracker.service.UserFunctionsService;
 import com.fitnesstracker.util.ImageUtil;
 
 import jakarta.servlet.ServletException;
@@ -78,7 +78,7 @@ public class UserProfileController extends HttpServlet {
         try {
             if (userIdParam != null) {
                 int userId = Integer.parseInt(userIdParam);
-                user = new UserFunctions().getUserById(userId);
+                user = new UserFunctionsService().getUserById(userId);
             } else {
                 user = (UserModel) request.getSession().getAttribute("user");
             }

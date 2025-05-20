@@ -6,10 +6,10 @@ import java.sql.*;
 import java.util.*;
 
 
-public class WorkoutUpload {
+public class WorkoutUploadService {
 	private Connection conn;
 	
-	public WorkoutUpload(Connection conn) {
+	public WorkoutUploadService(Connection conn) {
 		this.conn = conn;
 	}
 	

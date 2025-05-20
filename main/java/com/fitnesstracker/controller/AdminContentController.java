@@ -1,15 +1,19 @@
 package com.fitnesstracker.controller;
 
 import com.fitnesstracker.config.DBConfig;
-import com.fitnesstracker.service.MealUpload;
+import com.fitnesstracker.service.MealUploadService;
 import com.fitnesstracker.model.UploadedMeal;
-import com.fitnesstracker.service.WorkoutUpload;
+import com.fitnesstracker.service.WorkoutUploadService;
 import com.fitnesstracker.model.UploadedWorkout;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 /**
  * Servlet implementation class AdminContentController
@@ -29,17 +33,23 @@ public class AdminContentController extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		 try (Connection conn = DBConfig.getDbConnection()) {
-	            MealUpload mealup = new MealUpload(conn);
-	            List<UploadedMeal> meals = mealup.getAllMeals();
-	            request.setAttribute("uploadedMeals", meals);
-	            request.getRequestDispatcher("/WEB-INF/pages/admincontent.jsp").forward(request, response);
-	        
-		 	} 	catch (Exception e) {
-	            throw new ServletException("Error fetching uploaded meals", e);
-	        }
-	}
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try (Connection conn = DBConfig.getDbConnection()) {
+            MealUploadService mealup = new MealUploadService(conn);
+            List<UploadedMeal> suggesMeals = mealup.getSuggestedMeals();
+            request.setAttribute("suggestedMeals", suggesMeals);
+
+            WorkoutUploadService workoutUp = new WorkoutUploadService(conn);
+            List<UploadedWorkout> workouts = workoutUp.getAllWorkouts();
+            request.setAttribute("uploadedWorkouts", workouts);
+
+            request.getRequestDispatcher("/WEB-INF/pages/admincontent.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();  // Add this for debugging/logging
+            throw new ServletException("Error fetching uploaded content", e);
+        }
+    }
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -59,8 +69,8 @@ public class AdminContentController extends HttpServlet {
 	                workout.setType(workoutType);
 	                workout.setDuration(workoutDuration);
 
-	                WorkoutUpload dao = new WorkoutUpload(conn);
-	                dao.insertWorkout(workout);
+	                WorkoutUploadService work = new WorkoutUploadService(conn);
+	                work.insertWorkout(workout);
 
 	                response.sendRedirect(request.getContextPath() + "/admincontent");
 	                return;
@@ -81,7 +91,7 @@ public class AdminContentController extends HttpServlet {
 	                meal.setCalories(calories);
 	                meal.setMacros(macros);
 
-	                MealUpload meals = new MealUpload(conn);
+	                MealUploadService meals = new MealUploadService(conn);
 	                meals.insertMeal(meal);
 	            }
 	        }
@@ -92,7 +102,30 @@ public class AdminContentController extends HttpServlet {
 	        throw new ServletException("Error uploading content", e);
 	    }
 	}
+	
+	private List<UploadedMeal> getSuggestedMeals() {
+        List<UploadedMeal> suggestedMeals = new ArrayList<>();
 
+        try (Connection conn = DBConfig.getDbConnection();
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM uploadedmeals");
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                UploadedMeal meal = new UploadedMeal();
+                meal.setId(rs.getInt("uploadedmeals_id"));
+                meal.setName(rs.getString("uploadedmeals_name"));
+                meal.setType(rs.getString("uploadedmeal_type"));
+                meal.setCalories(rs.getInt("calories"));
+                meal.setMacros(rs.getString("macros"));
+                suggestedMeals.add(meal);
+            }
+
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+
+        return suggestedMeals;
+    }
 	
 }	
 	

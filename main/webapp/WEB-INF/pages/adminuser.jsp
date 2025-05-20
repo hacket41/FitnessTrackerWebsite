@@ -5,117 +5,140 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/adminuser.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>User List</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/adminuser.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body>
     <section id="menu">
         <div class="logo">
-            <img src="${pageContext.request.contextPath}/resources/images/logoone.png" alt="">
+            <img src="${pageContext.request.contextPath}/resources/images/logoone.png" alt="Logo" />
             <h2>Fitness Tracker</h2>
         </div>
         <div class="items">
-        <ul>
-             <li><i class="fa-solid fa-chart-pie"></i><a href ="${pageContext.request.contextPath}/admin">Dashboard</a></li>
-            <li><i class="fa-solid fa-users"></i><a href="${pageContext.request.contextPath}/adminusers">Users</a></li>
-            <li><i class="fa-solid fa-chart-simple"></i><a href="${pageContext.request.contextPath}/adminstat">Statistics</a></li>
-            <li><i class="fa-solid fa-gears"></i><a href="${pageContext.request.contextPath}/admincontent">Content</a></li>
-            <li><i class="fa-solid fa-house"></i><a href="${pageContext.request.contextPath}/home">Home</a></li>
-        </ul>
+            <ul>
+                <li><i class="fa-solid fa-chart-pie"></i><a href="${pageContext.request.contextPath}/admin">Dashboard</a></li>
+                <li><i class="fa-solid fa-users"></i><a href="${pageContext.request.contextPath}/adminusers">Users</a></li>
+                <li><i class="fa-solid fa-chart-simple"></i><a href="${pageContext.request.contextPath}/adminstat">Statistics</a></li>
+                <li><i class="fa-solid fa-gears"></i><a href="${pageContext.request.contextPath}/admincontent">Content</a></li>
+                <li><i class="fa-solid fa-house"></i><a href="${pageContext.request.contextPath}/home">Home</a></li>
+            </ul>
         </div>
     </section>
 
     <section id="interface">
-        <div class = "navigation">
-            <div class = "n1">
+        <div class="navigation">
+            <div class="n1">
                 <div>
-                    <i id = "menu-btn" class="fa-solid fa-bars"></i>
-                </div>
-                <div class="search">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" placeholder="Search">
+                    <i id="menu-btn" class="fa-solid fa-bars"></i>
                 </div>
             </div>
 
             <div class="profile">
                 <i class="fa-solid fa-user"></i>
-                <img src="${pageContext.request.contextPath}/resources/images/user-1.jpg" alt="">
+                <img src="${pageContext.request.contextPath}/resources/images/user-1.jpg" alt="User Profile" />
             </div>
         </div>
 
-        <h3 class = "i-name">
-            User List
-        </h3>
+        <h3 class="i-name">User List</h3>
 
-        <div class = "navigation-new">
-                <div class="search-bar">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" placeholder="Search">
-                </div>
-
-                
+        <div class="navigation-new">
+            <div class="search-bar">
+                <form method="get" action="${pageContext.request.contextPath}/adminusers" class="search-bar">
+                    <input
+                        type="text"
+                        name="search"
+                        value="${searchQuery}"
+                        placeholder="Search by username..."
+                    />
+                    <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </form>
+            </div>
         </div>
-        
-        <div class = "board">
-            <table width = "100%">
+
+        <!-- Display error message if any -->
+        <c:if test="${not empty errorMessage}">
+            <div class="error-message" style="color: red; text-align: center; margin: 10px 0;">
+                ${errorMessage}
+            </div>
+        </c:if>
+
+        <div class="board">
+            <table width="100%">
                 <thead>
                     <tr>
-                        <td><input type="checkbox"></td>
+                        <td><input type="checkbox" /></td>
                         <td>Name</td>
                         <td>Title</td>
                         <td>Status</td>
                         <td>Role</td>
-                        <td></td>
+                       
                     </tr>
                 </thead>
                 <tbody>
                     <c:forEach var="user" items="${userList}">
-				    <tr>
-				        <td class="people">
-				            <img src="${user.image_path}" alt="">
-				            <div class="people-de">
-				                <h5>${user.username}</h5>
-				                <p>${user.email}</p>
-				            </div>
-				        </td>
-				        <td class="people-des">
-				            <h5>${user.username}</h5>
-				            <p>${user.f_name} ${user.l_name}</p>
-				        </td>
-				        <td class="${onlineUsers.contains(user.username) ? 'active' : 'offline'}">
-						    <p>${onlineUsers.contains(user.username) ? 'Online' : 'Offline'}</p>
-						</td>
-				        <td class="role">
-						    <c:choose>
-						        <c:when test="${user.username == sessionScope.user.username}">
-						            <p>Admin</p>
-						        </c:when>
-						        <c:otherwise>
-						            <p>User</p>
-						        </c:otherwise>
-						    </c:choose>
-						</td>
+                        <tr>
+                            <td class="people">
+                                <img src="${user.image_path != null ? user.image_path : pageContext.request.contextPath.concat('/resources/images/default-user.jpg')}" 
+                                     alt="${user.username}" />
+                                <div class="people-de">
+                                    <h5>${user.username}</h5>
+                                    <p>${user.email}</p>
+                                </div>
+                            </td>
+                            <td class="people-des">
+                                <h5>${user.username}</h5>
+                                <p>${user.f_name} ${user.l_name}</p>
+                            </td>
+                            <td class="${onlineUsers.contains(user.username) ? 'active' : 'offline'}">
+                                <p><c:out value="${onlineUsers.contains(user.username) ? 'Online' : 'Offline'}" /></p>
+                            </td>
+                            <td class="role">
+                                <p>
+                                    <c:choose>
+                                        <c:when test="${not empty user.role}">
+                                            ${user.role}
+                                        </c:when>
+                                        <c:otherwise>
+                                            User
+                                        </c:otherwise>
+                                    </c:choose>
+                                    <c:if test="${user.username == sessionScope.user.username}">
+                                        (You)
+                                    </c:if>
+                                </p>
+                            </td>
+                            <td class="edit">
+                                <a href="${pageContext.request.contextPath}/adminedit?userId=${user.userId}">View</a> |
+                                <a
+                                    href="${pageContext.request.contextPath}/adminuser/delete?userId=${user.userId}"
+                                    onclick="return confirm('Are you sure you want to delete this user?');"
+                                    >Delete</a
+                                >
+                            </td>
+                        </tr>
+                    </c:forEach>
 
-				        <td class="edit">
-						    <a href="${pageContext.request.contextPath}/adminedit?userId=${user.userId}">View</a>
-						    |
-						    <a href="${pageContext.request.contextPath}/adminuser/delete?userId=${user.userId}" 
-						       onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
-						</td>
-
-
-				    </tr>
-				</c:forEach>
-				</tbody>
+                    <c:if test="${empty userList}">
+                        <tr>
+                            <td colspan="?" style="text-align: center;">
+                                No users found for "${searchQuery}".
+                            </td>
+                        </tr>
+                    </c:if>
+                </tbody>
+            </table>
         </div>
     </section>
-        
 
-        
+    <script>
+        // Toggle menu on mobile
+        $('#menu-btn').click(function() {
+            $('#menu').toggleClass('active');
+        });
+    </script>
 </body>
 </html>
-    

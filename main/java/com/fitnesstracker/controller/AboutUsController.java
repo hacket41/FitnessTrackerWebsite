@@ -24,7 +24,8 @@ public class AboutUsController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        Integer userId = (Integer) session.getAttribute("userId");
+        @SuppressWarnings("unused")
+		Integer userId = (Integer) session.getAttribute("userId");
 
         // Forward to the about.jsp page
         request.getRequestDispatcher("/WEB-INF/pages/about.jsp").forward(request, response);

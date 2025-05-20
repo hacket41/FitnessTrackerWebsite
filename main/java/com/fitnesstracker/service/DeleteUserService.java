@@ -1,4 +1,4 @@
-package com.fitnesstracker.controller;
+package com.fitnesstracker.service;
 
 import com.fitnesstracker.config.DBConfig;
 
@@ -13,7 +13,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 @WebServlet("/adminuser/delete")
-public class DeleteUserController extends HttpServlet {
+public class DeleteUserService extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

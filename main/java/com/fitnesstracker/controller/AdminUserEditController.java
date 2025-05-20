@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import com.fitnesstracker.model.UserModel;
-import com.fitnesstracker.service.UserFunctions;
+import com.fitnesstracker.service.UserFunctionsService;
 
 /**
  * Servlet implementation class AdminUserEditController
@@ -16,7 +16,7 @@ import com.fitnesstracker.service.UserFunctions;
 @WebServlet(asyncSupported = true, urlPatterns = { "/adminedit" })
 public class AdminUserEditController extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private UserFunctions userFunctions = new UserFunctions();
+    private UserFunctionsService userFunctions = new UserFunctionsService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -25,7 +25,7 @@ public class AdminUserEditController extends HttpServlet {
         try {
             UserModel user = userFunctions.getUserById(userId);
             request.setAttribute("editUser", user);
-            request.getRequestDispatcher("/WEB-INF/pages/admin_edit_user.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/pages/admin_edit_user.jsp").forward(request, response);//CHANGES MADE SO THAT USER DETAILS CANNOT BE EDITED
         } catch (Exception e) {
             e.printStackTrace();
             response.sendError(500);

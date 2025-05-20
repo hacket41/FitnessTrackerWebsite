@@ -2,7 +2,7 @@ package com.fitnesstracker.controller;
 
 import com.fitnesstracker.config.DBConfig;
 import com.fitnesstracker.model.UploadedWorkout;
-import com.fitnesstracker.service.WorkoutUpload;
+import com.fitnesstracker.service.WorkoutUploadService;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -32,7 +32,7 @@ public class WorkoutController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		 try (Connection conn = DBConfig.getDbConnection()) {
-	            WorkoutUpload dao = new WorkoutUpload(conn);
+	            WorkoutUploadService dao = new WorkoutUploadService(conn);
 	            List<UploadedWorkout> workouts = dao.getAllWorkouts();
 	            request.setAttribute("workoutList", workouts);
 	            request.getRequestDispatcher("/WEB-INF/pages/workoutmain.jsp").forward(request, response);

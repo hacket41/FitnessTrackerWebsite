@@ -120,7 +120,7 @@
 						    </c:choose>
 						</td>
 
-				        <td class="edit"><a href="#">Edit</a></td>
+				        <td class="edit"><a href="${pageContext.request.contextPath}/adminusers">Edit</a></td>
 				    </tr>
 				</c:forEach>
 

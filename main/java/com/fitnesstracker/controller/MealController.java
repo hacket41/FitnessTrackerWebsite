@@ -44,7 +44,7 @@ public class MealController extends HttpServlet {
             int totalCalories = calculateTotalCalories(todaysMeals);
             double waterIntake = getWaterIntakeFromDatabase(userId, session);
             List<UploadedMeal> suggesMeals = getSuggestedMeals();
-
+            
             request.setAttribute("todaysMeals", todaysMeals);
             request.setAttribute("totalCalories", totalCalories);
             request.setAttribute("waterIntake", waterIntake);
@@ -76,7 +76,7 @@ public class MealController extends HttpServlet {
         } else {
             doGet(request, response);
         }
-    }
+    }    
 
     private void addMeal(HttpServletRequest request, HttpServletResponse response, int userId) throws IOException {
         String mealName = request.getParameter("mealName");
