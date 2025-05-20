@@ -19,6 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 @WebServlet(asyncSupported = true, urlPatterns = { "/userprofile" })
 @MultipartConfig
@@ -71,52 +72,25 @@ public class UserProfileController extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        String userIdParam = request.getParameter("userId");
-        UserModel user = null;
-
         try {
-            if (userIdParam != null) {
-                int userId = Integer.parseInt(userIdParam);
-                user = new UserFunctionsService().getUserById(userId);
-            } else {
-                user = (UserModel) request.getSession().getAttribute("user");
-            }
-
-            if (user == null) {
-                response.sendRedirect(request.getContextPath() + "/login");
-                return;
-            }
-
-            // Extract form fields
-            String firstName = request.getParameter("firstName");
-            String lastName = request.getParameter("lastName");
-            String email = request.getParameter("email");
-            String birthdayStr = request.getParameter("date");
-
-            LocalDate birthday = (birthdayStr != null && !birthdayStr.isEmpty())
-                    ? LocalDate.parse(birthdayStr)
-                    : null;
-
-            Part image = request.getPart("image");
-            String imagePath = null;
-
-            if (image != null && image.getSize() > 0) {
-                String folder = "profile";
-                String savePath = request.getServletContext().getRealPath("/resources/images/" + folder);
-                boolean uploaded = imageUtil.uploadImage(image, savePath);
-
-                if (uploaded) {
-                    String imageName = imageUtil.getImageNameFromPart(image);
-                    imagePath = "resources/images/" + folder + "/" + imageName;
+            UserModel user = new UserModel();
+            user.setUserId((Integer) request.getSession().getAttribute("userId"));
+            user.setF_name(request.getParameter("firstName"));
+            user.setL_name(request.getParameter("lastName"));
+            user.setEmail(request.getParameter("email"));
+            
+            String birthdayStr = request.getParameter("birthday");
+            if (birthdayStr != null && !birthdayStr.trim().isEmpty()) {
+                try {
+                    user.setBirthday(LocalDate.parse(birthdayStr));
+                } catch (DateTimeParseException e) {
+                    request.setAttribute("error", "Invalid date format. Please use YYYY-MM-DD format.");
+                    request.getRequestDispatcher("/WEB-INF/pages/userprofile.jsp").forward(request, response);
+                    return;
                 }
             }
 
-            // Update fields
-            user.setF_name(firstName);
-            user.setL_name(lastName);
-            user.setEmail(email);
-            user.setBirthday(birthday);
+            String imagePath = handleImageUpload(request);
             if (imagePath != null) {
                 user.setImage_path(imagePath);
             }
@@ -138,14 +112,14 @@ public class UserProfileController extends HttpServlet {
                 int rows = stmt.executeUpdate();
 
                 if (rows > 0) {
-                    request.setAttribute("message", "Profile updated successfully.");
+                    request.setAttribute("success", "Profile updated successfully.");
                 } else {
-                    request.setAttribute("message", "Failed to update profile.");
+                    request.setAttribute("error", "Failed to update profile. Please try again.");
                 }
 
             } catch (SQLException | ClassNotFoundException e) {
                 e.printStackTrace();
-                request.setAttribute("message", "Error updating profile.");
+                request.setAttribute("error", "Database error occurred. Please try again later.");
             }
 
             request.setAttribute("user", user);
@@ -153,7 +127,26 @@ public class UserProfileController extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid form data.");
+            request.setAttribute("error", "An unexpected error occurred. Please try again later.");
+            request.getRequestDispatcher("/WEB-INF/pages/userprofile.jsp").forward(request, response);
         }
+    }
+
+    private String handleImageUpload(HttpServletRequest request) throws IOException, ServletException {
+        Part image = request.getPart("image");
+        String imagePath = null;
+
+        if (image != null && image.getSize() > 0) {
+            String folder = "profile";
+            String savePath = request.getServletContext().getRealPath("/resources/images/" + folder);
+            boolean uploaded = imageUtil.uploadImage(image, savePath);
+
+            if (uploaded) {
+                String imageName = imageUtil.getImageNameFromPart(image);
+                imagePath = "resources/images/" + folder + "/" + imageName;
+            }
+        }
+
+        return imagePath;
     }
 }

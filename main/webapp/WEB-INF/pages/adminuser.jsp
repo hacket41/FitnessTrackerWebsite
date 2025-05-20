@@ -59,11 +59,19 @@
             </div>
         </div>
 
-        <!-- Display error message if any -->
-        <c:if test="${not empty errorMessage}">
-            <div class="error-message" style="color: red; text-align: center; margin: 10px 0;">
-                ${errorMessage}
+        <!-- Display messages -->
+        <c:if test="${not empty sessionScope.errorMessage}">
+            <div class="error-message" style="color: red; text-align: center; margin: 10px 0; padding: 10px; background-color: #ffebee; border-radius: 4px;">
+                ${sessionScope.errorMessage}
             </div>
+            <c:remove var="errorMessage" scope="session"/>
+        </c:if>
+        
+        <c:if test="${not empty sessionScope.successMessage}">
+            <div class="success-message" style="color: green; text-align: center; margin: 10px 0; padding: 10px; background-color: #e8f5e9; border-radius: 4px;">
+                ${sessionScope.successMessage}
+            </div>
+            <c:remove var="successMessage" scope="session"/>
         </c:if>
 
         <div class="board">

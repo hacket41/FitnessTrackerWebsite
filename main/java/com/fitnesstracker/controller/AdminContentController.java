@@ -71,9 +71,6 @@ public class AdminContentController extends HttpServlet {
 
 	                WorkoutUploadService work = new WorkoutUploadService(conn);
 	                work.insertWorkout(workout);
-
-	                response.sendRedirect(request.getContextPath() + "/admincontent");
-	                return;
 	            }
 	        } else {
 	            // Handle meal upload
@@ -83,23 +80,36 @@ public class AdminContentController extends HttpServlet {
 	            String macros = request.getParameter("macros");
 
 	            if (mealName != null && mealType != null && caloriesStr != null && macros != null) {
-	                int calories = Integer.parseInt(caloriesStr);
+	                try {
+	                    int calories = Integer.parseInt(caloriesStr);
+	                    if (calories < 0) {
+	                        request.setAttribute("error", "Calories cannot be negative");
+	                        request.getRequestDispatcher("/WEB-INF/pages/admincontent.jsp").forward(request, response);
+	                        return;
+	                    }
 
-	                UploadedMeal meal = new UploadedMeal();
-	                meal.setName(mealName);
-	                meal.setType(mealType);
-	                meal.setCalories(calories);
-	                meal.setMacros(macros);
+	                    UploadedMeal meal = new UploadedMeal();
+	                    meal.setName(mealName);
+	                    meal.setType(mealType);
+	                    meal.setCalories(calories);
+	                    meal.setMacros(macros);
 
-	                MealUploadService meals = new MealUploadService(conn);
-	                meals.insertMeal(meal);
+	                    MealUploadService meals = new MealUploadService(conn);
+	                    meals.insertMeal(meal);
+	                } catch (NumberFormatException e) {
+	                    request.setAttribute("error", "Invalid calorie value. Please enter a valid number.");
+	                    request.getRequestDispatcher("/WEB-INF/pages/admincontent.jsp").forward(request, response);
+	                    return;
+	                }
 	            }
 	        }
 
+	        // Only redirect if we haven't forwarded the request
 	        response.sendRedirect(request.getContextPath() + "/admincontent");
 
 	    } catch (Exception e) {
-	        throw new ServletException("Error uploading content", e);
+	        request.setAttribute("error", "An error occurred while processing your request.");
+	        request.getRequestDispatcher("/WEB-INF/pages/admincontent.jsp").forward(request, response);
 	    }
 	}
 	

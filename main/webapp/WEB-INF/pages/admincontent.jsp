@@ -54,10 +54,15 @@
         <div class="content-section">
             <div class="content-card">
                 <h4>Upload Meal Plan</h4>
+                <c:if test="${not empty error}">
+                    <div class="error-message">
+                        ${error}
+                    </div>
+                </c:if>
 				<form action="${pageContext.request.contextPath}/admincontent" method="post">
 				    <input type="text" name="mealName" placeholder="Meal Name" required>
 				    <input type="text" name="mealType" placeholder="Meal Type" required>
-				    <input type="text" name="calories" placeholder="Calories" required>
+				    <input type="number" name="calories" placeholder="Calories" required min="0" style="height: 40px;">
 				    <textarea name="macros" placeholder="Macros" required></textarea>
 				    <button type="submit">Upload</button>
 				</form>
@@ -133,3 +138,15 @@
     </script>
 </body>
 </html>
+
+<style>
+    .error-message {
+        background-color: #ffebee;
+        color: #c62828;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+        border: 1px solid #ffcdd2;
+        font-size: 14px;
+    }
+</style>

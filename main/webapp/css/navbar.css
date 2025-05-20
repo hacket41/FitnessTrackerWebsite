@@ -5,6 +5,7 @@ nav{
     height: 70px;
 	background-color: rgb(245,245,245);
 	box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
 nav ul{
@@ -51,16 +52,15 @@ nav li:first-child {
 	top:0;
 	right:0;
 	height:100vh;
-	width:200px;
+	width:250px;
 	z-index:999;
-	background-color: rgba(255, 255, 255, 0.2);
-	backdrop-filter: blur(10px);
+	background-color: white;
 	box-shadow: -10px 0 10px rgba(0,0,0,0.1);
 	display:none;
 	flex-direction: column;
 	align-items: flex-start;
 	justify-content: flex-start;
-	
+	padding-top: 20px;
 }
 
 .sidebar li{
@@ -70,6 +70,25 @@ nav li:first-child {
 
 .sidebar a{
 	width:100%
+}
+
+/* Hide profile dropdown on mobile */
+@media (max-width: 768px) {
+    .hideOnMobile {
+        display: none !important;
+    }
+    
+    .sub-menu-wrap {
+        display: none !important;
+    }
+    
+    .sidebar {
+        display: none;
+    }
+    
+    .sidebar.active {
+        display: flex;
+    }
 }
 
 /* start here  */
