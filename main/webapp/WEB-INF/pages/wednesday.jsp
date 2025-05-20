@@ -20,9 +20,9 @@
     </c:if>
 
     <!-- Progress Bar -->
-    <div class="progress-container" style="width: 100%; padding: 0 20px; box-sizing: border-box;">
+    <div class="progress-container">
         <div class="progress-title">Today's Progress</div>
-        <div class="progress-bar-outer" style="width: 100%;">
+        <div class="progress-bar-outer">
             <div class="progress-bar-inner" id="progress-bar"></div>
         </div>
         <div class="progress-text">
@@ -42,10 +42,9 @@
                 </div>
             </div>
         </div>
-        
-        <form id="workoutForm" action="${pageContext.request.contextPath}/wednesday" method="post">
-            <input type="hidden" name="action" id="formAction">
-            <div class="exercises-table">
+        <div class="exercises-table">
+            <form id="workoutForm" action="${pageContext.request.contextPath}/wednesday" method="post">
+                <input type="hidden" name="action" id="formAction">
                 <div class="table-header">
                     <div class="workout-type">Exercise</div>
                     <div class="Sets">Sets</div>
@@ -94,8 +93,8 @@
                     <button type="button" class="btn btn-primary" id="save-progress" onclick="submitForm('completeWorkout')">Save Progress</button>
                     <button type="button" class="btn btn-success" id="complete-workout" onclick="submitForm('completeWorkout')">Complete Workout</button>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 
     <script>

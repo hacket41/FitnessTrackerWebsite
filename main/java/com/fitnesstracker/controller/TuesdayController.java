@@ -121,7 +121,7 @@ public class TuesdayController extends HttpServlet {
         String deleteSql = "DELETE FROM progress WHERE user_id = ? AND progress_type = ? AND progress_log = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(deleteSql)) {
             pstmt.setInt(1, userId);
-            pstmt.setString(2, "Legs Workout");
+            pstmt.setString(2, "Pull Workout");
             pstmt.setString(3, LocalDate.now().toString());
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -130,13 +130,13 @@ public class TuesdayController extends HttpServlet {
         }
 
         String insertSql = "INSERT INTO progress (progress_type, progress_notes, progress_log, user_id) VALUES (?, ?, ?, ?)";
-        String[] exercises = {"squats", "lunges", "legPress", "calfRaises", "legExtensions"};
+        String[] exercises = {"barbellRows", "latPulldown", "facePulls", "bicepCurls", "hammerCurls", "reverseFly"};
         for (String exercise : exercises) {
             String paramValue = request.getParameter(exercise);
             LOGGER.info("Saving progress for " + exercise + ": parameter value = " + (paramValue != null ? paramValue : "null"));
-            if ("on".equals(paramValue)) {
+            if ("completed".equals(paramValue)) {
                 try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
-                    pstmt.setString(1, "Legs Workout");
+                    pstmt.setString(1, "Pull Workout");
                     pstmt.setString(2, "Completed " + exercise);
                     pstmt.setString(3, LocalDate.now().toString());
                     pstmt.setInt(4, userId);
@@ -150,12 +150,12 @@ public class TuesdayController extends HttpServlet {
     }
 
     private void completeWorkout(HttpServletRequest request, HttpServletResponse response, Connection conn, int userId) throws ServletException, IOException, SQLException {
-        String[] exercises = {"squats", "lunges", "legPress", "calfRaises", "legExtensions"};
+        String[] exercises = {"barbellRows", "latPulldown", "facePulls", "bicepCurls", "hammerCurls", "reverseFly"};
         boolean allCompleted = true;
         for (String exercise : exercises) {
             String paramValue = request.getParameter(exercise);
             LOGGER.info("Checking exercise " + exercise + ": parameter value = " + (paramValue != null ? paramValue : "null"));
-            if (!"on".equals(paramValue)) {
+            if (!"completed".equals(paramValue)) {
                 allCompleted = false;
                 LOGGER.warning("Exercise " + exercise + " not completed (value: " + (paramValue != null ? paramValue : "null") + ")");
                 break;
@@ -170,15 +170,15 @@ public class TuesdayController extends HttpServlet {
         String updateSql = "UPDATE workout SET workout_weight_lifted = 0 WHERE user_id = ? AND workout_name = ? AND workout_id = (SELECT MAX(workout_id) FROM workout WHERE user_id = ? AND workout_name = ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(updateSql)) {
             pstmt.setInt(1, userId);
-            pstmt.setString(2, "Legs");
+            pstmt.setString(2, "Pull");
             pstmt.setInt(3, userId);
-            pstmt.setString(4, "Legs");
+            pstmt.setString(4, "Pull");
             int rowsUpdated = pstmt.executeUpdate();
             if (rowsUpdated == 0) {
                 String insertSql = "INSERT INTO workout (workout_name, workout_type, workout_duration, workout_weight_lifted, user_id) VALUES (?, ?, ?, ?, ?)";
                 try (PreparedStatement insertPstmt = conn.prepareStatement(insertSql)) {
-                    insertPstmt.setString(1, "Legs");
-                    insertPstmt.setString(2, "Legs Workout");
+                    insertPstmt.setString(1, "Pull");
+                    insertPstmt.setString(2, "Back and Biceps");
                     insertPstmt.setInt(3, 45);
                     insertPstmt.setInt(4, 0);
                     insertPstmt.setInt(5, userId);
