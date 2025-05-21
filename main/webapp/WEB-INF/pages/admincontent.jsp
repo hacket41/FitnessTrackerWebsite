@@ -51,22 +51,26 @@
             Dashboard
         </h3>
 
+        <!-- SUCCESS and ERROR MESSAGE DISPLAY -->
+        <c:if test="${not empty successMessage}">
+            <div class="success-message">${successMessage}</div>
+        </c:if>
+
+        <c:if test="${not empty error}">
+            <div class="error-message">${error}</div>
+        </c:if>
+
         <div class="content-section">
             <div class="content-card">
                 <h4>Upload Meal Plan</h4>
-                <c:if test="${not empty error}">
-                    <div class="error-message">
-                        ${error}
-                    </div>
-                </c:if>
 				<form action="${pageContext.request.contextPath}/admincontent" method="post">
+				    <input type="hidden" name="action" value="uploadMeal" />
 				    <input type="text" name="mealName" placeholder="Meal Name" required>
 				    <input type="text" name="mealType" placeholder="Meal Type" required>
 				    <input type="number" name="calories" placeholder="Calories" required min="0" style="height: 40px;">
 				    <textarea name="macros" placeholder="Macros" required></textarea>
 				    <button type="submit">Upload</button>
 				</form>
-
             </div>
             <div class="content-card">
                 <h4>Upload Workout Routine</h4>
@@ -80,47 +84,46 @@
             </div>            
         </div>
         
-        <!-- Suggested Meals Section -->
-			<!-- Suggested Meals Section -->
-			
-
-         <!--  -->
-         <div class="meal-wrapper days-grid">
-				<div class="meal-section animated slide-up" style="animation-delay: 0.6s;">
-				        <h2>Workout Routine</h2>
-				       <div class="meal-cards" id="mealCardsContainer">
-						    <c:forEach var="workout" items="${uploadedWorkouts}">
-						        <div class="meal-card">
-						            <h3>${workout.name}</h3>
-						            <p>Type: ${workout.type}</p>
-						            <p>Duration: ${workout.duration}</p>
-						        </div>
-						    </c:forEach>
-						</div>
-
+        <div class="meal-wrapper days-grid">
+			<div class="meal-section animated slide-up" style="animation-delay: 0.6s;">
+				<h2>Workout Routine</h2>
+				<div class="meal-cards" id="mealCardsContainer">
+				    <c:forEach var="workout" items="${uploadedWorkouts}">
+					    <div class="meal-card">
+					        <h3>${workout.name}</h3>
+					        <p>Type: ${workout.type}</p>
+					        <p>Duration: ${workout.duration}</p>
+					        <p>
+					            <a href="${pageContext.request.contextPath}/editworkout?id=${workout.id}">Edit</a>
+					            <a href="${pageContext.request.contextPath}/admincontent?action=deleteWorkout&workoutId=${workout.id}" 
+					               onclick="return confirm('Are you sure you want to delete this workout?');">Delete</a>
+					        </p>
+					    </div>
+					</c:forEach>
 				</div>
 			</div>
-			
-		
-		<!-- Suggested Meals Section -->
+		</div>
+
 		<div class="meal-wrapper days-grid">
 		    <div class="meal-section animated slide-up" style="animation-delay: 0.6s;">
 		        <h2>Suggested Meals</h2>
 		        <div class="meal-cards" id="mealCardsContainer">
-		
 		            <c:if test="${empty suggestedMeals}">
 		                <p>No suggested meals available.</p>
 		            </c:if>
-		
-		            <c:forEach items="${suggestedMeals}" var="meal">
-		                <div class="meal-card">
-		                    <h3>${meal.name}</h3>
-		                    <p>Type: ${meal.type}</p>
-		                    <p>Calories: ${meal.calories}</p>
-		                    <p>Macros: ${meal.macros}</p>
-		                </div>
-		            </c:forEach>
-		
+		            <c:forEach var="meal" items="${suggestedMeals}">
+					    <div class="meal-card">
+					        <h3>${meal.name}</h3>
+					        <p>Type: ${meal.type}</p>
+					        <p>Calories: ${meal.calories}</p>
+					        <p>Macros: ${meal.macros}</p>
+					        <p>
+					            <a href="${pageContext.request.contextPath}/editmeal?id=${meal.id}">Edit</a>
+					            <a href="${pageContext.request.contextPath}/admincontent?action=deleteMeal&mealId=${meal.id}" 
+					               onclick="return confirm('Are you sure you want to delete this meal?');">Delete</a>
+					        </p>
+					    </div>
+					</c:forEach>
 		        </div>
 		    </div>
 		</div>
@@ -136,8 +139,6 @@
             }, 500);
         });
     </script>
-</body>
-</html>
 
 <style>
     .error-message {
@@ -149,4 +150,16 @@
         border: 1px solid #ffcdd2;
         font-size: 14px;
     }
+    .success-message {
+        background-color: #d4edda;
+        color: #155724;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+        border: 1px solid #c3e6cb;
+        font-size: 14px;
+        font-weight: bold;
+    }
 </style>
+</body>
+</html>

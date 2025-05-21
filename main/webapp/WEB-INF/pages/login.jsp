@@ -41,10 +41,6 @@
 	<!-- NEW FEATURE FOR SHOWING HIDDEN PASSWORD -->
 	<div class="forgot animated slide-up" style="animation-delay: 0.5s;">
     <section>
-        <input type="checkbox" id="check" name="remember">
-        <label for="check">Remember me</label>
-    </section>
-    <section>
         <input type="checkbox" id="showPassword" onclick="togglePasswordVisibility()" />
         <label for="showPassword">Show Password</label>
     </section>

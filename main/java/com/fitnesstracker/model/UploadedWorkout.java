@@ -6,6 +6,16 @@ public class UploadedWorkout {
 	private String type;
 	private String duration;
 
+	public UploadedWorkout(int id, String name, String type, String duration) {
+	    this.id = id;
+	    this.name = name;
+	    this.type = type;
+	    this.duration = duration;
+	}
+
+	public UploadedWorkout() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public int getId() {
 		return id;

@@ -6,9 +6,22 @@ public class UploadedMeal {
     private String type;
     private int calories;
     private String macros;
+    
+    public UploadedMeal(int id, String name, String type, int calories, String macros) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.calories = calories;
+        this.macros = macros;
+    }
 
    
-    public int getId(){ 
+    public UploadedMeal() {
+		// TODO Auto-generated constructor stub
+	}
+
+
+	public int getId(){ 
     	return id; 
     }
     
