@@ -32,19 +32,10 @@
         <div class = "navigation">
             <div class = "n1">
                 
-                <div class="search">
-                    <form method="get" action="${pageContext.request.contextPath}/admincontent" class="search-form">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" name="search" value="${searchQuery}" placeholder="Search content...">
-                        <button type="submit" style="display: none;"></button>
-                    </form>
-                </div>
+                
             </div>
 
-            <div class="profile">
-                <i class="fa-solid fa-user"></i>
-                <img src="${pageContext.request.contextPath}/resources/images/user-1.jpg" alt="">
-            </div>
+            
         </div>
 
         <h3 class = "i-name">

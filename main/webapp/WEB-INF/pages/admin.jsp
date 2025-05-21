@@ -36,19 +36,10 @@
                     <i id="menu-btn" class="fa-solid fa-bars"></i>
                 </div>
             </div>
-            <div class="profile">
-                <i class="fa-solid fa-user"></i>
-                <img src="${pageContext.request.contextPath}/resources/images/user-1.jpg" alt="">
-            </div>
+           
         </div>
 
-        <div class="header">
-            <h1>Admin Dashboard</h1>
-            <div class="user-info">
-                <span>Welcome, ${sessionScope.username}</span>
-                <a href="logout" class="logout-btn">Logout</a>
-            </div>
-        </div>
+        
 
         <div class="values">
             <div class="val-box">
