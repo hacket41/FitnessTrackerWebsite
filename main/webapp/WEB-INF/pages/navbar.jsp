@@ -25,7 +25,7 @@
             <li><a href="${pageContext.request.contextPath}/meals">Meals</a></li>
             <li><a href="${pageContext.request.contextPath}/progress">Progress</a></li>
             <li><a href="${pageContext.request.contextPath}/workout">Workout</a></li>
-            <li><a href="${pageContext.request.contextPath}/about">About Us</a></li>
+            <li><a href="${pageContext.request.contextPath}/css/adminuser.css">About Us</a></li>
         
             <c:choose>
                 <c:when test="${not empty sessionScope.username}">

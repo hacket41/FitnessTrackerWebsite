@@ -276,15 +276,20 @@ body{
 
 
 /* NEWSLETTER SECTION STARTS HERE  */
-#newsletter{
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	flex-wrap: wrap;
-	background-repeat: no-repeat;
-	background-position: 20% 30%;
-	background-color: #d3d3d3;
+#newsletter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    padding: 40px;
+    background-color: #d3d3d3;
 }
+
+.newsletter-wrapper {
+    max-width: 600px;
+}
+
 
 #newsletter h4{
 	font-size: 22px;

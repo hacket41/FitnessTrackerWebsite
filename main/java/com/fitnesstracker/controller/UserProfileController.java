@@ -2,7 +2,6 @@ package com.fitnesstracker.controller;
 
 import com.fitnesstracker.config.DBConfig;
 import com.fitnesstracker.model.UserModel;
-import com.fitnesstracker.service.UserFunctionsService;
 import com.fitnesstracker.util.ImageUtil;
 
 import jakarta.servlet.ServletException;
@@ -34,32 +33,31 @@ public class UserProfileController extends HttpServlet {
         UserModel user = null;
 
         if (userIdParam != null && !userIdParam.isEmpty()) {
-            // Admin is editing another user's profile
-            int userId = Integer.parseInt(userIdParam);
+            try {
+                int userId = Integer.parseInt(userIdParam);
 
-            try (Connection conn = DBConfig.getDbConnection()) {
-                String sql = "SELECT * FROM user WHERE user_id=?";
-                PreparedStatement stmt = conn.prepareStatement(sql);
-                stmt.setInt(1, userId);
-                ResultSet rs = stmt.executeQuery();
+                try (Connection conn = DBConfig.getDbConnection()) {
+                    String sql = "SELECT * FROM user WHERE user_id=?";
+                    PreparedStatement stmt = conn.prepareStatement(sql);
+                    stmt.setInt(1, userId);
+                    ResultSet rs = stmt.executeQuery();
 
-                if (rs.next()) {
-                    user = new UserModel();
-                    user.setId(rs.getInt("user_id"));
-                    user.setF_name(rs.getString("f_name"));
-                    user.setL_name(rs.getString("l_name"));
-                    user.setUsername(rs.getString("username"));
-                    user.setEmail(rs.getString("email"));
-                    user.setBirthday(rs.getDate("birthday") != null ? rs.getDate("birthday").toLocalDate() : null);
-                    user.setImage_path(rs.getString("image_path"));
+                    if (rs.next()) {
+                        user = new UserModel();
+                        user.setId(rs.getInt("user_id"));
+                        user.setF_name(rs.getString("f_name"));
+                        user.setL_name(rs.getString("l_name"));
+                        user.setUsername(rs.getString("username"));
+                        user.setEmail(rs.getString("email"));
+                        user.setBirthday(rs.getDate("birthday") != null ? rs.getDate("birthday").toLocalDate() : null);
+                        user.setImage_path(rs.getString("image_path"));
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
-            // Normal user accessing their own profile
             user = (UserModel) request.getSession().getAttribute("user");
-
             if (user == null) {
                 response.sendRedirect(request.getContextPath() + "/login");
                 return;
@@ -73,18 +71,25 @@ public class UserProfileController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            Integer userId = (Integer) request.getSession().getAttribute("userId");
+            if (userId == null) {
+                response.sendRedirect(request.getContextPath() + "/login");
+                return;
+            }
+
             UserModel user = new UserModel();
-            user.setUserId((Integer) request.getSession().getAttribute("userId"));
+            user.setUserId(userId);
             user.setF_name(request.getParameter("firstName"));
             user.setL_name(request.getParameter("lastName"));
             user.setEmail(request.getParameter("email"));
-            
+
             String birthdayStr = request.getParameter("birthday");
             if (birthdayStr != null && !birthdayStr.trim().isEmpty()) {
                 try {
                     user.setBirthday(LocalDate.parse(birthdayStr));
                 } catch (DateTimeParseException e) {
                     request.setAttribute("error", "Invalid date format. Please use YYYY-MM-DD format.");
+                    request.setAttribute("user", user);
                     request.getRequestDispatcher("/WEB-INF/pages/userprofile.jsp").forward(request, response);
                     return;
                 }
@@ -110,16 +115,15 @@ public class UserProfileController extends HttpServlet {
                 stmt.setInt(6, user.getUserId());
 
                 int rows = stmt.executeUpdate();
-
                 if (rows > 0) {
                     request.setAttribute("success", "Profile updated successfully.");
                 } else {
-                    request.setAttribute("error", "Failed to update profile. Please try again.");
+                    request.setAttribute("error", "Failed to update profile.");
                 }
 
             } catch (SQLException | ClassNotFoundException e) {
                 e.printStackTrace();
-                request.setAttribute("error", "Database error occurred. Please try again later.");
+                request.setAttribute("error", "Database error. Try again later.");
             }
 
             request.setAttribute("user", user);
@@ -127,7 +131,7 @@ public class UserProfileController extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "An unexpected error occurred. Please try again later.");
+            request.setAttribute("error", "Unexpected error occurred.");
             request.getRequestDispatcher("/WEB-INF/pages/userprofile.jsp").forward(request, response);
         }
     }

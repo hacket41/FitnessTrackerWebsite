@@ -103,12 +103,13 @@
     </section>
 
     <!-- NEWSLETTER -->
-    <section id ="newsletter" class="sectionforpadding sectionformargin">
-		<div class = "newtext">
-			<h4>Sign Up For Newsletter</h4>
-			<p>Get Email updates about our latest posts and <a href =""><span>workouts</span></p></a>
-		</div>
-	 </section>
+    <section id="newsletter" class="sectionforpadding sectionformargin">
+	    <div class="newsletter-wrapper">
+	        <h4>Sign Up For Newsletter</h4>
+	        <p>Get Email updates about our latest posts and <span><a href="${pageContext.request.contextPath}/contact">workouts</a></span></p>
+	    </div>
+	</section>
+
 
 	
     

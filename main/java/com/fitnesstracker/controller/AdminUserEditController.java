@@ -25,7 +25,7 @@ public class AdminUserEditController extends HttpServlet {
         try {
             UserModel user = userFunctions.getUserById(userId);
             request.setAttribute("editUser", user);
-            request.getRequestDispatcher("/WEB-INF/pages/admin_edit_user.jsp").forward(request, response);//CHANGES MADE SO THAT USER DETAILS CANNOT BE EDITED
+            request.getRequestDispatcher("/WEB-INF/pages/admin_edit_user.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             response.sendError(500);

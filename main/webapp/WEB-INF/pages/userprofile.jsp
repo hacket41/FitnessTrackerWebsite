@@ -35,7 +35,7 @@
             </div>
 
             <!-- User Information Form -->
-            <form action="${pageContext.request.contextPath}/userprofile?userId=${user.userId}" method="post" enctype="multipart/form-data">
+			<form action="${pageContext.request.contextPath}/userprofile" method="post" enctype="multipart/form-data">
 
                 <div class="form-group">
                     <label for="firstName">First Name</label>
@@ -58,9 +58,11 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="date">Birthday</label>
-                    <input type="date" id="date" name="date" value="${user.birthday}">
-                </div>
+				    <label for="birthday">Birthday</label>
+				    <input type="date" id="birthday" name="birthday" value="${user.birthday}">
+				</div>
+				
+				
 
                 <div class="form-group">
                     <label for="image">Upload Profile Image</label>
@@ -71,10 +73,14 @@
                 <button class="save-btn" type="submit">Save Changes</button>
             </form>
 
-            <!-- Display success/failure message -->
-            <c:if test="${not empty message}">
-                <p style="margin-top: 20px; color: green;">${message}</p>
-            </c:if>
+            <!-- Feedback messages -->
+				<c:if test="${not empty success}">
+				    <p style="color: green;">${success}</p>
+				</c:if>
+				<c:if test="${not empty error}">
+				    <p style="color: red;">${error}</p>
+				</c:if>
+				
         </div>
     </div>
 </body>
