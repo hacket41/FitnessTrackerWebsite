@@ -62,13 +62,13 @@
 				       <div class="meal-cards" id="mealCardsContainer">
 						    <c:choose>
 						        <c:when test="${not empty workoutList}">
-						            <c:forEach var="workout" items="${workoutList}">
-						                <div class="meal-card">
+						    <c:forEach var="workout" items="${workoutList}">
+						        <div class="meal-card">
 						                    <h3><c:out value="${workout.name}"/></h3>
 						                    <p>Type: <c:out value="${workout.type}"/></p>
 						                    <p>Duration: <c:out value="${workout.duration}"/></p>
-						                </div>
-						            </c:forEach>
+						        </div>
+						    </c:forEach>
 						        </c:when>
 						        <c:otherwise>
 						            <div class="no-workouts">

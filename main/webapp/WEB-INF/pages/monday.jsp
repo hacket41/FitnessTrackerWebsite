@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -27,6 +28,34 @@
         </div>
     </div>
 
+    <div class="workout-history" style="margin: 20px; padding: 20px; background: #f5f5f5; border-radius: 8px;">
+        <h3 style="color: #333; margin-bottom: 15px;">Your Workout History</h3>
+        <c:set var="sessionProgress" value="${sessionScope.mondayWorkoutProgress}" />
+        <c:if test="${empty sessionProgress}">
+            <p style="color: #666;">No workout history available yet.</p>
+        </c:if>
+        <c:if test="${not empty sessionProgress}">
+            <div style="display: grid; gap: 15px;">
+                <c:forEach items="${sessionProgress}" var="progress" varStatus="status">
+                    <div style="background: white; padding: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <strong style="color: #2c3e50;">Date: ${progress.date}</strong>
+                            <span style="color: #27ae60;">${progress.workout_type}</span>
+                        </div>
+                        <div style="color: #666;">
+                            <strong>Completed Exercises:</strong>
+                            <ul style="margin: 5px 0; padding-left: 20px;">
+                                <c:forEach items="${progress.completed_exercises}" var="exercise">
+                                    <li>${exercise}</li>
+                                </c:forEach>
+                            </ul>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+        </c:if>
+    </div>
+
     <div class="workout-details">
         <div class="workout-info">
             <div class="exercise-name-container">
@@ -43,7 +72,7 @@
 
         <div class="exercises-table">
             <form id="workoutForm" action="${pageContext.request.contextPath}/monday" method="post">
-                <input type="hidden" name="action" value="saveProgress" id="formAction">
+                <input type="hidden" name="action" id="formAction">
                 <div class="table-header">
                     <div class="workout-type">Exercise</div>
                     <div class="Sets">Sets</div>
@@ -62,7 +91,7 @@
                     <div class="exercise-name">Deadlifts</div>
                     <div class="sets-range">4</div>
                     <div class="exercise-specs">6-8</div>
-                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="benchPress" value="completed"></div>
+                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="deadlifts" value="completed"></div>
                 </div>
                 
                 <div class="exercise-row">
@@ -94,11 +123,11 @@
                 </div>
                 
                 <div class="action-buttons">
-                    <button type="submit" class="btn btn-primary" name="action" value="saveProgress">Save Progress</button>
-                    <button type="submit" class="btn btn-success" name="action" value="completeWorkout">Complete Workout</button>
+                    <button type="button" class="btn btn-success" id="complete-workout" onclick="submitForm('completeWorkout')">Complete Workout</button>
                 </div>
             </form>
         </div>
+    </div>
 
     <script>
         window.onload = function() {
@@ -124,6 +153,11 @@
                     checkbox.closest('.exercise-row').classList.remove('completed');
                 }
             });
+        }
+
+        function submitForm(action) {
+            document.getElementById('formAction').value = action;
+            document.getElementById('workoutForm').submit();
         }
     </script>
 </body>

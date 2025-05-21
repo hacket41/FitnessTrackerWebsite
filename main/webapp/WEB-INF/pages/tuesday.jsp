@@ -30,22 +30,55 @@
         </div>
     </div>
 
+    <!-- Workout History -->
+    <div class="workout-history" style="margin: 20px; padding: 20px; background: #f5f5f5; border-radius: 8px;">
+        <h3 style="color: #333; margin-bottom: 15px;">Your Workout History</h3>
+        <%-- Fetching data from session scope --%>
+        <c:set var="sessionProgress" value="${sessionScope.tuesdayWorkoutProgress}" />
+        <c:if test="${empty sessionProgress}">
+            <p style="color: #666;">No workout history available yet.</p>
+        </c:if>
+        <c:if test="${not empty sessionProgress}">
+            <div style="display: grid; gap: 15px;">
+                <c:forEach items="${sessionProgress}" var="progress" varStatus="status">
+                    <div style="background: white; padding: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <strong style="color: #2c3e50;">Date: ${progress.date}</strong>
+                            <span style="color: #27ae60;">${progress.workout_type}</span>
+                        </div>
+                        <div style="color: #666;">
+                            <strong>Completed Exercises:</strong>
+                            <ul style="margin: 5px 0; padding-left: 20px;">
+                                <c:forEach items="${progress.completed_exercises}" var="exercise">
+                                    <li>${exercise}</li>
+                                </c:forEach>
+                            </ul>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+        </c:if>
+    </div>
+
     
     <div class="workout-details">
-        <div class="workout-info">
+			<div class="workout-info">
             <div class="exercise-name-container">
-                <p>PULL <br> WORKOUT</p>
+                <p>LEGS <br> WORKOUT</p>
                 <div class="workout-duration">Duration - 45 Mins</div>
                 <hr class="custom-line">
                 <div class="exercise-description">
-                    Let's target your Back and Biceps today with these simple and beginner-friendly Pull exercises.<br>
+                    Lets target your Quads, Hamstrings, and Calves today with these
+                    simple and beginner friendly Legs workout. <br>
                     BEST OF LUCK 
                 </div>
             </div>
         </div>
         
+        
         <div class="exercises-table">
             <form id="workoutForm" action="${pageContext.request.contextPath}/tuesday" method="post">
+                <input type="hidden" name="action" id="formAction">
                 <div class="table-header">
                     <div class="workout-type">Exercise</div>
                     <div class="Sets">Sets</div>
@@ -55,51 +88,50 @@
                 
                 <!-- Exercise Rows -->
                 <div class="exercise-row">
-                    <div class="exercise-name">Barbell Rows</div>
+                    <div class="exercise-name">Squats</div>
                     <div class="sets-range">4</div>
-                    <div class="exercise-specs">6-8</div>
-                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="barbellRows" value="completed"></div>
+                    <div class="exercise-specs">8-10</div>
+                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="squats"></div>
                 </div>
                 
                 <div class="exercise-row">
-                    <div class="exercise-name">Lat Pulldown</div>
-                    <div class="sets-range">3</div>
-                    <div class="exercise-specs">8-10</div>
-                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="latPulldown" value="completed"></div>
-                </div>
-
-                <div class="exercise-row">
-                    <div class="exercise-name">Face Pulls</div>
+                    <div class="exercise-name">Leg Press</div>
                     <div class="sets-range">3</div>
                     <div class="exercise-specs">10-12</div>
-                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="facePulls" value="completed"></div>
+                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="legPress"></div>
                 </div>
-
+                
                 <div class="exercise-row">
-                    <div class="exercise-name">Bicep Curls</div>
+                    <div class="exercise-name">Lunges</div>
                     <div class="sets-range">3</div>
-                    <div class="exercise-specs">10-12</div>
-                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="bicepCurls" value="completed"></div>
+                    <div class="exercise-specs">10-12 each</div>
+                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="lunges"></div>
                 </div>
-
+                
                 <div class="exercise-row">
-                    <div class="exercise-name">Hammer Curls</div>
-                    <div class="sets-range">3</div>
-                    <div class="exercise-specs">12-15</div>
-                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="hammerCurls" value="completed"></div>
-                </div>
-
-                <div class="exercise-row">
-                    <div class="exercise-name">Reverse Fly</div>
+                    <div class="exercise-name">Leg Extensions</div>
                     <div class="sets-range">3</div>
                     <div class="exercise-specs">12-15</div>
-                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="reverseFly" value="completed"></div>
+                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="legExtensions"></div>
+                </div>
+                
+                <div class="exercise-row">
+                    <div class="exercise-name">Leg Curls</div>
+                    <div class="sets-range">3</div>
+                    <div class="exercise-specs">12-15</div>
+                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="legCurls"></div>
+                </div>
+                
+                <div class="exercise-row">
+                    <div class="exercise-name">Calf Raises</div>
+                    <div class="sets-range">3</div>
+                    <div class="exercise-specs">15-20</div>
+                    <div class="exercise-check"><input type="checkbox" class="exercise-checkbox" name="calfRaises"></div>
                 </div>
                 
                 <!-- Action Buttons -->
                 <div class="action-buttons">
-                    <button type="submit" class="btn btn-primary" name="action" value="saveProgress">Save Progress</button>
-                    <button type="submit" class="btn btn-success" name="action" value="completeWorkout">Complete Workout</button>
+                    <button type="button" class="btn btn-success" id="complete-workout" onclick="submitForm('completeWorkout')">Complete Workout</button>
                 </div>
             </form>
         </div>

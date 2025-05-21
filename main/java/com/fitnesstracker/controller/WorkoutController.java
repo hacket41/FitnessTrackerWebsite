@@ -55,7 +55,7 @@ public class WorkoutController extends HttpServlet {
 			}
 		}
 
-		try (Connection conn = DBConfig.getDbConnection()) {
+		 try (Connection conn = DBConfig.getDbConnection()) {
 			List<UploadedWorkout> workouts = new ArrayList<>();
 			
 			// First, get uploaded workouts
@@ -78,13 +78,13 @@ public class WorkoutController extends HttpServlet {
 				}
 			}
 			
-			request.setAttribute("workoutList", workouts);
-			request.getRequestDispatcher("/WEB-INF/pages/workoutmain.jsp").forward(request, response);
-		} catch (Exception e) {
+	            request.setAttribute("workoutList", workouts);
+	            request.getRequestDispatcher("/WEB-INF/pages/workoutmain.jsp").forward(request, response);
+	        } catch (Exception e) {
 			LOGGER.severe("Error fetching workouts: " + e.getMessage());
-			throw new ServletException("Error fetching workouts", e);
-		}
-	}
+	            throw new ServletException("Error fetching workouts", e);
+	        }
+	    }
 	
 
 	/**

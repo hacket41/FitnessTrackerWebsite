@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -29,6 +30,36 @@
             <span id="progress-percentage">0%</span>
         </div>
     </div>
+
+    <!-- Workout History -->
+    <div class="workout-history" style="margin: 20px; padding: 20px; background: #f5f5f5; border-radius: 8px;">
+        <h3 style="color: #333; margin-bottom: 15px;">Your Workout History</h3>
+        <%-- Fetching data from session scope --%>
+        <c:set var="sessionProgress" value="${sessionScope.thursdayWorkoutProgress}" />
+        <c:if test="${empty sessionProgress}">
+            <p style="color: #666;">No workout history available yet.</p>
+        </c:if>
+        <c:if test="${not empty sessionProgress}">
+            <div style="display: grid; gap: 15px;">
+                <c:forEach items="${sessionProgress}" var="progress" varStatus="status">
+                    <div style="background: white; padding: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <strong style="color: #2c3e50;">Date: ${progress.date}</strong>
+                            <span style="color: #27ae60;">${progress.workout_type}</span>
+                        </div>
+                        <div style="color: #666;">
+                            <strong>Completed Exercises:</strong>
+                            <ul style="margin: 5px 0; padding-left: 20px;">
+                                <c:forEach items="${progress.completed_exercises}" var="exercise">
+                                    <li>${exercise}</li>
+                                </c:forEach>
+                            </ul>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+        </c:if>
+    </div>
     
     <div class="workout-details">
         <div class="workout-info">
@@ -44,8 +75,8 @@
             </div>
         </div>
         <div class="exercises-table">
-            <form id="workoutForm" action="${pageContext.request.contextPath}/thursday" method="post">
-                <input type="hidden" name="action" id="formAction">
+        <form id="workoutForm" action="${pageContext.request.contextPath}/thursday" method="post">
+            <input type="hidden" name="action" id="formAction">
                 <div class="table-header">
                     <div class="workout-type">Exercise</div>
                     <div class="Sets">Sets</div>
@@ -85,11 +116,10 @@
                 </div>
                 <!-- Action Buttons -->
                 <div class="action-buttons">
-                    <button type="button" class="btn btn-primary" id="save-progress" onclick="submitForm('completeWorkout')">Save Progress</button>
                     <button type="button" class="btn btn-success" id="complete-workout" onclick="submitForm('completeWorkout')">Complete Workout</button>
                 </div>
             </form>
-        </div>
+            </div>
     </div>
 
     <script>
