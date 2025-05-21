@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -10,7 +9,6 @@
 </head>
 <body>
     <div class="contact-container">
-        
         <!-- Back to Home Button -->
         <div class="back-home">
             <a href="${pageContext.request.contextPath}/home">← Back to Home</a>
@@ -18,7 +16,17 @@
 
         <h2>Contact Us</h2>
 
-        <form>
+        <!-- Display Message -->
+        <%
+            String message = (String) request.getAttribute("message");
+            if (message != null) {
+        %>
+            <div style="color: green; margin: 10px 0;"><%= message %></div>
+        <%
+            }
+        %>
+
+        <form method="post" action="${pageContext.request.contextPath}/contact">
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" required placeholder="Enter your username">
