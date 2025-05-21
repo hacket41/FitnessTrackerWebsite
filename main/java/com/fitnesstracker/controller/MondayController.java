@@ -24,6 +24,9 @@ import java.util.logging.Logger;
 
 /**
  * Servlet implementation class MondayController
+ * 
+ * Handles HTTP requests related to Monday's workout tracking.
+ * Supports displaying workout progress and marking workouts as completed.
  */
 @WebServlet(asyncSupported = true, urlPatterns = { "/monday" })
 public class MondayController extends HttpServlet {
@@ -31,12 +34,20 @@ public class MondayController extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(MondayController.class.getName());
     private static final String SESSION_PROGRESS_KEY = "mondayWorkoutProgress";
 
+    /**
+     * Default constructor.
+     */
     public MondayController() {
         super();
     }
 
     /**
      * Handles GET requests to display the Monday workout page.
+     * Checks for user session and retrieves workout progress from session attributes.
+     * Forwards the request to the Monday JSP page.
+     * 
+     * @param request  HttpServletRequest object
+     * @param response HttpServletResponse object
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         LOGGER.info("Received GET request for /monday, Session ID: " + 
@@ -69,6 +80,11 @@ public class MondayController extends HttpServlet {
 
     /**
      * Handles POST requests for completing workouts.
+     * Validates user session and checks if workout for the day is already completed.
+     * Calls completeWorkout() to mark workout completion if valid.
+     * 
+     * @param request  HttpServletRequest object
+     * @param response HttpServletResponse object
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
@@ -109,6 +125,15 @@ public class MondayController extends HttpServlet {
 
     /**
      * Marks the workout as completed and saves progress if all exercises are completed.
+     * Validates each exercise parameter from the request.
+     * Forwards back to the Monday page with error if not all exercises are completed.
+     * Redirects to /monday after saving progress.
+     * 
+     * @param request  HttpServletRequest object
+     * @param response HttpServletResponse object
+     * @param username Username of the logged-in user
+     * @throws ServletException
+     * @throws IOException
      */
     private void completeWorkout(HttpServletRequest request, HttpServletResponse response, String username) throws ServletException, IOException {
         String[] exercises = {
@@ -140,7 +165,12 @@ public class MondayController extends HttpServlet {
     }
 
     /**
-     * Saves the progress of checked exercises for the user.
+     * Saves the progress of checked exercises for the user in the session.
+     * Initializes progress list if absent.
+     * Adds a new progress entry containing username, date, workout type, and completed exercises.
+     * 
+     * @param request  HttpServletRequest object
+     * @param username Username of the logged-in user
      */
     @SuppressWarnings("unchecked")
     private void saveProgress(HttpServletRequest request, String username) {
@@ -161,13 +191,13 @@ public class MondayController extends HttpServlet {
         List<String> completedExercises = new ArrayList<>();
         String[] exercises = {
             "barbellSquats",
-            "deadlifts",
+            "deadlifts", 
             "assistedPullups",
             "barbellRows",
             "barbellBicepsCurls",
             "hammerCurls"
         };
-         // Correcting exercise name for Deadlifts if needed based on JSP name
+         // Collect completed exercises from request parameters
         String[] jspExercises = {
             "barbellSquats",
             "deadlifts", 
@@ -191,7 +221,11 @@ public class MondayController extends HttpServlet {
     }
 
     /**
-     * Lists session attributes for debugging.
+     * Lists all session attributes as a debug string.
+     * Useful for debugging session state.
+     * 
+     * @param request HttpServletRequest object
+     * @return String containing session attribute names and values
      */
     private String listSessionAttributes(HttpServletRequest request) {
         StringBuilder attributes = new StringBuilder();

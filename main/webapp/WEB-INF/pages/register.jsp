@@ -82,7 +82,7 @@
         <!-- Feature illustration -->
         <div class="login-illustration animated slide-in-right" style="animation-delay: 0.4s;">
             <div class="illustration-wrapper">
-                <img src="${pageContext.request.contextPath}/resources/images/register.png" alt="Fitness Journey" class="illustration-image">
+                <img src="${pageContext.request.contextPath}/resources/images/register.png" alt="" class="illustration-image">
                 <!-- Optional illustration text
                 <div class="illustration-text">
                     <h2>FITNESS JOURNEY</h2>

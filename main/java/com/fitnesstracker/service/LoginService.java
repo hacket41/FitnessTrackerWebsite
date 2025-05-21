@@ -1,13 +1,13 @@
 package com.fitnesstracker.service;
 
+import com.fitnesstracker.config.DBConfig;
+import com.fitnesstracker.model.UserModel;
+import com.fitnesstracker.util.PasswordUtil;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import com.fitnesstracker.config.DBConfig;
-import com.fitnesstracker.model.UserModel;
-import com.fitnesstracker.util.PasswordUtil;
 
 /**
  * Handles user authentication and user-related queries for login and profile.
@@ -17,6 +17,10 @@ public class LoginService {
     private Connection dbConn;
     private boolean connectionErr = false;
 
+    /**
+     * Initializes LoginService by establishing a database connection.
+     * Sets connectionErr flag if connection fails.
+     */
     public LoginService() {
         try {
             dbConn = DBConfig.getDbConnection();
@@ -28,6 +32,7 @@ public class LoginService {
 
     /**
      * Authenticates a user by validating username and password.
+     *
      * @param userModel The user model containing username and password input.
      * @return true if login successful, false if invalid credentials, null if DB error.
      */
@@ -55,6 +60,7 @@ public class LoginService {
 
     /**
      * Retrieves the role of a user by username.
+     *
      * @param username Username to look up.
      * @return Role name, or null if not found or error.
      */
@@ -82,6 +88,7 @@ public class LoginService {
 
     /**
      * Retrieves full user details by username.
+     *
      * @param username Username to look up.
      * @return UserModel populated with user details, or null if not found.
      */
@@ -119,11 +126,12 @@ public class LoginService {
 
     /**
      * Updates user profile details.
+     *
      * @param user UserModel containing updated information.
      * @return true if update successful, false otherwise.
      */
     public boolean updateUserProfile(UserModel user) {
-        String sql = "UPDATE users SET f_name=?, l_name=?, email=? WHERE username=?";
+        String sql = "UPDATE user SET f_name=?, l_name=?, email=? WHERE username=?";
         try (Connection conn = DBConfig.getDbConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, user.getF_name());
@@ -141,6 +149,7 @@ public class LoginService {
 
     /**
      * Validates input password against decrypted database password.
+     *
      * @param result ResultSet containing stored username and password.
      * @param userModel UserModel with input credentials.
      * @return true if valid credentials, false otherwise.

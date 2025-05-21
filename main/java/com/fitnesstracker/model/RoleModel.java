@@ -1,20 +1,21 @@
 package com.fitnesstracker.model;
 
 public class RoleModel {
-	
-	String role;
+    // Role name or identifier (e.g., "admin", "user")
+    private String role;
 
-	public RoleModel(String role) {
-		super();
-		this.role = role;
-	}
+    // Constructor initializing the role
+    public RoleModel(String role) {
+        this.role = role;
+    }
 
-	public String getRole() {
-		return role;
-	}
+    // Getter for role
+    public String getRole() {
+        return role;
+    }
 
-	public void setModel(String role) {
-		this.role = role;
-	}
-	
+    // Setter for role (method name corrected from setModel to setRole)
+    public void setRole(String role) {
+        this.role = role;
+    }
 }

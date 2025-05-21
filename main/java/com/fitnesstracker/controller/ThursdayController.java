@@ -29,6 +29,13 @@ public class ThursdayController extends HttpServlet {
 
     /**
      * Handles GET requests to display the Thursday workout page.
+     *
+     * @param request  the HttpServletRequest object that contains the request
+     *                 the client made to the servlet
+     * @param response the HttpServletResponse object that contains the response
+     *                 the servlet returns to the client
+     * @throws ServletException if the request could not be handled
+     * @throws IOException      if an input or output error is detected
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         LOGGER.info("Received GET request for /thursday, Session ID: " + 
@@ -61,6 +68,11 @@ public class ThursdayController extends HttpServlet {
 
     /**
      * Handles POST requests for completing workouts.
+     *
+     * @param request  the HttpServletRequest containing form submission
+     * @param response the HttpServletResponse for sending responses
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
@@ -89,17 +101,23 @@ public class ThursdayController extends HttpServlet {
             }
         }
 
-            if ("completeWorkout".equals(action) || "saveProgress".equals(action)) {
+        if ("completeWorkout".equals(action) || "saveProgress".equals(action)) {
             completeWorkout(request, response, username);
-            } else {
-                LOGGER.warning("Invalid action received: " + action);
-                request.setAttribute("error", "Invalid action");
+        } else {
+            LOGGER.warning("Invalid action received: " + action);
+            request.setAttribute("error", "Invalid action");
             request.getRequestDispatcher("/WEB-INF/pages/thursday.jsp").forward(request, response);
         }
     }
 
     /**
      * Marks the workout as completed and saves progress if all exercises are completed.
+     *
+     * @param request  the HttpServletRequest from the client
+     * @param response the HttpServletResponse to send feedback
+     * @param username the username of the currently logged-in user
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an input or output error occurs
      */
     private void completeWorkout(HttpServletRequest request, HttpServletResponse response, String username)
             throws ServletException, IOException {
@@ -124,6 +142,12 @@ public class ThursdayController extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/thursday");
     }
 
+    /**
+     * Saves the progress for the current workout by storing it in the session.
+     *
+     * @param request  the HttpServletRequest containing form data
+     * @param username the username of the user submitting progress
+     */
     @SuppressWarnings("unchecked")
     private void saveProgress(HttpServletRequest request, String username) {
         HttpSession session = request.getSession();
@@ -156,7 +180,10 @@ public class ThursdayController extends HttpServlet {
     }
 
     /**
-     * Lists session attributes for debugging.
+     * Lists all attributes in the current session for debugging purposes.
+     *
+     * @param request the HttpServletRequest used to get the session
+     * @return a string listing all session attributes
      */
     private String listSessionAttributes(HttpServletRequest request) {
         StringBuilder attributes = new StringBuilder();

@@ -12,6 +12,13 @@ public class UserFunctionsService {
 
     private static final String SELECT_USER_COUNT = "SELECT COUNT(*) AS total_users FROM user";
 
+    /**
+     * Retrieves all users and their roles from the database.
+     *
+     * @return List of UserModel objects representing all users.
+     * @throws SQLException if a database access error occurs.
+     * @throws ClassNotFoundException if database driver class not found.
+     */
     public List<UserModel> getAllUsers() throws SQLException, ClassNotFoundException {
         List<UserModel> userList = new ArrayList<>();
         try (Connection connection = DBConfig.getDbConnection();
@@ -33,6 +40,13 @@ public class UserFunctionsService {
         return userList;
     }
 
+    /**
+     * Counts the total number of users in the database.
+     *
+     * @return Total user count as an integer.
+     * @throws SQLException if a database access error occurs.
+     * @throws ClassNotFoundException if database driver class not found.
+     */
     public int getUserCount() throws SQLException, ClassNotFoundException {
         int count = 0;
         try (Connection connection = DBConfig.getDbConnection();
@@ -46,6 +60,14 @@ public class UserFunctionsService {
         return count;
     }
 
+    /**
+     * Retrieves user details by user ID.
+     *
+     * @param userId The ID of the user to fetch.
+     * @return UserModel object if user exists; null otherwise.
+     * @throws SQLException if a database access error occurs.
+     * @throws ClassNotFoundException if database driver class not found.
+     */
     public UserModel getUserById(int userId) throws SQLException, ClassNotFoundException {
         Connection conn = DBConfig.getDbConnection();
         String sql = "SELECT * FROM user WHERE user_id=?";
@@ -65,6 +87,17 @@ public class UserFunctionsService {
         return null;
     }
 
+    /**
+     * Updates user profile information from the admin panel.
+     *
+     * @param userId     The ID of the user to update.
+     * @param fName      New first name.
+     * @param lName      New last name.
+     * @param email      New email address.
+     * @param birthdayStr New birthday date as a String (format: YYYY-MM-DD).
+     * @throws SQLException if a database access error occurs.
+     * @throws ClassNotFoundException if database driver class not found.
+     */
     public void updateUserProfileFromAdmin(int userId, String fName, String lName, String email, String birthdayStr)
             throws SQLException, ClassNotFoundException {
         Connection conn = DBConfig.getDbConnection();
@@ -78,6 +111,13 @@ public class UserFunctionsService {
         stmt.executeUpdate();
     }
 
+    /**
+     * Deletes a user from the database.
+     *
+     * @param userId The ID of the user to delete.
+     * @throws SQLException if a database access error occurs.
+     * @throws ClassNotFoundException if database driver class not found.
+     */
     public void deleteUser(int userId) throws SQLException, ClassNotFoundException {
         Connection conn = DBConfig.getDbConnection();
         String sql = "DELETE FROM user WHERE user_id=?";
@@ -85,9 +125,4 @@ public class UserFunctionsService {
         stmt.setInt(1, userId);
         stmt.executeUpdate();
     }
-
-   
-
-
-
 }

@@ -1,12 +1,18 @@
 package com.fitnesstracker.model;
 
 public class UploadedMeal {
+    // Unique identifier for the uploaded meal
     private int id;
+    // Name of the meal
     private String name;
+    // Type/category of the meal (e.g., breakfast, lunch)
     private String type;
+    // Caloric content of the meal
     private int calories;
+    // Macronutrient details as a string (e.g., "Protein: 20g, Carbs: 30g")
     private String macros;
-    
+
+    // Parameterized constructor
     public UploadedMeal(int id, String name, String type, int calories, String macros) {
         this.id = id;
         this.name = name;
@@ -15,53 +21,50 @@ public class UploadedMeal {
         this.macros = macros;
     }
 
-   
+    // Default constructor
     public UploadedMeal() {
-		// TODO Auto-generated constructor stub
-	}
+        // No-arg constructor
+    }
 
-
-	public int getId(){ 
-    	return id; 
+    // Getter and Setter methods
+    
+    public int getId() { 
+        return id; 
     }
     
-    public void setId(int id){ 
-    	this.id = id; 
+    public void setId(int id) { 
+        this.id = id; 
     }
 
-    public String getName(){ 
-    	return name;
+    public String getName() { 
+        return name;
     }
     
-   
-    public void setName(String name){ 
-    	this.name = name; 
+    public void setName(String name) { 
+        this.name = name; 
     }
 
     public String getType() { 
-    	return type; 
+        return type; 
     }
     
-    
-    public void setType(String type){ 
-    	this.type = type; 
+    public void setType(String type) { 
+        this.type = type; 
     }
 
     public int getCalories() { 
-    	return calories; 
+        return calories; 
     }
     
-    
-    public void setCalories(int calories){ 
-    	this.calories = calories; 
+    public void setCalories(int calories) { 
+        this.calories = calories; 
     }
 
     public String getMacros() { 
-    	return macros; 
+        return macros; 
     }
     
-    
-    public void setMacros(String macros){ 
-    	this.macros = macros; 
+    public void setMacros(String macros) { 
+        this.macros = macros; 
     }
 }

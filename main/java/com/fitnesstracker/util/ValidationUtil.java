@@ -1,53 +1,69 @@
-
 package com.fitnesstracker.util;
-
 
 import java.util.regex.Pattern;
 
-
-
-//
 public class ValidationUtil {
 
-	// 1. Validate if a field is null or empty
-	public boolean isNullOrEmpty(String value) {
-		return value == null || value.trim().isEmpty();
-	}
+    /**
+     * Check if a string is null or empty after trimming.
+     *
+     * @param value the string to check
+     * @return true if null or empty, false otherwise
+     */
+    public boolean isNullOrEmpty(String value) {
+        return value == null || value.trim().isEmpty();
+    }
 
-	// 2. Validate if a string contains only letters
-	public boolean isAlphabetic(String value) {
-		return !isNullOrEmpty(value) && value.matches("^[a-zA-Z]+$"); //
-	}
+    /**
+     * Check if a string contains only alphabetic letters.
+     *
+     * @param value the string to check
+     * @return true if only letters, false otherwise
+     */
+    public boolean isAlphabetic(String value) {
+        return !isNullOrEmpty(value) && value.matches("^[a-zA-Z]+$");
+    }
 
-	// 3. Validate if a string starts with a letter and is composed of letters and
-	// numbers
-	public boolean isAlphanumericStartingWithLetter(String value) {
-		return !isNullOrEmpty(value) && value.matches("^[a-zA-Z][a-zA-Z0-9]*$");
-	}
+    /**
+     * Check if a string starts with a letter and contains only letters and digits.
+     *
+     * @param value the string to check
+     * @return true if it starts with a letter and is alphanumeric, false otherwise
+     */
+    public boolean isAlphanumericStartingWithLetter(String value) {
+        return !isNullOrEmpty(value) && value.matches("^[a-zA-Z][a-zA-Z0-9]*$");
+    }
 
-	
+    /**
+     * Validate if the input is a valid email format.
+     *
+     * @param email the email string to check
+     * @return true if valid email, false otherwise
+     */
+    public boolean isValidEmail(String email) {
+        String emailRegex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+        return !isNullOrEmpty(email) && Pattern.matches(emailRegex, email);
+    }
 
-	// 5. Validate if a string is a valid email address
-	public boolean isValidEmail(String email) {
-		String emailRegex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
-		return !isNullOrEmpty(email) && Pattern.matches(emailRegex, email);
-	}
+    /**
+     * Validate if a password has at least one uppercase letter, one digit, one special symbol, and minimum length of 8.
+     *
+     * @param password the password string to check
+     * @return true if password meets criteria, false otherwise
+     */
+    public boolean isValidPassword(String password) {
+        String passwordRegex = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+        return !isNullOrEmpty(password) && password.matches(passwordRegex);
+    }
 
-	
-	// 7. Validate if a password is composed of at least 1 capital letter, 1 number,
-	// and 1 symbol
-	public boolean isValidPassword(String password) {
-		String passwordRegex = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
-		return !isNullOrEmpty(password) && password.matches(passwordRegex);
-	}
-
-	
-
-	// 9. Validate if password and retype password match
-	public boolean doPasswordsMatch(String password, String retypePassword) {
-		return !isNullOrEmpty(password) && !isNullOrEmpty(retypePassword) && password.equals(retypePassword);
-	}
-
-	
-
+    /**
+     * Check if two password strings match exactly.
+     *
+     * @param password the first password
+     * @param retypePassword the second password to compare
+     * @return true if both match, false otherwise
+     */
+    public boolean doPasswordsMatch(String password, String retypePassword) {
+        return !isNullOrEmpty(password) && !isNullOrEmpty(retypePassword) && password.equals(retypePassword);
+    }
 }

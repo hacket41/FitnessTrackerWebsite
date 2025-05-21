@@ -64,42 +64,42 @@
                 <div class="team-grid">
                     <div class="team-member">
                         <div class="member-image">
-                            <img src="${pageContext.request.contextPath}/resources/images/AboutUser.png" alt="Team Member">
+                            <img src="${pageContext.request.contextPath}/resources/images/Abhijit.png" alt="Team Member">
                         </div>
                         <h3>Abhijit Singh</h3>
                         <p>Developer 1</p>
                     </div>
                     <div class="team-member">
                         <div class="member-image">
-                            <img src="${pageContext.request.contextPath}/resources/images/AboutUser.png" alt="Team Member">
+                            <img src="${pageContext.request.contextPath}/resources/images/Pranish.png" alt="Team Member">
                         </div>
                         <h3>Pranish Chaulagain</h3>
                         <p>Developer 2</p>
                     </div>
                     <div class="team-member">
                         <div class="member-image">
-                            <img src="${pageContext.request.contextPath}/resources/images/AboutUser.png" alt="Team Member">
+                            <img src="${pageContext.request.contextPath}/resources/images/Aashutosh.png" alt="Team Member">
                         </div>
                         <h3>Aashutosh Chalise</h3>
                         <p>Developer 3</p>
                     </div>
                      <div class="team-member">
                         <div class="member-image">
-                            <img src="${pageContext.request.contextPath}/resources/images/AboutUser.png" alt="Team Member">
+                            <img src="${pageContext.request.contextPath}/resources/images/Nobel.png" alt="Team Member">
                         </div>
                         <h3>Nobel Kumar Aryal</h3>
                         <p>Developer 4</p>
                     </div>
                      <div class="team-member">
                         <div class="member-image">
-                            <img src="${pageContext.request.contextPath}/resources/images/AboutUser.png" alt="Team Member">
+                            <img src="${pageContext.request.contextPath}/resources/images/Kaushal.png" alt="Team Member">
                         </div>
                         <h3>Kaushal Raj Thapa</h3>
                         <p>Developer 5</p>
                     </div>
                      <div class="team-member">
                         <div class="member-image">
-                            <img src="${pageContext.request.contextPath}/resources/images/AboutUser.png" alt="Team Member">
+                            <img src="${pageContext.request.contextPath}/resources/images/Samik.png" alt="Team Member">
                         </div>
                         <h3>Samik Bhandari</h3>
                         <p>Developer 6</p>

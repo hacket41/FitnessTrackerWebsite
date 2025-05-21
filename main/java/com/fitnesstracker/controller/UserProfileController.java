@@ -20,12 +20,23 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Servlet controller responsible for handling user profile operations such as
+ * retrieving and updating profile information and handling image uploads.
+ */
 @WebServlet(asyncSupported = true, urlPatterns = { "/userprofile" })
 @MultipartConfig
 public class UserProfileController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private final ImageUtil imageUtil = new ImageUtil();
 
+    /**
+     * Handles GET requests to fetch user profile data from the database
+     * or from session if no user ID is provided in the request.
+     *
+     * @param request  the HttpServletRequest object
+     * @param response the HttpServletResponse object
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -68,6 +79,13 @@ public class UserProfileController extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/pages/userprofile.jsp").forward(request, response);
     }
 
+    /**
+     * Handles POST requests to update user profile information including
+     * name, email, birthday, and profile image.
+     *
+     * @param request  the HttpServletRequest object
+     * @param response the HttpServletResponse object
+     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -136,6 +154,15 @@ public class UserProfileController extends HttpServlet {
         }
     }
 
+    /**
+     * Handles image upload from the form. Saves the image to the server
+     * and returns the relative path to be stored in the database.
+     *
+     * @param request the HttpServletRequest containing the image part
+     * @return the relative path of the uploaded image or null if upload fails
+     * @throws IOException
+     * @throws ServletException
+     */
     private String handleImageUpload(HttpServletRequest request) throws IOException, ServletException {
         Part image = request.getPart("image");
         String imagePath = null;

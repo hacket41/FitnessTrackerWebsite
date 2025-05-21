@@ -4,13 +4,27 @@ import com.fitnesstracker.model.UploadedMeal;
 import java.sql.*;
 import java.util.*;
 
+/**
+ * Service class to manage uploaded meals in the database.
+ */
 public class MealUpload {
-    private Connection conn;
+    private final Connection conn;
 
+    /**
+     * Constructor that sets the database connection.
+     * 
+     * @param conn The active database connection.
+     */
     public MealUpload(Connection conn) {
         this.conn = conn;
     }
 
+    /**
+     * Inserts a new uploaded meal into the database.
+     * 
+     * @param meal The UploadedMeal object containing meal details.
+     * @throws SQLException If any SQL error occurs.
+     */
     public void insertMeal(UploadedMeal meal) throws SQLException {
         String sql = "INSERT INTO uploadedmeals (uploadedmeals_name, uploadedmeal_type, calories, macros) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -22,6 +36,12 @@ public class MealUpload {
         }
     }
 
+    /**
+     * Retrieves all uploaded meals from the database.
+     * 
+     * @return A list of UploadedMeal objects.
+     * @throws SQLException If any SQL error occurs.
+     */
     public List<UploadedMeal> getAllMeals() throws SQLException {
         List<UploadedMeal> meals = new ArrayList<>();
         String sql = "SELECT * FROM uploadedmeals";

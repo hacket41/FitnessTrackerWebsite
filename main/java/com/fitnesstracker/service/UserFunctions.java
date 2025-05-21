@@ -7,12 +7,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserFunctions {
+
     private static final String SELECT_ALL_USERS = "SELECT u.user_id, u.username, u.email, u.f_name, u.l_name, u.image_path, r.role "
                                                   + "FROM user u "
                                                   + "LEFT JOIN roles r ON u.user_id = r.user_id";
 
     private static final String SELECT_USER_COUNT = "SELECT COUNT(*) AS total_users FROM user";
 
+    /**
+     * Retrieves all users with their associated roles from the database.
+     * 
+     * @return a list of UserModel objects representing all users.
+     * @throws SQLException if a database access error occurs.
+     * @throws ClassNotFoundException if the database driver class is not found.
+     */
     public List<UserModel> getAllUsers() throws SQLException, ClassNotFoundException {
         List<UserModel> userList = new ArrayList<>();
         try (Connection connection = DBConfig.getDbConnection();
@@ -34,6 +42,13 @@ public class UserFunctions {
         return userList;
     }
 
+    /**
+     * Retrieves the total count of users in the database.
+     * 
+     * @return the total number of users.
+     * @throws SQLException if a database access error occurs.
+     * @throws ClassNotFoundException if the database driver class is not found.
+     */
     public int getUserCount() throws SQLException, ClassNotFoundException {
         int count = 0;
         try (Connection connection = DBConfig.getDbConnection();
@@ -46,13 +61,22 @@ public class UserFunctions {
         }
         return count;
     }
-    
+
+    /**
+     * Retrieves a user by their unique ID.
+     * 
+     * @param userId the ID of the user to retrieve.
+     * @return a UserModel object representing the user, or null if not found.
+     * @throws SQLException if a database access error occurs.
+     * @throws ClassNotFoundException if the database driver class is not found.
+     */
     public UserModel getUserById(int userId) throws SQLException, ClassNotFoundException {
         Connection conn = DBConfig.getDbConnection();
         String sql = "SELECT * FROM user WHERE user_id=?";
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setInt(1, userId);
         ResultSet rs = stmt.executeQuery();
+
         if (rs.next()) {
             UserModel user = new UserModel();
             user.setId(rs.getInt("user_id"));
@@ -66,6 +90,17 @@ public class UserFunctions {
         return null;
     }
 
+    /**
+     * Updates user profile information from the admin panel.
+     * 
+     * @param userId the ID of the user to update.
+     * @param fName the new first name.
+     * @param lName the new last name.
+     * @param email the new email address.
+     * @param birthdayStr the new birthday date as a string (YYYY-MM-DD).
+     * @throws SQLException if a database access error occurs.
+     * @throws ClassNotFoundException if the database driver class is not found.
+     */
     public void updateUserProfileFromAdmin(int userId, String fName, String lName, String email, String birthdayStr)
             throws SQLException, ClassNotFoundException {
         Connection conn = DBConfig.getDbConnection();
@@ -79,6 +114,13 @@ public class UserFunctions {
         stmt.executeUpdate();
     }
 
+    /**
+     * Deletes a user by their ID.
+     * 
+     * @param userId the ID of the user to delete.
+     * @throws SQLException if a database access error occurs.
+     * @throws ClassNotFoundException if the database driver class is not found.
+     */
     public void deleteUser(int userId) throws SQLException, ClassNotFoundException {
         Connection conn = DBConfig.getDbConnection();
         String sql = "DELETE FROM user WHERE user_id=?";

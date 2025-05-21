@@ -23,13 +23,15 @@ import com.fitnesstracker.model.Meal;
 
 /**
  * Servlet implementation class ProgressController
+ * Handles user progress related requests such as viewing progress,
+ * updating weight, and goal weight management.
  */
 @WebServlet("/progress")
 public class ProgressController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
-     * @see HttpServlet#HttpServlet()
+     * Default constructor.
      */
     public ProgressController() {
         super();
@@ -37,7 +39,13 @@ public class ProgressController extends HttpServlet {
     }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * Handles GET requests for progress page.
+	 * If action parameter equals "getWeightHistory", retrieves weight history data as JSON.
+	 * Otherwise, loads today's meals, total calories, calorie goal, current and goal weights 
+	 * and forwards to progress JSP page.
+	 * 
+	 * @param request HttpServletRequest object
+	 * @param response HttpServletResponse object
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -76,7 +84,11 @@ public class ProgressController extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * Handles POST requests for updating weight or goal weight based on action parameter.
+	 * Redirects to login if user is not authenticated.
+	 * 
+	 * @param request HttpServletRequest object
+	 * @param response HttpServletResponse object
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -99,6 +111,14 @@ public class ProgressController extends HttpServlet {
 		}
 	}
 
+	/**
+	 * Retrieves user's weight history from the database and returns it as JSON response.
+	 * 
+	 * @param request HttpServletRequest object
+	 * @param response HttpServletResponse object
+	 * @param userId ID of the authenticated user
+	 * @throws IOException if an input or output error occurs
+	 */
 	private void getWeightHistory(HttpServletRequest request, HttpServletResponse response, int userId) throws IOException {
 		try {
 			List<WeightRecord> weightHistory = new ArrayList<>();
@@ -120,7 +140,7 @@ public class ProgressController extends HttpServlet {
 				}
 			}
 
-			// Convert to JSON
+			// Convert weight history to JSON format and send response
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 			
@@ -142,6 +162,15 @@ public class ProgressController extends HttpServlet {
 		}
 	}
 
+	/**
+	 * Updates the user's current weight by inserting a new progress record.
+	 * Validates input and sends appropriate HTTP errors if input is missing or invalid.
+	 * 
+	 * @param request HttpServletRequest object
+	 * @param response HttpServletResponse object
+	 * @param userId ID of the authenticated user
+	 * @throws IOException if an input or output error occurs
+	 */
 	private void updateWeight(HttpServletRequest request, HttpServletResponse response, int userId) throws IOException {
 		try {
 			String weightStr = request.getParameter("weight");
@@ -174,6 +203,15 @@ public class ProgressController extends HttpServlet {
 		}
 	}
 
+	/**
+	 * Updates the user's goal weight in the database.
+	 * Performs input validation and returns errors for missing or invalid input.
+	 * 
+	 * @param request HttpServletRequest object
+	 * @param response HttpServletResponse object
+	 * @param userId ID of the authenticated user
+	 * @throws IOException if an input or output error occurs
+	 */
 	private void updateGoalWeight(HttpServletRequest request, HttpServletResponse response, int userId) throws IOException {
 		try {
 			String goalWeightStr = request.getParameter("goalWeight");
@@ -208,6 +246,12 @@ public class ProgressController extends HttpServlet {
 		}
 	}
 
+	/**
+	 * Retrieves all meals logged today by the user.
+	 * 
+	 * @param userId ID of the authenticated user
+	 * @return List of Meal objects for today's date
+	 */
 	private List<Meal> getTodaysMeals(int userId) {
 		List<Meal> meals = new ArrayList<>();
 		String todayDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
@@ -240,10 +284,23 @@ public class ProgressController extends HttpServlet {
 		return meals;
 	}
 
+	/**
+	 * Calculates the total calories consumed based on the list of meals.
+	 * 
+	 * @param meals List of Meal objects
+	 * @return Total calorie sum
+	 */
 	private int calculateTotalCalories(List<Meal> meals) {
 		return meals.stream().mapToInt(Meal::getCaloriesConsumed).sum();
 	}
 
+	/**
+	 * Retrieves the calorie goal set by the user from the database.
+	 * Returns a default value of 2500 if no goal is found or on error.
+	 * 
+	 * @param userId ID of the authenticated user
+	 * @return Calorie goal integer value
+	 */
 	private int getCalorieGoal(int userId) {
 		try (Connection conn = DBConfig.getDbConnection();
 			 PreparedStatement stmt = conn.prepareStatement(
@@ -261,6 +318,13 @@ public class ProgressController extends HttpServlet {
 		return 2500; // Default calorie goal if not set
 	}
 
+	/**
+	 * Retrieves the latest recorded current weight of the user.
+	 * Returns 0.0 if no record is found or on error.
+	 * 
+	 * @param userId ID of the authenticated user
+	 * @return Current weight as double
+	 */
 	private double getCurrentWeight(int userId) {
 		try (Connection conn = DBConfig.getDbConnection();
 			 PreparedStatement stmt = conn.prepareStatement(
@@ -278,6 +342,13 @@ public class ProgressController extends HttpServlet {
 		return 0.0;
 	}
 
+	/**
+	 * Retrieves the latest goal weight set by the user.
+	 * Returns 0.0 if no record is found or on error.
+	 * 
+	 * @param userId ID of the authenticated user
+	 * @return Goal weight as double
+	 */
 	private double getGoalWeight(int userId) {
 		try (Connection conn = DBConfig.getDbConnection();
 			 PreparedStatement stmt = conn.prepareStatement(
@@ -295,6 +366,9 @@ public class ProgressController extends HttpServlet {
 		return 0.0;
 	}
 
+	/**
+	 * Private inner class to represent a single weight record with weight value and date.
+	 */
 	private static class WeightRecord {
 		private double weight;
 		private String date;

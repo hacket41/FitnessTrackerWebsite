@@ -14,15 +14,30 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * Servlet implementation class AdminContentController
+ * Handles admin functionality for managing uploaded meals and workouts.
+ */
 @WebServlet(asyncSupported = true, urlPatterns = { "/admincontent" })
 public class AdminContentController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final Logger LOGGER = Logger.getLogger(AdminContentController.class.getName());
 
+    /**
+     * Default constructor
+     */
     public AdminContentController() {
         super();
     }
 
+    /**
+     * Handles GET requests for viewing and deleting meals or workouts.
+     *
+     * @param request  the HttpServletRequest object that contains the request
+     * @param response the HttpServletResponse object that contains the response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an input or output error is detected
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -33,6 +48,7 @@ public class AdminContentController extends HttpServlet {
             MealUploadService mealService = new MealUploadService(conn);
             WorkoutUploadService workoutService = new WorkoutUploadService(conn);
 
+            // Handle meal deletion
             if ("deleteMeal".equals(action)) {
                 String mealIdStr = request.getParameter("mealId");
                 if (mealIdStr == null || mealIdStr.trim().isEmpty()) {
@@ -46,6 +62,7 @@ public class AdminContentController extends HttpServlet {
                 return;
             }
 
+            // Handle workout deletion
             if ("deleteWorkout".equals(action)) {
                 String workoutIdStr = request.getParameter("workoutId");
                 if (workoutIdStr == null || workoutIdStr.trim().isEmpty()) {
@@ -59,7 +76,7 @@ public class AdminContentController extends HttpServlet {
                 return;
             }
 
-            // Flash success message from session to request
+            // Handle success message forwarding
             HttpSession session = request.getSession(false);
             if (session != null) {
                 String successMessage = (String) session.getAttribute("successMessage");
@@ -69,7 +86,7 @@ public class AdminContentController extends HttpServlet {
                 }
             }
 
-            // Load all meals and workouts
+            // Load meals and workouts for admin view
             List<UploadedMeal> meals = mealService.getSuggestedMeals();
             List<UploadedWorkout> workouts = workoutService.getAllWorkouts();
 
@@ -84,6 +101,14 @@ public class AdminContentController extends HttpServlet {
         }
     }
 
+    /**
+     * Handles POST requests for uploading and editing meals or workouts.
+     *
+     * @param request  the HttpServletRequest object that contains the request
+     * @param response the HttpServletResponse object that contains the response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an input or output error is detected
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -97,6 +122,7 @@ public class AdminContentController extends HttpServlet {
             HttpSession session = request.getSession();
 
             switch (action) {
+                // Handle meal upload
                 case "uploadMeal":
                     try {
                         String mealName = request.getParameter("mealName");
@@ -130,6 +156,7 @@ public class AdminContentController extends HttpServlet {
                     }
                     break;
 
+                // Handle workout upload
                 case "uploadWorkout":
                     String workoutName = request.getParameter("workoutName");
                     String workoutType = request.getParameter("workoutType");
@@ -152,6 +179,7 @@ public class AdminContentController extends HttpServlet {
                     session.setAttribute("successMessage", "Workout uploaded successfully.");
                     break;
 
+                // Handle meal editing
                 case "editMeal":
                     try {
                         String mealIdStr = request.getParameter("mealId");
@@ -186,6 +214,7 @@ public class AdminContentController extends HttpServlet {
                     }
                     break;
 
+                // Handle workout editing
                 case "editWorkout":
                     String workoutIdStr = request.getParameter("workoutId");
                     String updatedWorkoutName = request.getParameter("workoutName");
@@ -211,6 +240,7 @@ public class AdminContentController extends HttpServlet {
                     session.setAttribute("successMessage", "Workout updated successfully.");
                     break;
 
+                // Handle unknown action case
                 default:
                     request.setAttribute("error", "Unknown action: " + action);
                     request.getRequestDispatcher("/WEB-INF/pages/admincontent.jsp").forward(request, response);

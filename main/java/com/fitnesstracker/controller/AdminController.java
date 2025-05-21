@@ -11,11 +11,25 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Servlet implementation for the admin dashboard.
+ * Handles retrieving user data and forwarding it to the admin JSP view.
+ */
 @WebServlet("/admin")
 public class AdminController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Handles GET requests for the admin dashboard.
+     * Retrieves a list of all users and total user count from the service layer,
+     * sets them as request attributes, and forwards to the admin JSP.
+     *
+     * @param request  the HttpServletRequest object
+     * @param response the HttpServletResponse object
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             UserFunctionsService userFunctions = new UserFunctionsService();
@@ -30,12 +44,18 @@ public class AdminController extends HttpServlet {
         }
     }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
+    /**
+     * Handles POST requests by delegating to the doGet method.
+     * This allows the same behavior for both GET and POST requests to this endpoint.
+     *
+     * @param request  the HttpServletRequest object
+     * @param response the HttpServletResponse object
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
+     */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // TODO Auto-generated method stub
+        doGet(request, response);
+    }
 
 }

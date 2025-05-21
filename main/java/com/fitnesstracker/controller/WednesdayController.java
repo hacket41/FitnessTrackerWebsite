@@ -21,12 +21,13 @@ import java.util.logging.Logger;
 
 /**
  * Servlet implementation class WednesdayController
+ * Manages the Wednesday workout page, handling display and user workout progress.
  */
 @WebServlet(asyncSupported = true, urlPatterns = { "/wednesday" })
 public class WednesdayController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final Logger LOGGER = Logger.getLogger(WednesdayController.class.getName());
-    private static final String SESSION_PROGRESS_KEY = "wednesdayWorkoutProgress"; // Unique key for Wednesday
+    private static final String SESSION_PROGRESS_KEY = "wednesdayWorkoutProgress"; // Unique session key for storing Wednesday workout progress
 
     public WednesdayController() {
         super();
@@ -34,6 +35,8 @@ public class WednesdayController extends HttpServlet {
 
     /**
      * Handles GET requests to display the Wednesday workout page.
+     * Retrieves user's workout progress from session and forwards to JSP.
+     * Redirects to login if user is not authenticated.
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         LOGGER.info("Received GET request for /wednesday, Session ID: " + 
@@ -46,11 +49,12 @@ public class WednesdayController extends HttpServlet {
             return;
         }
 
-        // Get user's progress from session
+        // Retrieve user's workout progress list from session
         HttpSession session = request.getSession();
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> userProgress = (List<Map<String, Object>>) session.getAttribute(SESSION_PROGRESS_KEY);
         if (userProgress == null) {
+            // Initialize empty progress list if not present in session
             userProgress = new ArrayList<>();
             session.setAttribute(SESSION_PROGRESS_KEY, userProgress);
             LOGGER.info("Initialized empty progress list in session for user: " + username);
@@ -58,14 +62,19 @@ public class WednesdayController extends HttpServlet {
              LOGGER.info("Retrieved progress list from session for user: " + username + ", size: " + userProgress.size());
         }
 
+        // Set user progress as request attribute for JSP rendering
         request.setAttribute("userProgress", userProgress);
         LOGGER.info("Set userProgress attribute in request for user: " + username + ", size: " + userProgress.size());
 
+        // Forward request to Wednesday workout JSP page
         request.getRequestDispatcher("/WEB-INF/pages/wednesday.jsp").forward(request, response);
     }
 
     /**
      * Handles POST requests for completing workouts.
+     * Validates user session and workout completion.
+     * Prevents duplicate workout completion for the same day.
+     * Calls completeWorkout() to process the workout completion.
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
@@ -77,16 +86,16 @@ public class WednesdayController extends HttpServlet {
             return;
         }
 
-        // Check if workout for today is already completed
+        // Retrieve workout progress list from session
         HttpSession session = request.getSession();
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> progressList = (List<Map<String, Object>>) session.getAttribute(SESSION_PROGRESS_KEY);
 
         if (progressList != null) {
             String todayDate = LocalDate.now().toString();
+            // Check if user already completed "Core Workout" today
             for (Map<String, Object> entry : progressList) {
-                 // Check for username, date, and workout type
-                if (username.equals(entry.get("username")) && todayDate.equals(entry.get("date")) && "Core Workout".equals(entry.get("workout_type"))) { // Check for "Core Workout"
+                if (username.equals(entry.get("username")) && todayDate.equals(entry.get("date")) && "Core Workout".equals(entry.get("workout_type"))) {
                     request.setAttribute("error", "You have already completed the Core Workout for today.");
                     request.getRequestDispatcher("/WEB-INF/pages/wednesday.jsp").forward(request, response);
                     LOGGER.warning("User " + username + " attempted to complete Core Workout again on " + todayDate);
@@ -95,43 +104,50 @@ public class WednesdayController extends HttpServlet {
             }
         }
 
-            if ("completeWorkout".equals(action) || "saveProgress".equals(action)) {
+        if ("completeWorkout".equals(action) || "saveProgress".equals(action)) {
+            // Process workout completion and save progress
             completeWorkout(request, response, username);
-            } else {
-                LOGGER.warning("Invalid action received: " + action);
-                request.setAttribute("error", "Invalid action");
+        } else {
+            LOGGER.warning("Invalid action received: " + action);
+            request.setAttribute("error", "Invalid action");
             request.getRequestDispatcher("/WEB-INF/pages/wednesday.jsp").forward(request, response);
         }
     }
 
     /**
-     * Marks the workout as completed and saves progress if all exercises are completed.
+     * Validates that all exercises are completed before marking the workout complete.
+     * If all exercises checked, saves progress and redirects.
+     * Otherwise, forwards back with error message.
      */
     private void completeWorkout(HttpServletRequest request, HttpServletResponse response, String username)
             throws ServletException, IOException {
-        String[] exercises = {"plank", "russianTwists", "legRaises", "bicycleCrunches", "mountainClimbers"}; // Ensure these match your JSP checkbox names
+        String[] exercises = {"plank", "russianTwists", "legRaises", "bicycleCrunches", "mountainClimbers"}; // Exercise checkbox names
         boolean allCompleted = true;
         for (String exercise : exercises) {
             String paramValue = request.getParameter(exercise);
             LOGGER.info("Checking exercise " + exercise + ": parameter value = " + (paramValue != null ? paramValue : "null"));
-            if (!"on".equals(paramValue)) { // Ensure this matches the value attribute in your JSP checkboxes
+            if (!"on".equals(paramValue)) { // Checkbox must be checked ("on") to mark complete
                 allCompleted = false;
                 LOGGER.warning("Exercise " + exercise + " not completed (value: " + (paramValue != null ? paramValue : "null") + ")");
                 break;
             }
         }
         if (!allCompleted) {
+            // Forward back to JSP with error if not all exercises checked
             request.setAttribute("error", "Please complete all exercises before saving progress.");
             request.getRequestDispatcher("/WEB-INF/pages/wednesday.jsp").forward(request, response);
             return;
         }
+        // Save progress in session and redirect to avoid resubmission
         saveProgress(request, username);
         LOGGER.info("Workout completed/progress saved for user: " + username + ", redirecting to /wednesday");
         response.sendRedirect(request.getContextPath() + "/wednesday");
     }
 
     /**
-     * Saves the progress of checked exercises for the user.
+     * Saves the current workout progress for the user into session.
+     * Creates a new entry with username, date, workout type, and completed exercises.
+     * Adds entry to the session progress list.
      */
     @SuppressWarnings("unchecked")
     private void saveProgress(HttpServletRequest request, String username) {
@@ -143,29 +159,31 @@ public class WednesdayController extends HttpServlet {
              LOGGER.warning("Progress list was null in saveProgress, initialized a new one for user: " + username);
         }
 
-        // Create new progress entry
+        // Create new progress entry map
         Map<String, Object> progressEntry = new HashMap<>();
         progressEntry.put("username", username);
         progressEntry.put("date", LocalDate.now().toString());
-        progressEntry.put("workout_type", "Core Workout"); // Make sure this matches the check in doPost
+        progressEntry.put("workout_type", "Core Workout"); // Workout type label consistent with doPost check
 
+        // Collect completed exercises based on checked checkboxes
         List<String> completedExercises = new ArrayList<>();
-        String[] exercises = {"plank", "russianTwists", "legRaises", "bicycleCrunches", "mountainClimbers"}; // Ensure these match your JSP checkbox names
+        String[] exercises = {"plank", "russianTwists", "legRaises", "bicycleCrunches", "mountainClimbers"};
         for (String exercise : exercises) {
-             if ("on".equals(request.getParameter(exercise))) { // Ensure this matches the value attribute in your JSP checkboxes
+             if ("on".equals(request.getParameter(exercise))) {
                  completedExercises.add(exercise);
              }
         }
         progressEntry.put("completed_exercises", completedExercises);
 
-        // Add new entry to list
+        // Add new progress entry to the list in session
         progressList.add(progressEntry);
         LOGGER.info("Added new progress entry for user: " + username + ", date: " + progressEntry.get("date") + ", completed: " + completedExercises.size() + " exercises.");
         LOGGER.info("Current progress list size in session for user: " + username + ", size: " + progressList.size());
     }
 
     /**
-     * Lists session attributes for debugging.
+     * Utility method to list all session attributes and their values.
+     * Useful for debugging session state.
      */
     private String listSessionAttributes(HttpServletRequest request) {
         StringBuilder attributes = new StringBuilder();
