@@ -84,7 +84,10 @@ public class LoginController extends HttpServlet {
                 req.getSession().setAttribute("user", user);
                 req.getSession().setAttribute("userId", user.getUserId());
 
-                // Track online users in the servlet context
+                String role = loginService.getUserRole(username); // Declare before using
+                req.getSession().setAttribute("role", role);      // Now no error here
+
+                // Track online users
                 ServletContext context = getServletContext();
                 Set<String> onlineUsers = (Set<String>) context.getAttribute("onlineUsers");
                 if (onlineUsers == null) {
@@ -93,8 +96,7 @@ public class LoginController extends HttpServlet {
                 onlineUsers.add(username);
                 context.setAttribute("onlineUsers", onlineUsers);
 
-                // Perform role-based redirection with cookies for role tracking
-                String role = loginService.getUserRole(username);
+                // Role-based redirection
                 if ("admin".equalsIgnoreCase(role)) {
                     CookiesUtil.addCookie(resp, "role", "admin", 5 * 30);
                     resp.sendRedirect(req.getContextPath() + "/admin");
@@ -102,6 +104,7 @@ public class LoginController extends HttpServlet {
                     CookiesUtil.addCookie(resp, "role", "user", 5 * 30);
                     resp.sendRedirect(req.getContextPath() + "/home");
                 }
+
             } else {
                 handleLoginFailure(req, resp, loginStatus);
             }

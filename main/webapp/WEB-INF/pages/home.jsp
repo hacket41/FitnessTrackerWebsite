@@ -23,9 +23,7 @@
                <p>
   At <strong>Be Fit</strong>, we believe that a healthy lifestyle starts with small, consistent habits. Our fitness tracker helps you stay on top of your goals by monitoring activity, sleep, heart rate, and more — giving you the insights you need to maintain your well-being. Whether you're just starting out or pushing for peak performance, <strong>Be Fit</strong> keeps you motivated, informed, and on track for a healthier, stronger you.
 </p>
-                <div class="button">
-                    <button>Get Started</button>
-                </div>     
+                    
             </div> 
         </div>
     </section>
