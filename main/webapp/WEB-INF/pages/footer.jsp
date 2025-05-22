@@ -21,10 +21,10 @@
     <div class="footer-col">
       <h4>Quick Links</h4>
       <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">My Meals</a></li>
-        <li><a href="#">My Progress</a></li>
-        <li><a href="#">My Workouts</a></li>
+        <li><a href="${pageContext.request.contextPath}/home">Home</a></li>
+        <li><a href="${pageContext.request.contextPath}/meals">My Meals</a></li>
+        <li><a href="${pageContext.request.contextPath}/progress">My Progress</a></li>
+        <li><a href="${pageContext.request.contextPath}/workout">My Workout</a></li>
       </ul>
     </div>
 

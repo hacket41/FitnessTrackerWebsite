@@ -37,7 +37,7 @@
             <p>Track your workouts, set plan meals, track your macros<br>and discover new goals.</p>
             
             <div class="button-1">
-                <button class = "button">Learn More</button>
+                <button class = "button" onclick="window.location.href='${pageContext.request.contextPath}/about'">Learn More</button>
             </div>
         </div>
 
