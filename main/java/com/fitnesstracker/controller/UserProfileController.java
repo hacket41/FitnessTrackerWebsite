@@ -95,64 +95,91 @@ public class UserProfileController extends HttpServlet {
                 return;
             }
 
-            UserModel user = new UserModel();
-            user.setUserId(userId);
-            user.setF_name(request.getParameter("firstName"));
-            user.setL_name(request.getParameter("lastName"));
-            user.setEmail(request.getParameter("email"));
+            // Retrieve current user data from DB for fallback values (image_path)
+            UserModel existingUser = null;
+            try (Connection conn = DBConfig.getDbConnection()) {
+                String fetchSql = "SELECT * FROM user WHERE user_id=?";
+                PreparedStatement fetchStmt = conn.prepareStatement(fetchSql);
+                fetchStmt.setInt(1, userId);
+                ResultSet rs = fetchStmt.executeQuery();
+                if (rs.next()) {
+                    existingUser = new UserModel();
+                    existingUser.setImage_path(rs.getString("image_path"));
+                }
+            }
 
+            // Set updated values
+            String firstName = request.getParameter("firstName");
+            String lastName = request.getParameter("lastName");
+            String email = request.getParameter("email");
             String birthdayStr = request.getParameter("birthday");
+
+            LocalDate birthday = null;
             if (birthdayStr != null && !birthdayStr.trim().isEmpty()) {
                 try {
-                    user.setBirthday(LocalDate.parse(birthdayStr));
+                    birthday = LocalDate.parse(birthdayStr);
                 } catch (DateTimeParseException e) {
-                    request.setAttribute("error", "Invalid date format. Please use YYYY-MM-DD format.");
-                    request.setAttribute("user", user);
+                    request.setAttribute("error", "Invalid date format.");
                     request.getRequestDispatcher("/WEB-INF/pages/userprofile.jsp").forward(request, response);
                     return;
                 }
             }
 
+            // Handle image upload
             String imagePath = handleImageUpload(request);
-            if (imagePath != null) {
-                user.setImage_path(imagePath);
+            if (imagePath == null && existingUser != null) {
+                imagePath = existingUser.getImage_path(); // fallback to existing image
             }
 
+            // Update user in DB
             try (Connection conn = DBConfig.getDbConnection()) {
                 String sql = "UPDATE user SET f_name=?, l_name=?, email=?, birthday=?, image_path=? WHERE user_id=?";
                 PreparedStatement stmt = conn.prepareStatement(sql);
-                stmt.setString(1, user.getF_name());
-                stmt.setString(2, user.getL_name());
-                stmt.setString(3, user.getEmail());
-                if (user.getBirthday() != null) {
-                    stmt.setDate(4, java.sql.Date.valueOf(user.getBirthday()));
+                stmt.setString(1, firstName);
+                stmt.setString(2, lastName);
+                stmt.setString(3, email);
+                if (birthday != null) {
+                    stmt.setDate(4, java.sql.Date.valueOf(birthday));
                 } else {
                     stmt.setNull(4, java.sql.Types.DATE);
                 }
-                stmt.setString(5, user.getImage_path());
-                stmt.setInt(6, user.getUserId());
+                stmt.setString(5, imagePath);
+                stmt.setInt(6, userId);
 
                 int rows = stmt.executeUpdate();
                 if (rows > 0) {
                     request.setAttribute("success", "Profile updated successfully.");
+
+                    // Update session user
+                    UserModel updatedUser = new UserModel();
+                    updatedUser.setUserId(userId);
+                    updatedUser.setF_name(firstName);
+                    updatedUser.setL_name(lastName);
+                    updatedUser.setEmail(email);
+                    updatedUser.setBirthday(birthday);
+                    updatedUser.setImage_path(imagePath);
+
+                    // Get username from existing session object
+                    UserModel sessionUser = (UserModel) request.getSession().getAttribute("user");
+                    if (sessionUser != null) {
+                        updatedUser.setUsername(sessionUser.getUsername());
+                    }
+
+                    request.getSession().setAttribute("user", updatedUser);
+                    request.setAttribute("user", updatedUser);
                 } else {
                     request.setAttribute("error", "Failed to update profile.");
                 }
-
-            } catch (SQLException | ClassNotFoundException e) {
-                e.printStackTrace();
-                request.setAttribute("error", "Database error. Try again later.");
             }
 
-            request.setAttribute("user", user);
             request.getRequestDispatcher("/WEB-INF/pages/userprofile.jsp").forward(request, response);
-
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Unexpected error occurred.");
             request.getRequestDispatcher("/WEB-INF/pages/userprofile.jsp").forward(request, response);
         }
     }
+
 
     /**
      * Handles image upload from the form. Saves the image to the server
